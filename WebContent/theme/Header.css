@@ -1,0 +1,35 @@
+.heaText {
+	font-family: Tahoma, Verdana, Arial;
+	font-size: 12px;
+	text-decoration: none;
+}
+
+a:link {
+	color: #000000;
+	text-decoration: none;
+}
+a:visited {
+	color: #FFFFFF;
+	text-decoration: none;
+}
+a:hover {
+	color: #FFFFFF;
+	text-decoration: none;
+}
+a:active {
+	color: #FFFFFF;
+	text-decoration: none;	
+}
+
+.frmInput {
+	font-family: Tahoma, Verdana, Arial;
+	font-size: 12px;
+	color: #000000;
+	text-decoration: none;
+	background-color: #CCCCCC;
+	border-top: 1px solid #999999;
+	border-right: 1px solid #999999;
+	border-left: 1px solid #999999;
+	border-bottom: 1px solid #999999;
+	width: 214px;
+}

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap
+PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+	
+<sqlMap namespace="AuditTrailSQL">
+	<resultMap id="auditTrailResult" class="com.benclaus.koperasi.model.system.Audit">
+		<result property="tableName" column="tableName" />
+		<result property="fields" column="fields" />
+		<result property="contents" column="contents" />
+		<result property="lastUpdDtm" column="lastUpdDtm" />
+		<result property="lastUpdBy" column="lastUpdBy" />
+		<result property="lastUpdProcess" column="lastUpdProcess" />
+	</resultMap>
+
+	<insert id="insertAuditTrail" parameterClass="com.benclaus.koperasi.model.system.Audit">
+		INSERT INTO absen_audittrail (tablename, fields, contents, lastupddtm, lastupdby, lastupdprocess) 
+		VALUES (#tableName#, #fields#, #contents#, now(), #lastUpdBy#, #lastUpdProcess#)
+	</insert>
+
+	<select id="selectAuditTrailForUserMonitor" resultMap="auditTrailResult" parameterClass="com.benclaus.koperasi.model.system.Audit">
+		<![CDATA[
+			SELECT 
+				tableName, fields, contents, lastUpdDtm, lastUpdBy, lastUpdProcess 
+			FROM 
+				absen_audittrail
+			WHERE
+				lastUpdBy = #lastUpdBy# AND lastUpdDtm >= #lastUpdDtm#
+			ORDER BY 
+				lastUpdDtm DESC
+		]]>
+	</select>
+</sqlMap>

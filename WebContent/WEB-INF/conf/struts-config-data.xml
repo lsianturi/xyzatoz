@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN"
+                               "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+  -->
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.2//EN" 
+		"http://struts.apache.org/dtds/struts-config_1_2.dtd">
+
+<struts-config>
+	<form-beans>
+		
+		<form-bean name="planSearch" type="org.apache.struts.validator.DynaValidatorForm">
+			<form-property name="dispatch" type="java.lang.String" initial="prepare" />
+			<form-property name="usercode" type="java.lang.String" />
+			<form-property name="companyId" type="java.lang.Integer" />
+			<form-property name="bookId" type="java.lang.Integer" />
+			<form-property name="bookItemId" type="java.lang.Integer" />
+			<form-property name="fromYear" type="java.lang.Integer" />
+			<form-property name="toYear" type="java.lang.Integer" />
+			<form-property name="pageIndex" type="java.lang.String" initial="1" />	
+			<form-property name="totalPage" type="java.lang.String" />
+			<form-property name="totalSize" type="java.lang.String" />		
+		</form-bean>
+		
+		<form-bean name="planForm" type="org.apache.struts.validator.DynaValidatorForm">
+			<form-property name="dispatch" type="java.lang.String" />
+			<form-property name="usercode" type="java.lang.String" />
+			<form-property name="companyId" type="java.lang.Integer" />
+			<form-property name="bookId" type="java.lang.Integer" />
+			<form-property name="year" type="java.lang.Integer" />
+			<form-property name="id" type="java.lang.Integer[]" />
+			<form-property name="bookItemId" type="java.lang.Integer[]" />
+			<form-property name="plan1Str" type="java.lang.String[]" />
+			<form-property name="plan2Str" type="java.lang.String[]" />
+			<form-property name="plan3Str" type="java.lang.String[]" />
+			<form-property name="plan4Str" type="java.lang.String[]" />
+			<form-property name="plan5Str" type="java.lang.String[]" />
+			<form-property name="plan6Str" type="java.lang.String[]" />
+			<form-property name="plan7Str" type="java.lang.String[]" />
+			<form-property name="plan8Str" type="java.lang.String[]" />
+			<form-property name="plan9Str" type="java.lang.String[]" />
+			<form-property name="plan10Str" type="java.lang.String[]" />
+			<form-property name="plan11Str" type="java.lang.String[]" />
+			<form-property name="plan12Str" type="java.lang.String[]" />
+		</form-bean>
+		
+		<form-bean name="forecastSearch" type="org.apache.struts.validator.DynaValidatorForm">
+			<form-property name="dispatch" type="java.lang.String" initial="prepare" />
+			<form-property name="usercode" type="java.lang.String" />
+			<form-property name="companyId" type="java.lang.Integer" />
+			<form-property name="bookId" type="java.lang.Integer" />
+			<form-property name="bookItemId" type="java.lang.Integer" />
+			<form-property name="fromYear" type="java.lang.Integer" />
+			<form-property name="toYear" type="java.lang.Integer" />
+			<form-property name="pageIndex" type="java.lang.String" initial="1" />	
+			<form-property name="totalPage" type="java.lang.String" />
+			<form-property name="totalSize" type="java.lang.String" />		
+		</form-bean>
+		
+		<form-bean name="forecastForm" type="org.apache.struts.validator.DynaValidatorForm">
+			<form-property name="dispatch" type="java.lang.String" />
+			<form-property name="usercode" type="java.lang.String" />
+			<form-property name="companyId" type="java.lang.Integer" />
+			<form-property name="bookId" type="java.lang.Integer" />
+			<form-property name="year" type="java.lang.Integer" />
+			<form-property name="id" type="java.lang.Integer[]" />
+			<form-property name="bookItemId" type="java.lang.Integer[]" />
+			<form-property name="amountStr" type="java.lang.String[]" />
+		</form-bean>
+		
+		<form-bean name="actualSearch" type="org.apache.struts.validator.DynaValidatorForm">
+			<form-property name="dispatch" type="java.lang.String" initial="prepare" />
+			<form-property name="usercode" type="java.lang.String" />
+			<form-property name="companyId" type="java.lang.Integer" />
+			<form-property name="bookId" type="java.lang.Integer" />
+			<form-property name="bookItemId" type="java.lang.Integer" />
+			<form-property name="fromYear" type="java.lang.Integer" />
+			<form-property name="toYear" type="java.lang.Integer" />
+			<form-property name="pageIndex" type="java.lang.String" initial="1" />	
+			<form-property name="totalPage" type="java.lang.String" />
+			<form-property name="totalSize" type="java.lang.String" />		
+		</form-bean>
+		
+		<form-bean name="actualForm" type="org.apache.struts.validator.DynaValidatorForm">
+			<form-property name="dispatch" type="java.lang.String" />
+			<form-property name="usercode" type="java.lang.String" />
+			<form-property name="companyId" type="java.lang.Integer" />
+			<form-property name="bookId" type="java.lang.Integer" />
+			<form-property name="year" type="java.lang.Integer" />
+			<form-property name="id" type="java.lang.Integer[]" />
+			<form-property name="bookItemId" type="java.lang.Integer[]" />
+			<form-property name="actual1Str" type="java.lang.String[]" />
+			<form-property name="actual2Str" type="java.lang.String[]" />
+			<form-property name="actual3Str" type="java.lang.String[]" />
+			<form-property name="actual4Str" type="java.lang.String[]" />
+			<form-property name="actual5Str" type="java.lang.String[]" />
+			<form-property name="actual6Str" type="java.lang.String[]" />
+			<form-property name="actual7Str" type="java.lang.String[]" />
+			<form-property name="actual8Str" type="java.lang.String[]" />
+			<form-property name="actual9Str" type="java.lang.String[]" />
+			<form-property name="actual10Str" type="java.lang.String[]" />
+			<form-property name="actual11Str" type="java.lang.String[]" />
+			<form-property name="actual12Str" type="java.lang.String[]" />
+		</form-bean>
+		
+		<form-bean name="a3Search" type="org.apache.struts.validator.DynaValidatorForm">
+			<form-property name="dispatch" type="java.lang.String" initial="prepare" />
+			<form-property name="month" type="java.lang.Integer" />
+			<form-property name="currentYear" type="java.lang.Integer" />
+			<form-property name="fromYear" type="java.lang.Integer" />
+			<form-property name="toYear" type="java.lang.Integer" />
+			<form-property name="pageIndex" type="java.lang.String" initial="1" />	
+			<form-property name="totalPage" type="java.lang.String" />
+			<form-property name="totalSize" type="java.lang.String" />		
+		</form-bean>
+		
+		<form-bean name="logSearch" type="org.apache.struts.validator.DynaValidatorForm">
+			<form-property name="dispatch" type="java.lang.String" initial="prepare" />
+			<form-property name="companyId" type="java.lang.Integer" />
+			<form-property name="year" type="java.lang.Integer" />
+			<form-property name="month" type="java.lang.Integer" />
+			<form-property name="pageIndex" type="java.lang.String" initial="1" />	
+			<form-property name="totalPage" type="java.lang.String" />
+			<form-property name="totalSize" type="java.lang.String" />		
+		</form-bean>
+		
+		<form-bean name="uploadForm" type="com.benclaus.koperasi.action.app.UploadForm"/>
+        
+	</form-beans>
+	
+	<action-mappings>
+		<action path="/upload" name="uploadForm" type="com.benclaus.koperasi.action.app.UploadDataAction" scope="request" validate="false" parameter="dispatch">
+    		<forward name="continue" path="/app/upload.jsp" />
+    		<forward name="success" path="/app/logs.jsp" />	
+    		<forward name="fail" path="/main.jsp" />
+    	</action>
+		<action path="/plan" name="planSearch" type="com.benclaus.koperasi.action.app.master.BusinessPlanAction" scope="request" validate="false" parameter="dispatch">
+    		<forward name="continue" path="/app/plan.jsp" />	
+    		<forward name="fail" path="/main.jsp" />
+    	</action>
+    	<action path="/updatePlan" name="planForm" type="com.benclaus.koperasi.action.app.master.BusinessPlanAction" scope="request" parameter="dispatch" validate="false">
+			<forward name="continue" path="/plan.do?dispatch=returned" />
+			<forward name="first" path="/app/planEdit1st.jsp" />
+			<forward name="success" path="/app/planEdit.jsp" />
+			<forward name="fail" path="/app/planEdit.jsp" />
+		</action>
+    	<action path="/savePlan" name="planForm" type="com.benclaus.koperasi.action.app.master.BusinessPlanAction" scope="request" parameter="dispatch" validate="false">
+			<forward name="success" path="/plan.do?dispatch=returned" />
+			<forward name="fail" path="/app/planEdit.jsp" />
+		</action>
+		
+		<action path="/forecast" name="forecastSearch" type="com.benclaus.koperasi.action.app.master.ForecastAction" scope="request" validate="false" parameter="dispatch">
+    		<forward name="continue" path="/app/forecast.jsp" />	
+    		<forward name="fail" path="/main.jsp" />
+    	</action>
+    	<action path="/updateForecast" name="forecastForm" type="com.benclaus.koperasi.action.app.master.ForecastAction" scope="request" parameter="dispatch" validate="false">
+			<forward name="continue" path="/forecast.do?dispatch=returned" />
+			<forward name="first" path="/app/forecastEdit1st.jsp" />
+			<forward name="success" path="/app/forecastEdit.jsp" />
+			<forward name="fail" path="/app/forecastEdit.jsp" />
+		</action>
+    	<action path="/saveForecast" name="forecastForm" type="com.benclaus.koperasi.action.app.master.ForecastAction" scope="request" parameter="dispatch" validate="false">
+			<forward name="success" path="/forecast.do?dispatch=returned" />
+			<forward name="fail" path="/app/forecastEdit.jsp" />
+		</action>
+		
+		<action path="/actual" name="planSearch" type="com.benclaus.koperasi.action.app.ActualDataAction" scope="request" validate="false" parameter="dispatch">
+    		<forward name="continue" path="/app/actual.jsp" />	
+    		<forward name="fail" path="/main.jsp" />
+    	</action>
+    	<action path="/updateActual" name="planForm" type="com.benclaus.koperasi.action.app.ActualDataAction" scope="request" parameter="dispatch" validate="false">
+			<forward name="continue" path="/actual.do?dispatch=returned" />
+			<forward name="success" path="/app/actualEdit.jsp" />
+			<forward name="fail" path="/app/actualEdit.jsp" />
+		</action>
+		
+		<action path="/a3" name="a3Search" type="com.benclaus.koperasi.action.app.DownloadA3Action" scope="request" validate="false" parameter="dispatch">
+    		<forward name="continue" path="/app/a3.jsp" />	
+    		<forward name="success" path="/a3.do?dispatch=prepare" />
+    	</action>
+    	
+    	<action path="/logs" name="logSearch" type="com.benclaus.koperasi.action.app.DataLogAction" scope="request" validate="false" parameter="dispatch">
+    		<forward name="continue" path="/app/logs.jsp" />	
+    		<forward name="success" path="/logs.do?dispatch=prepare" />
+    	</action>
+		
+		
+	</action-mappings>
+</struts-config>

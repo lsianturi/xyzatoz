@@ -1,0 +1,342 @@
+BODY {
+	font-family: Tahoma, Verdana, Arial;
+	font-size: 12px;
+}
+
+.heaText {
+	font-family: Tahoma, Verdana, Arial;
+	font-size: 12px;
+	color: #003399;
+	text-decoration: none;
+}
+
+.hr-separator {
+	color: #CCCCCC;
+	border: dotted;
+}
+
+.hr-line {
+	color: #000000;
+}
+
+.conTitle {
+	font-family: Tahoma, Verdana, Arial;
+	font-size: 16px;
+	font-weight: bold;
+	color: #1583c3;
+	white-space: nowrap;
+}
+
+.conLabel {
+	font-family: Tahoma, Verdana, Arial;
+	font-size: 12px;
+	color: #000000;
+	font-weight: bold;
+	white-space: nowrap;
+	vertical-align: middle;
+}
+
+.conText {
+	font-family: Tahoma, Verdana, Arial;
+	font-size: 12px;
+	color: #000000;
+	text-decoration: none;
+}
+
+input {
+	font-family: Tahoma, Verdana, Arial;
+	font-size: 12px;
+	color: #000000;
+	text-decoration: none;
+	border-top: 1px solid #000000;
+	border-right: 1px solid #000000;
+	border-left: 1px solid #000000;
+	border-bottom: 1px solid #000000;
+}
+
+.inputNav {
+	font-family: Tahoma, Verdana, Arial;
+	color: #000000;
+	text-decoration: none;
+	font-size: 12px;
+	border-top: 1px solid #C2C2C2;
+	border-right: 1px solid #C2C2C2;
+	border-bottom: 1px solid #C2C2C2;
+	border-left: 1px solid #C2C2C2;
+	white-space: nowrap;
+}
+
+textarea {
+	font-family: Tahoma, Verdana, Arial;
+	font-size: 12px;
+	color: #000000;
+	text-decoration: none;
+	border-top: 1px solid #000000;
+	border-right: 1px solid #000000;
+	border-left: 1px solid #000000;
+	border-bottom: 1px solid #000000;
+}
+
+select {
+	font-family: Tahoma, Verdana, Arial;
+	font-size: 12px;
+	color: #000000;
+	text-decoration: none;
+	border-top: 1px solid #000000;
+	border-right: 1px solid #000000;
+	border-left: 1px solid #000000;
+	border-bottom: 1px solid #000000;
+}
+
+.frmReadOnly {
+	font-family: Tahoma, Verdana, Arial;
+	font-size: 12px;
+	font-weight: bold;
+	color: #000000;
+	text-decoration: none;
+	background-color: #CCCCCC;
+	border-top: 1px solid #000000;
+	border-right: 1px solid #000000;
+	border-left: 1px solid #000000;
+	border-bottom: 1px solid #000000;
+}
+
+.frmWriteAble {
+	font-family: Tahoma, Verdana, Arial;
+	font-size: 12px;
+	color: #000000;
+	text-decoration: none;
+	background-color: #DEDEBB;
+}
+
+.frmInput {
+	font-family: Tahoma, Verdana, Arial;
+	font-size: 12px;
+	color: #000000;
+	text-decoration: none;
+	border-top: 1px solid #000000;
+	border-right: 1px solid #000000;
+	border-left: 1px solid #000000;
+	border-bottom: 1px solid #000000;
+}
+
+.frmButton {
+	font-family: Tahoma, Verdana, Arial;
+	color: #FFFFFF;
+	text-decoration: none;
+	background-color: #999999;
+	font-weight: bold;
+	font-size: 12px;
+	border-top: 1px solid #C2C2C2;
+	border-right: 1px solid #C2C2C2;
+	border-bottom: 1px solid #2E2E2E;
+	border-left: 1px solid #2E2E2E;
+	white-space: nowrap;
+}
+
+.frmNavigator {
+	font-family: Tahoma, Verdana, Arial;
+	color: #FFFFFF;
+	text-decoration: none;
+	font-weight: bold;
+	font-size: 12px;
+	border-top: 1px solid #C2C2C2;
+	border-right: 1px solid #C2C2C2;
+	border-bottom: 1px solid #2E2E2E;
+	border-left: 1px solid #2E2E2E;
+	white-space: nowrap;
+}
+
+.frmNav {
+	font-family: Tahoma, Verdana, Arial;
+	color: #000000;
+	text-decoration: none;
+	width: 25px;
+	font-weight: bold;
+	font-size: 12px;
+	border-top: 1px solid #CCCCCC;
+	border-right: 1px solid #333333;
+	border-bottom: 1px solid #333333;
+	border-left: 1px solid #999999;
+}
+
+.tblHeader {
+	font-family: Tahoma, Verdana, Arial;
+	font-size: 12px;
+	color: #000000;
+	background-color: #C0C0C0;
+	font-weight: bold;
+	text-decoration: none;
+}
+
+.tblHeaderWithBorder {
+	font-family: Tahoma, Verdana, Arial;
+	font-size: 12px;
+	color: #000000;
+	background-color: #C0C0C0;
+	font-weight: bold;
+	text-decoration: none;
+	border: 1px solid #CCCCCC;
+	vertical-align: text-top;
+}
+
+.tblBorder {
+	border: 1px solid #0;
+}
+
+.celBorder {
+	font-family: Tahoma, Verdana, Arial;
+	color: #000000;
+	text-decoration: none;
+	font-size: 12px;
+	border-top-width: 1px;
+	border-top-style: solid;
+	border-top-color: #CCCCCC;
+	border-left-width: 1px;
+	border-left-style: solid;
+	border-left-color: #CCCCCC;
+	vertical-align: text-top;
+}
+
+.celBorderGrey {
+	font-family: Tahoma, Verdana, Arial;
+	color: #000000;
+	text-decoration: none;
+	font-size: 12px;
+	background-color: #EEEEEE;
+	border-top-width: 1px;
+	border-top-style: dashed;
+	border-top-color: #CCCCCC;
+	border-left-width: 1px;
+	border-left-style: dashed;
+	border-left-color: #CCCCCC;
+	vertical-align: text-top;
+}
+
+.celBorderDarkGrey {
+	font-family: Tahoma, Verdana, Arial;
+	color: #000000;
+	text-decoration: none;
+	font-size: 12px;
+	background-color: #DDDDDD;
+	border-top-width: 1px;
+	border-top-style: dashed;
+	border-top-color: #CCCCCC;
+	border-left-width: 1px;
+	border-left-style: dashed;
+	border-left-color: #CCCCCC;
+	vertical-align: text-top;
+}
+
+.celBorderYellowGrey {
+	font-family: Tahoma, Verdana, Arial;
+	color: #000000;
+	text-decoration: none;
+	font-size: 12px;
+	background-color: #DEDEBB;
+	border-top-width: 1px;
+	border-top-style: dashed;
+	border-top-color: #CCCCCC;
+	border-left-width: 1px;
+	border-left-style: dashed;
+	border-left-color: #CCCCCC;
+	vertical-align: text-top;
+}
+
+.celBorderDarkYellowGrey {
+	font-family: Tahoma, Verdana, Arial;
+	color: #000000;
+	text-decoration: none;
+	font-size: 12px;
+	background-color: #DDDDBB;
+	border-top-width: 1px;
+	border-top-style: dashed;
+	border-top-color: #CCCCCC;
+	border-left-width: 1px;
+	border-left-style: dashed;
+	border-left-color: #CCCCCC;
+	vertical-align: text-top;
+}
+
+.upperBorder {
+	font-family: Tahoma, Verdana, Arial;
+	color: #000000;
+	text-decoration: none;
+	font-size: 12px;
+	border-top-width: 1px;
+	border-top-style: dashed;
+	border-top-color: #CCCCCC;
+}
+
+.tblText {
+	font-family: Tahoma, Verdana, Arial;
+	font-size: 12px;
+	color: #000000;
+	text-decoration: none;
+}
+
+.dlgTable {
+	background-color: #CCCCCC;
+	border: #000000;
+	border-style: solid;
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+}
+
+.dlgTitle {
+	font-family: Tahoma, Verdana, Arial;
+	font-size: 12px;
+	font-weight: bold;
+	color: #FFFFFF;
+	text-decoration: none;
+	white-space: nowrap;
+}
+
+.dlgText {
+	font-family: Tahoma, Verdana, Arial;
+	font-size: 12px;
+	color: #003366;
+}
+
+.msgBorder {
+	border: 1px solid #006699;
+	border-collapse: collapse;
+}
+
+a:visited {
+	color: #800000;
+}
+
+a:hover {
+	color: #000000;
+}
+
+a:active {
+	color: #000000;
+}
+
+.evenRow {
+	color: #000000;
+}
+
+.oddRow {
+	color: #000000;
+	background-color: #FBFBEF;
+}
+.manualRow {
+	color: #000000;
+	background-color: #A9D0F5;	
+}
+.nonActive {
+	background-color: #EEEEBB;
+}
+
+.evenRowAnal {
+	background-color: #E5E5E5;
+}
+
+.oddRowAnal {
+	background-color: #F2F2F2;
+}

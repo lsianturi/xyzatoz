@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap
+PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="UsmSQL">
+	<resultMap id="loginTrailResult" class="com.benclaus.koperasi.model.usm.LoginTrail">
+		<result property="userCode" column="userCode" />
+		<result property="sessionId" column="sessionId" />
+		<result property="lastUpdDtm" column="lastUpdDtm" />
+		<result property="lastUpdProcess" column="lastUpdProcess" />
+	</resultMap>
+	
+	<insert id="insertLoginTrail" parameterClass="com.benclaus.koperasi.model.usm.LoginTrail">
+		INSERT INTO absen_logintrail(userCode, sessionId, lastUpdDtm, lastUpdProcess) 
+		VALUES (#userCode#, #sessionId#, now(), #lastUpdProcess#)
+	</insert>
+	
+	<select id="selectLoginTrail" resultMap="loginTrailResult" parameterClass="java.util.Map">
+		<dynamic>	
+			SELECT 
+				userCode, sessionId, lastUpdDtm, lastUpdProcess 
+			FROM 
+				absen_logintrail
+			<isNotEmpty property="searchValue">
+				WHERE UCASE($searchColumn$) like '%' CONCAT #searchValue# CONCAT '%'
+			</isNotEmpty>
+			ORDER BY 
+				lastUpdDtm DESC
+		</dynamic>
+	</select>
+	
+	<select id="selectLoginTrailSize" resultClass="java.lang.Integer" parameterClass="java.util.Map">
+		<dynamic>	
+			SELECT 
+				COUNT(*) 
+			FROM 
+				absen_logintrail
+			<isNotEmpty property="searchValue">
+				WHERE UCASE($searchColumn$) like '%' CONCAT #searchValue# CONCAT '%'
+			</isNotEmpty>
+		</dynamic>	
+	</select>
+	<select id="listRole" resultMap="AllSQL.labelValueResult">
+		SELECT roleCode as value, description as label
+		FROM ms_role m
+		WHERE m.statusid=1
+	</select>
+</sqlMap>

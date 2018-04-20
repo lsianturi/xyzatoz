@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap
+PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="MenuSQL">
+	
+	<resultMap id="menuResult" class="com.benclaus.koperasi.model.usm.Menu">
+		<result property="menuCode" column="menuCode" />
+		<result property="parentMenuCode" column="parentMenuCode" />
+		<result property="name" column="name" />
+		<result property="menuType" column="menuType" />
+		<result property="menuLevel" column="menuLevel"/>
+		<result property="menuOrder" column="menuOrder"/>
+		<result property="command" column="command" />
+		<result property="description" column="description"/>
+		<result property="systemMenu" column="systemMenu"/>	
+		<result property="child" column="menuCode" select="MenuSQL.getChildCount"/>
+	</resultMap>
+	
+	<select id="getPagingMenu" resultMap="menuResult" parameterClass="java.util.Map">
+		SELECT 
+			menuCode, parentMenuCode, name, menuType, menuLevel, menuOrder, systemMenu, command, description
+		FROM 
+			ms_menu
+		WHERE 
+			DELETED = 0 
+		<dynamic>
+			<isNotEmpty prepend = " AND " property="searchValue">
+				UCASE($searchColumn$) LIKE '%' CONCAT #searchValue# CONCAT '%'
+			</isNotEmpty>
+		</dynamic>
+		ORDER BY 
+			MENULEVEL
+    </select>
+    
+    <select id="getCountRowMenu" resultClass="java.lang.Integer" parameterClass="java.util.Map">
+		SELECT 
+			COUNT(*) 
+		FROM 
+			ms_menu
+		WHERE
+			DELETED = 0
+		<dynamic>
+			<isNotEmpty prepend = " AND " property="searchValue">
+				UCASE($searchColumn$) LIKE '%' CONCAT #searchValue# CONCAT '%'
+			</isNotEmpty>
+		</dynamic>
+    </select>
+	
+    <insert id="insertMenu" parameterClass="com.benclaus.koperasi.model.usm.Menu">
+    	INSERT INTO 
+    		ms_menu(MENUCODE, PARENTMENUCODE, DESCRIPTION, NAME, MENUTYPE, SYSTEMMENU, CREATEDBY, MENUORDER, DELETED, MENULEVEL, COMMAND) 
+    	VALUES 
+    		(#menuCode#, #parentMenuCode#, #description#, #name#, #menuType#, 0, #createdBy#, #menuOrder#, 0, #menuLevel#, #command#)
+    </insert>
+
+
+	<update id="updateMenu" parameterClass="com.benclaus.koperasi.model.usm.Menu">
+    	UPDATE 
+    		ms_menu
+    	SET 
+    		MENUORDER = #menuOrder#,  COMMAND = #command#, DESCRIPTION = #description#, NAME = #name#, LASTUPDDTM = now(), LASTUPDBY = #lastUpdBy#, LASTUPDPROCESS = #lastUpdProcess#  
+    	WHERE 
+    		MENUCODE = #menuCode# AND DELETED = 0
+    </update>
+
+
+	<update id="deleteMenu" parameterClass="com.benclaus.koperasi.model.usm.Menu">
+    	UPDATE 
+    		ms_menu
+    	SET 
+    		DELETED = 1, LASTUPDDTM = now(), LASTUPDBY = #lastUpdBy#, LASTUPDPROCESS = #lastUpdProcess#  
+    	WHERE 
+    		MENUCODE = #menuCode#
+    </update>
+
+	<select id="getMenu" resultMap="menuResult" parameterClass="java.lang.String">
+		SELECT 
+			menuCode, parentMenuCode, name, menuType, menuLevel, menuOrder, systemMenu, command, description
+		FROM 
+			ms_menu
+		WHERE 
+			menuCode = #value# AND deleted = 0 
+		ORDER BY 
+			menuCode
+    </select>
+
+    <select id="getMenuParent" resultMap="menuResult" parameterClass="java.lang.String">
+		SELECT 
+			menuCode, parentMenuCode, name, menuType, menuLevel, menuOrder, systemMenu, command, description
+		FROM 
+			ms_menu
+		WHERE 
+			parentMenuCode = #value# AND deleted = 0 
+		ORDER BY 
+			menuCode
+    </select>    
+
+	<select id="getRootMenu" resultMap="menuResult" parameterClass="java.lang.String">
+		SELECT 
+			menuCode, parentMenuCode, name, menuType, menuLevel, menuOrder, systemMenu, command, description
+		FROM 
+			ms_menu 
+		WHERE 
+			menuType=0 and menuCode=#value#
+	</select>
+    
+    <select id="getMenuLabelValue" resultMap="AllSQL.labelValueResult">
+		SELECT 
+			menuCode as value, (menuCode CONCAT '-' CONCAT name)  AS label
+		FROM  
+			ms_menu
+		WHERE 
+			deleted = 0
+    </select>
+
+    <select id="getChildCount" resultClass="java.lang.Integer" parameterClass="java.lang.String">
+	    SELECT
+	    	count(*) 
+	    FROM
+	    	ms_menu
+	    WHERE 
+	    	parentMenuCode = #value# AND deleted = 0 
+    </select>
+
+
+	<select id="selectUserMenu" resultMap="menuResult" parameterClass="com.benclaus.koperasi.model.usm.User">
+		SELECT DISTINCT
+			a.menuCode, a.parentMenuCode, a.name, a.menuType, a.menuLevel, a.menuOrder, a.systemMenu, a.command, a.description			
+		FROM 
+			ms_menu a
+			inner join ms_rolemenu b on a.menucode=b.menucode
+			inner join ms_user c on b.rolecode=c.rolecode
+		WHERE 
+			a.systemmenu =1 and a.deleted=0 and b.deleted=0 and c.deleted=0 and c.usercode=#userCode# and a.parentMenuCode=#parentMenuCode# 
+			order by a.menuOrder, a.menuCode
+	</select>	
+	
+	<select id="selectUserMenu2" resultMap="menuResult" parameterClass="com.benclaus.koperasi.model.usm.User">
+		SELECT DISTINCT
+			a.menuCode, a.parentMenuCode, a.name, a.menuType, a.menuLevel, a.menuOrder, a.systemMenu, a.command, a.description			
+		FROM 
+			ms_menu a
+			inner join ms_rolemenu b on a.menucode=b.menucode
+		WHERE 
+			a.systemmenu =1 and a.deleted=0 and b.deleted=0 and b.ROLECODE=#roleCode# and a.parentMenuCode=#parentMenuCode#  
+			order by a.menuOrder, a.menuCode;
+	</select>
+    
+    
+	<select id="selectAllUserMenuCode" resultClass="java.lang.String" parameterClass="java.lang.String">
+		SELECT DISTINCT 
+			a.menuCode 
+		FROM 
+			ms_menu a
+			inner join ms_rolemenu b on a.menucode=b.menucode
+			inner join ms_user c on b.rolecode=c.rolecode
+		WHERE 
+			 a.deleted=0 and b.deleted=0 and c.deleted=0 and c.usercode=#value#
+	</select>
+	<select id="selectUserMenuCode" resultClass="java.lang.String" parameterClass="java.lang.String">
+		SELECT DISTINCT 
+			a.menuCode 
+		FROM 
+			ms_menu a
+			inner join ms_rolemenu b on a.menucode=b.menucode
+		WHERE 
+			 a.deleted=0 and b.deleted=0 and b.ROLECODE=#value#
+	</select>
+	    
+</sqlMap>
+

@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<!DOCTYPE form-validation PUBLIC
+          "-//Apache Software Foundation//DTD Commons Validator Rules Configuration 1.1.3//EN"
+          "http://jakarta.apache.org/commons/dtds/validator_1_1_3.dtd">
+          
+<form-validation>
+	<formset>
+        <form name="loginForm">
+			<field property="userCode" depends="required">
+				<arg0 key="form.userCode" />
+			</field>
+			<field property="password" depends="required">
+				<arg0 key="form.password" />
+			</field>
+		</form>
+		
+		<form name="pillarForm">
+			<field property="name" depends="required">
+				<arg0 key="form.pilar.name" />
+			</field>
+		</form>
+		<form name="companyForm">
+			<!-- <field property="pilarId" depends="required">
+				<arg0 key="form.pilar.name" />
+			</field> -->
+			<field property="name" depends="required">
+				<arg0 key="form.company.pilar" />
+			</field>
+			<field property="user" depends="required">
+				<arg0 key="form.company.spm" />
+			</field>
+			<field property="prefix" depends="required">
+				<arg0 key="form.company.prefix" />
+			</field>
+		</form>
+		
+		<form name="bookForm">
+			<!-- <field property="pilarId" depends="required">
+				<arg0 key="form.pilar.name" />
+			</field> -->
+			<field property="companyId" depends="required">
+				<arg0 key="form.book.company" />
+			</field>
+			<field property="bookId" depends="required">
+				<arg0 key="form.book.name" />
+			</field>
+			<field property="value" depends="required">
+				<arg0 key="form.book.value" />
+			</field>
+			<field property="valuePeriod" depends="required">
+				<arg0 key="form.book.period" />
+			</field>
+		</form>
+		
+		<form name="bookItemForm">
+			<field property="name" depends="required">
+				<arg0 key="form.bookItem.name" />
+			</field>
+		</form>
+		
+		<form name="mapForm">
+			<field property="cellFy" depends="required">
+				<arg0 key="form.mapping.cellFy" />
+			</field>
+			<field property="cellYtd" depends="required">
+				<arg0 key="form.mapping.cellYtd" />
+			</field>
+			<field property="formula" depends="required">
+				<arg0 key="form.mapping.formula" />
+			</field>
+		</form>
+		<!-- <form name="planForm1St">
+			<field property="usercode" depends="required">
+				<arg0 key="form.plan.spm" />
+			</field>
+			<field property="companyId" depends="required">
+				<arg0 key="form.plan.company" />
+			</field>
+			<field property="year" depends="required">
+				<arg0 key="form.plan.year" />
+			</field>
+		</form> -->
+		<form name="planForm">
+			<field property="year" depends="required">
+				<arg0 key="form.plan.year" />
+			</field>
+			<field property="companyId" depends="required">
+				<arg0 key="form.plan.company" />
+			</field>
+			
+		</form>
+		
+		<form name="forecastForm">
+			<field property="year" depends="required">
+				<arg0 key="form.plan.year" />
+			</field>
+			<field property="companyId" depends="required">
+				<arg0 key="form.plan.company" />
+			</field>
+			
+		</form>
+		
+		<form name="userForm">
+			<field property="userCode" depends="required">
+				<arg0 key="form.user.userCode" />
+			</field>
+			<field property="firstName" depends="required">
+				<arg0 key="form.user.firstName" />
+			</field>
+			<field property="mobile" depends="required">
+				<arg0 key="form.user.mobile" />
+			</field>
+			<field property="emailAddress" depends="required">
+				<arg0 key="form.user.email" />
+			</field>
+		</form>
+		
+		
+		
+		
+		
+		
+		
+		<!-- <form name="mesinForm">
+			<field property="ip" depends="required">
+				<arg0 key="form.mesin.ip" />
+			</field>
+			<field property="bagian" depends="required">
+                <arg0 key="form.mesin.bagian" />
+            </field>
+            <field property="terminal" depends="required">
+                <arg0 key="form.mesin.terminal" />
+            </field>
+            <field property="userid" depends="required">
+                <arg0 key="form.mesin.user" />
+            </field>
+            <field property="userpass" depends="required">
+                <arg0 key="form.mesin.password" />
+            </field>
+		</form>
+		
+		<form name="calcForm">
+			<field property="month" depends="required">
+				<arg0 key="form.calcAbsen.month" />
+			</field>
+			<field property="year" depends="required">
+				<arg0 key="form.calcAbsen.year" />
+			</field>
+		</form>
+		<form name="reportForm">
+			<field property="month" depends="required">
+				<arg0 key="form.calcAbsen.month" />
+			</field>
+			<field property="year" depends="required">
+				<arg0 key="form.calcAbsen.year" />
+			</field>
+		</form>
+		<form name="summaryReportForm">
+			<field property="year" depends="required">
+				<arg0 key="form.calcAbsen.year" />
+			</field>
+		</form>
+		<form name="absenForm">
+			<field property="tglKerja" depends="required">
+				<arg0 key="form.inputAbsen.tglKerja" />
+			</field>
+			<field property="jam" depends="required">
+				<arg0 key="form.inputAbsen.jamAbsen" />
+			</field>
+			<field property="menit" depends="required">
+				<arg0 key="form.inputAbsen.jamAbsen" />
+			</field>
+			<field property="detik" depends="required">
+				<arg0 key="form.inputAbsen.jamAbsen" />
+			</field>
+		</form>
+		<form name="uploadForm">
+            <field property="startDate" depends="required">
+                <arg0 key="form.uploadAbsen.startDate" />
+            </field>
+            <field property="endDate" depends="required">
+                <arg0 key="form.uploadAbsen.endDate" />
+            </field>
+        </form>
+        <form name="skipEmpForm">
+			<field property="employeeNo" depends="required">
+				<arg0 key="form.calcAbsen.month" />
+			</field>
+			<field property="firstName" depends="required">
+				<arg0 key="form.calcAbsen.year" />
+			</field>
+		</form> -->
+		<!-- 
+		<form name="materialForm">
+			<field property="materialCode" depends="required">
+				<arg0 key="form.material.materialCode" />
+			</field>
+			<field property="description" depends="required">
+				<arg0 key="form.material.description" />
+				<arg1 name="maxlength" key="${var:maxlength}" resource="false" />
+				<var>
+					<var-name>maxlength</var-name>
+					<var-value>256</var-value>
+				</var>
+			</field>
+			<field property="buyingPrice" depends="required,bigDecimal">
+				<arg0 key="form.material.buyingPrice" />
+				<arg1 name="bigDecimal" key="${var:base}" resource="false" />
+				<arg2 name="bigDecimal" key="${var:fraction}" resource="false" />
+				<var>
+					<var-name>base</var-name>
+					<var-value>10</var-value>
+				</var>
+				<var>
+					<var-name>fraction</var-name>
+					<var-value>2</var-value>
+				</var>
+			</field>
+			<field property="sellingPrice" depends="required,bigDecimal">
+				<arg0 key="form.material.sellingPrice" />
+				<arg1 name="bigDecimal" key="${var:base}" resource="false" />
+				<arg2 name="bigDecimal" key="${var:fraction}" resource="false" />
+				<var>
+					<var-name>base</var-name>
+					<var-value>10</var-value>
+				</var>
+				<var>
+					<var-name>fraction</var-name>
+					<var-value>2</var-value>
+				</var>
+			</field>
+			<field property="safetyStock" depends="required,integer">
+				<arg0 key="form.material.safetyStock" />
+			</field>
+			<field property="orderLevel" depends="required,integer">
+				<arg0 key="form.material.orderLevel" />
+			</field>
+		</form>
+		<form name="companyForm">
+			<field property="companyCode" depends="required">
+				<arg0 key="form.company.companyCode" />
+			</field>
+			<field property="name" depends="required">
+				<arg0 key="form.company.name" />
+			</field>
+			<field property="address" depends="required">
+				<arg0 key="form.company.address" />
+			</field>
+			<field property="city" depends="required">
+				<arg0 key="form.company.city" />
+			</field>
+			<field property="state" depends="required">
+				<arg0 key="form.company.state" />
+			</field>
+			<field property="country" depends="required">
+				<arg0 key="form.company.country" />
+			</field>
+			<field property="postCode" depends="required,integer">
+				<arg0 key="form.company.postCode" />
+			</field>
+			<field property="phoneNumber" depends="required">
+				<arg0 key="form.company.phoneNumber" />
+			</field>
+			<field property="faxNumber" depends="required">
+				<arg0 key="form.company.faxNumber" />
+			</field>
+		</form>
+		
+		<form name="bomForm">
+			<field property="childMaterialCode" depends="required">
+				<arg0 key="form.bom.materialCode" />
+			</field>
+			<field property="quantity" depends="required,integer">
+				<arg0 key="form.bom.qty" />
+			</field>
+		</form>
+		<form name="updateFmlsForm">
+			<field property="rackId" depends="required">
+				<arg0 key="form.wh.rackId" />
+			</field>
+			<field property="quantity" depends="required,integer">
+				<arg0 key="form.stock.quantity" />
+			</field>
+		</form>
+		<form name="warehouseForm">
+			<field property="warehouseId" depends="required">
+				<arg0 key="form.wh.warehouseId" />
+			</field>
+			<field property="name" depends="required">
+				<arg0 key="form.wh.name" />
+			</field>
+			<field property="address" depends="required">
+				<arg0 key="form.wh.address" />
+			</field>
+			<field property="city" depends="required">
+				<arg0 key="form.wh.city" />
+			</field>
+			<field property="country" depends="required">
+				<arg0 key="form.wh.country" />
+			</field>
+			<field property="state" depends="required">
+				<arg0 key="form.wh.state" />
+			</field>
+			<field property="postCode" depends="required">
+				<arg0 key="form.wh.postCode" />
+			</field>
+			<field property="phoneNumber" depends="required">
+				<arg0 key="form.wh.phoneNumber" />
+			</field>
+		</form>
+		<form name="profileForm">
+			<field property="userCode" depends="required">
+				<arg0 key="form.user.userCode" />
+			</field>
+			<field property="firstName" depends="required">
+				<arg0 key="form.user.firstName" />
+			</field>
+			<field property="mobile" depends="required">
+				<arg0 key="form.user.mobile" />
+			</field>
+			<field property="emailAddress" depends="required,email">
+				<arg0 key="form.user.email" />
+			</field>
+		</form>
+		
+		<form name="purchaseOrderForm">
+			<field property="orderNumber" depends="required">
+				<arg0 key="form.po.orderNumber" />
+			</field>
+		</form>
+		<form name="topForm">
+			<field property="type" depends="required">
+				<arg0 key="form.top.type" />
+			</field>
+			<field property="description" depends="required">
+				<arg0 key="form.top.description" />
+			</field>
+		</form>
+		<form name="roleForm">
+			<field property="roleCode" depends="required">
+				<arg0 key="form.roleCode" />
+			</field>
+			<field property="description" depends="maxlength">
+				<arg0 key="form.description" />
+				<arg1 name="maxlength" key="${var:maxlength}" resource="false" />
+				<var>
+					<var-name>maxlength</var-name>
+					<var-value>128</var-value>
+				</var>
+			</field>
+		</form>
+		<form name="restockForm">
+			<field property="companyCode" depends="required">
+				<arg0 key="form.company.companyCode" />
+			</field>
+			<field property="top" depends="required">
+				<arg0 key="form.top.title" />
+			</field>
+		</form>
+		 -->
+	</formset>
+</form-validation>

@@ -1,0 +1,387 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap
+PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="DataSQL">
+	
+	
+	<resultMap id="planResult" class="com.benclaus.koperasi.model.Data">
+		<result property="id" column="id" />
+		<result property="bookItem.id" column="bookItem_id" />
+		<result property="bookItem.name" column="bookItem_name" />
+		<result property="bookItem.book.id" column="bookItem_book_id" />
+		<result property="bookItem.book.name" column="bookItem_book_name" />
+		<result property="company.id" column="company_id" />
+		<result property="company.name" column="company_name" />
+		<result property="company.prefix" column="company_prefix" />
+		<result property="company.user.userCode" column="company_usercode" />
+		<result property="year" column="year" />
+		<result property="plan1" column="plan1" />
+		<result property="plan2" column="plan2" />
+		<result property="plan3" column="plan3" />
+		<result property="plan4" column="plan4" />
+		<result property="plan5" column="plan5" />
+		<result property="plan6" column="plan6" />
+		<result property="plan7" column="plan7" />
+		<result property="plan8" column="plan8" />
+		<result property="plan9" column="plan9" />
+		<result property="plan10" column="plan10" />
+		<result property="plan11" column="plan11" />
+		<result property="plan12" column="plan12" />
+	</resultMap>
+	
+	<resultMap id="actualResult" class="com.benclaus.koperasi.model.Data">
+		<result property="id" column="id" />
+		<result property="bookItem.id" column="bookItem_id" />
+		<result property="bookItem.name" column="bookItem_name" />
+		<result property="bookItem.book.id" column="bookItem_book_id" />
+		<result property="bookItem.book.name" column="bookItem_book_name" />
+		<result property="company.id" column="company_id" />
+		<result property="company.name" column="company_name" />
+		<result property="company.prefix" column="company_prefix" />
+		<result property="company.user.userCode" column="company_usercode" />
+		<result property="year" column="year" />
+		<result property="actual1" column="actual1" />
+		<result property="actual2" column="actual2" />
+		<result property="actual3" column="actual3" />
+		<result property="actual4" column="actual4" />
+		<result property="actual5" column="actual5" />
+		<result property="actual6" column="actual6" />
+		<result property="actual7" column="actual7" />
+		<result property="actual8" column="actual8" />
+		<result property="actual9" column="actual9" />
+		<result property="actual10" column="actual10" />
+		<result property="actual11" column="actual11" />
+		<result property="actual12" column="actual12" />
+	</resultMap>
+	
+	<resultMap id="forecastResult" class="com.benclaus.koperasi.model.Forecast">
+		<result property="id" column="id" />
+		<result property="bookItem.id" column="bookItem_id" />
+		<result property="bookItem.name" column="bookItem_name" />
+		<result property="bookItem.book.id" column="bookItem_book_id" />
+		<result property="bookItem.book.name" column="bookItem_book_name" />
+		<result property="company.id" column="company_id" />
+		<result property="company.name" column="company_name" />
+		<result property="company.user.userCode" column="company_usercode" />
+		<result property="year" column="year" />
+		<result property="amount" column="amount" />
+	</resultMap>
+	
+	
+	
+	
+	
+	<!-- ==================================================================== BUSINESS PLAN START =================  -->
+	<select id="getDataYearList" resultMap="AllSQL.labelValueResult">
+		SELECT DISTINCT a.* from (SELECT DISTINCT year label, year value FROM `Data` 
+		UNION ALL
+		SELECT DISTINCT year label, year value FROM `Forecast` )a ORDER BY a.label;
+	</select>
+	
+	<select id="searchPlan" resultMap="planResult">
+		SELECT d.id, d.book_item_id bookItem_id, bi.name as bookItem_name, b.id as bookItem_book_id, b.book_name bookItem_book_name,
+			d.company_id, c.company_name as company_name, c.usercode as company_usercode, c.prefix as company_prefix, d.`year`,
+		  d.plan1, d.plan2, d.plan3, d.plan4, d.plan5, d.plan6, d.plan7, d.plan8, d.plan9, d.plan10, d.plan11, d.plan12
+			FROM `Data` d
+			INNER JOIN Book_items bi ON bi.id = d.book_item_id
+			INNER JOIN Books b on b.id = bi.book_id
+			inner JOIN Company c ON c.id = d.company_id
+		<dynamic prepend=" WHERE">
+			<isNotEmpty property="usercode" prepend="AND">
+				c.usercode = #usercode#
+			</isNotEmpty>
+			<isNotEqual property="companyId"  compareValue="0" prepend="AND">
+				c.id = #companyId#
+			</isNotEqual>
+			<isNotEqual property="bookId" compareValue="0" prepend="AND">
+				b.id = #bookId#
+			</isNotEqual>
+			<isNotEqual property="bookItemId" compareValue="0" prepend="AND">
+				bi.id = #bookItemId#
+			</isNotEqual>
+			<isNotEmpty property="fromYear" prepend="AND">
+				d.year >= #fromYear#
+			</isNotEmpty>
+			<isNotEmpty property="toYear" prepend="AND">
+				<![CDATA[ 
+				d.year <= #toYear#
+				]]>
+			</isNotEmpty>
+		</dynamic>
+		ORDER BY c.pilar_id, c.id, d.year, b.id, bi.id
+	</select>
+	
+	<select id="searchPlanSize" resultClass="java.lang.Integer">
+		SELECT count(*)
+		FROM `Data` d
+			INNER JOIN Book_items bi ON bi.id = d.book_item_id
+			INNER JOIN Books b on b.id = bi.book_id
+			inner JOIN Company c ON c.id = d.company_id
+		<dynamic prepend=" WHERE">
+			<isNotEmpty property="usercode" prepend="AND">
+				c.usercode = #usercode#
+			</isNotEmpty>
+			<isNotEqual property="companyId"  compareValue="0" prepend="AND">
+				c.id = #companyId#
+			</isNotEqual>
+			<isNotEqual property="bookId" compareValue="0" prepend="AND">
+				b.id = #bookId#
+			</isNotEqual>
+			<isNotEqual property="bookItemId" compareValue="0" prepend="AND">
+				bi.id = #bookItemId#
+			</isNotEqual>
+			<isNotEmpty property="fromYear" prepend="AND">
+				d.year >= #fromYear#
+			</isNotEmpty>
+			<isNotEmpty property="toYear" prepend="AND">
+				<![CDATA[ 
+				d.year <= #toYear#
+				]]>
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<select id="getPlan" resultMap="planResult">
+		SELECT d.id, d.book_item_id bookItem_id, bi.name as bookItem_name, b.id as bookItem_book_id, b.book_name bookItem_book_name,
+			d.company_id, c.company_name as company_name, c.usercode as company_usercode, c.prefix as company_prefix, d.`year`,
+		  d.plan1, d.plan2, d.plan3, d.plan4, d.plan5, d.plan6, d.plan7, d.plan8, d.plan9, d.plan10, d.plan11, d.plan12
+			FROM `Data` d
+			INNER JOIN Book_items bi ON bi.id = d.book_item_id
+			INNER JOIN Books b on b.id = bi.book_id
+			inner JOIN Company c ON c.id = d.company_id
+		WHERE d.id = #value#	
+	</select>
+	
+	<update id="updatePlan" parameterClass="com.benclaus.koperasi.model.Data">
+		UPDATE `Data` SET plan1=#plan1#, plan2=#plan2#, plan3=#plan3#, plan4=#plan4#, plan5=#plan5#, 
+			plan6=#plan6#, plan7=#plan7#, plan8=#plan8#, plan9=#plan9#, plan10=#plan10#, plan11=#plan11#, plan12=#plan12#
+		WHERE id = #id#
+	</update>
+	
+	<insert id="insertPlan" parameterClass="java.util.Map">
+		INSERT INTO `Data` (company_id, book_item_id, year) 
+			select #company# as company, bi.id, #year# as year
+			from Book_items bi 
+			<dynamic prepend=" WHERE">
+				<isNotEqual property="bookItem" compareValue="0" prepend="AND">
+					bi.book_id = #bookItem#
+				</isNotEqual>
+			</dynamic>
+	</insert>
+	
+	<select id="getNewInsertedPlan" resultMap="planResult">
+		SELECT d.id, d.book_item_id bookItem_id, bi.name as bookItem_name, b.id as bookItem_book_id, b.book_name bookItem_book_name,
+			d.company_id, c.company_name as company_name, c.usercode as company_usercode, c.prefix as company_prefix, d.`year`,
+		  d.plan1, d.plan2, d.plan3, d.plan4, d.plan5, d.plan6, d.plan7, d.plan8, d.plan9, d.plan10, d.plan11, d.plan12
+			FROM `Data` d
+			INNER JOIN Book_items bi ON bi.id = d.book_item_id
+			INNER JOIN Books b on b.id = bi.book_id
+			inner JOIN Company c ON c.id = d.company_id
+			<dynamic prepend=" WHERE">
+				<isNotEmpty property="company" prepend="AND">
+					d.company_id = #company#
+				</isNotEmpty>
+				<isNotEmpty property="year" prepend="AND">
+					d.`year` = #year#
+				</isNotEmpty>
+				<isNotEqual property="bookItem" compareValue="0" prepend="AND">
+					bi.book_id = #bookItem#
+				</isNotEqual>
+			</dynamic>
+	</select>
+	
+	
+	<!-- ==================================================================== BUSINESS PLAN END =================  -->
+	
+	
+	
+	
+	<!-- ==================================================================== BUSINESS FORECAST START =================  -->
+	<select id="getForecastYearList" resultMap="AllSQL.labelValueResult">
+		SELECT DISTINCT year label, year value FROM `Forecast` ORDER BY year;
+	</select>
+	
+	<select id="searchForecast" resultMap="forecastResult">
+		SELECT f.id, f.book_item_id bookItem_id, bi.name as bookItem_name, b.id as bookItem_book_id, b.book_name bookItem_book_name,
+			f.company_id, c.company_name as company_name, c.usercode as company_usercode, f.`year`, f.amount
+			FROM `Forecast` f
+			INNER JOIN Book_items bi ON bi.id = f.book_item_id
+			INNER JOIN Books b on b.id = bi.book_id
+			inner JOIN Company c ON c.id = f.company_id
+		<dynamic prepend=" WHERE">
+			<isNotEmpty property="usercode" prepend="AND">
+				c.usercode = #usercode#
+			</isNotEmpty>
+			<isNotEqual property="companyId"  compareValue="0" prepend="AND">
+				c.id = #companyId#
+			</isNotEqual>
+			<isNotEqual property="bookId" compareValue="0" prepend="AND">
+				b.id = #bookId#
+			</isNotEqual>
+			<isNotEqual property="bookItemId" compareValue="0" prepend="AND">
+				bi.id = #bookItemId#
+			</isNotEqual>
+			<isNotEmpty property="fromYear" prepend="AND">
+				f.year >= #fromYear#
+			</isNotEmpty>
+			<isNotEmpty property="toYear" prepend="AND">
+				<![CDATA[ 
+				f.year <= #toYear#
+				]]>
+			</isNotEmpty>
+		</dynamic>
+		ORDER BY c.pilar_id, c.id, b.id, bi.id
+	</select>
+	
+	<select id="searchForecastSize" resultClass="java.lang.Integer">
+		SELECT count(*)
+		FROM `Forecast` f
+			INNER JOIN Book_items bi ON bi.id = f.book_item_id
+			INNER JOIN Books b on b.id = bi.book_id
+			inner JOIN Company c ON c.id = f.company_id
+		<dynamic prepend=" WHERE">
+			<isNotEmpty property="usercode" prepend="AND">
+				c.usercode = #usercode#
+			</isNotEmpty>
+			<isNotEqual property="companyId"  compareValue="0" prepend="AND">
+				c.id = #companyId#
+			</isNotEqual>
+			<isNotEqual property="bookId" compareValue="0" prepend="AND">
+				b.id = #bookId#
+			</isNotEqual>
+			<isNotEqual property="bookItemId" compareValue="0" prepend="AND">
+				bi.id = #bookItemId#
+			</isNotEqual>
+			<isNotEmpty property="fromYear" prepend="AND">
+				f.year >= #fromYear#
+			</isNotEmpty>
+			<isNotEmpty property="toYear" prepend="AND">
+				<![CDATA[ 
+				f.year <= #toYear#
+				]]>
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<select id="getForecast" resultMap="forecastResult">
+		SELECT f.id, f.book_item_id bookItem_id, bi.name as bookItem_name, b.id as bookItem_book_id, b.book_name bookItem_book_name,
+			f.company_id, c.company_name as company_name, c.usercode as company_usercode, f.`year`,
+		  f.amount
+			FROM `Forecast` f
+			INNER JOIN Book_items bi ON bi.id = f.book_item_id
+			INNER JOIN Books b on b.id = bi.book_id
+			inner JOIN Company c ON c.id = f.company_id
+		WHERE d.id = #value#	
+	</select>
+	
+	<update id="updateForecast" parameterClass="com.benclaus.koperasi.model.Forecast">
+		UPDATE `Forecast` SET amount=#amount#
+		WHERE id = #id#
+	</update>
+	
+	<insert id="insertForecast" parameterClass="java.util.Map">
+		INSERT INTO `Forecast` (company_id, book_item_id, year) 
+			select #company# as company, bi.id, #year# as year
+			from Book_items bi 
+			<dynamic prepend=" WHERE">
+				<isNotEqual property="bookItem" compareValue="0" prepend="AND">
+					bi.book_id = #bookItem#
+				</isNotEqual>
+			</dynamic>
+	</insert>
+	
+	<select id="getNewInsertedForecast" resultMap="forecastResult">
+		SELECT f.id, f.book_item_id bookItem_id, bi.name as bookItem_name, b.id as bookItem_book_id, b.book_name bookItem_book_name,
+			f.company_id, c.company_name as company_name, c.usercode as company_usercode, f.`year`,
+		  f.amount
+			FROM `Forecast` f
+			INNER JOIN Book_items bi ON bi.id = f.book_item_id
+			INNER JOIN Books b on b.id = bi.book_id
+			inner JOIN Company c ON c.id = f.company_id
+			<dynamic prepend=" WHERE">
+				<isNotEmpty property="company" prepend="AND">
+					f.company_id = #company#
+				</isNotEmpty>
+				<isNotEmpty property="year" prepend="AND">
+					f.`year` = #year#
+				</isNotEmpty>
+				<isNotEqual property="bookItem" compareValue="0" prepend="AND">
+					bi.book_id = #bookItem#
+				</isNotEqual>
+			</dynamic>
+	</select>
+	
+	
+	<!-- ==================================================================== BUSINESS FORECAST END =================  -->
+	
+	
+	
+	<select id="searchActual" resultMap="actualResult">
+		SELECT d.id, d.book_item_id bookItem_id, bi.name as bookItem_name, b.id as bookItem_book_id, b.book_name bookItem_book_name,
+			d.company_id, c.company_name as company_name, c.usercode as company_usercode, c.prefix as company_prefix, d.`year`,
+		  d.actual1, d.actual2, d.actual3, d.actual4, d.actual5, d.actual6, d.actual7, d.actual8, d.actual9, d.actual10, d.actual11, d.actual12
+			FROM `Data` d
+			INNER JOIN Book_items bi ON bi.id = d.book_item_id
+			INNER JOIN Books b on b.id = bi.book_id
+			inner JOIN Company c ON c.id = d.company_id
+		<dynamic prepend=" WHERE">
+			<isNotEmpty property="usercode" prepend="AND">
+				c.usercode = #usercode#
+			</isNotEmpty>
+			<isNotEqual property="companyId"  compareValue="0" prepend="AND">
+				c.id = #companyId#
+			</isNotEqual>
+			<isNotEqual property="bookId" compareValue="0" prepend="AND">
+				b.id = #bookId#
+			</isNotEqual>
+			<isNotEqual property="bookItemId" compareValue="0" prepend="AND">
+				bi.id = #bookItemId#
+			</isNotEqual>
+			<isNotEmpty property="fromYear" prepend="AND">
+				d.year >= #fromYear#
+			</isNotEmpty>
+			<isNotEmpty property="toYear" prepend="AND">
+				<![CDATA[ 
+				d.year <= #toYear#
+				]]>
+			</isNotEmpty>
+		</dynamic>
+		ORDER BY c.pilar_id, c.id, d.year, b.id, bi.id
+	</select>
+	
+	<select id="searchActualSize" resultClass="java.lang.Integer">
+		SELECT count(*)
+		FROM `Data` d
+			INNER JOIN Book_items bi ON bi.id = d.book_item_id
+			INNER JOIN Books b on b.id = bi.book_id
+			inner JOIN Company c ON c.id = d.company_id
+		<dynamic prepend=" WHERE">
+			<isNotEmpty property="usercode" prepend="AND">
+				c.usercode = #usercode#
+			</isNotEmpty>
+			<isNotEqual property="companyId"  compareValue="0" prepend="AND">
+				c.id = #companyId#
+			</isNotEqual>
+			<isNotEqual property="bookId" compareValue="0" prepend="AND">
+				b.id = #bookId#
+			</isNotEqual>
+			<isNotEqual property="bookItemId" compareValue="0" prepend="AND">
+				bi.id = #bookItemId#
+			</isNotEqual>
+			<isNotEmpty property="fromYear" prepend="AND">
+				d.year >= #fromYear#
+			</isNotEmpty>
+			<isNotEmpty property="toYear" prepend="AND">
+				<![CDATA[ 
+				d.year <= #toYear#
+				]]>
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	
+	
+</sqlMap>
+

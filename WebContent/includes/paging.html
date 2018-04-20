@@ -1,0 +1,14 @@
+<table width="100%">
+	<tbody>
+		<tr>
+			<td class="conText">
+				<input type="button" name="btnFirstPage" value="&lt;&lt;" onclick="doFirstPage(this.form)">
+				<input type="button" name="btnPrevPage" value="&lt;" onclick="doPrevPage(this.form)">
+				<input type="button" name="btnNextPage" value="&gt;" onclick="doNextPage(this.form)">
+				<input type="button" name="btnLastPage" value="&gt;&gt;" onclick="doLastPage(this.form)">
+				&nbsp;<bean:message key="form.page" ></bean:message>&nbsp;<html:text property="pageIndex" name="DataList" onchange="doPageChanged(this.form)" maxlength="9" size="5"></html:text>
+				&nbsp;<bean:message key="form.of" ></bean:message>&nbsp;<c:out value="${DataList.totalPage}" />&nbsp;(<c:out value="${DataList.totalSize}" />)&nbsp;
+				<input type="button" name="btnChangePage" value="Go" onclick="doChangePage(this.form)"></td>
+		</tr>
+	</tbody>
+</table>

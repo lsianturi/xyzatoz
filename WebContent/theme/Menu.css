@@ -1,0 +1,37 @@
+/* Style for tree item text */
+.treenormal {
+	font-family: Tahoma, Verdana, Arial;
+	font-size: 12px;
+	color: #000000;
+	background-color: #E5E5E5;
+	text-decoration: none;
+	width: 100%;
+}
+.treeopened {
+	font-family: Tahoma, Verdana, Arial;
+	font-weight: bold;
+	font-size: 12px;
+	color: #000000;
+	background-color: #E5E5E5;
+	text-decoration: none;
+	width: 100%;
+}
+a:link {
+	color: #000000;
+	text-decoration: none;
+}
+a:visited {
+	color: #000000;
+	text-decoration: none;	
+}
+a:hover {
+	color: #000000;
+	text-decoration: none;	
+}
+a:active {
+	color: #000000;
+	text-decoration: none;	
+}
+body {
+	background-color: #E5E5E5;
+}

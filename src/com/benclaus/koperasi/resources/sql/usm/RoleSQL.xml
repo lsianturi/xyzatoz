@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap
+PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+ 
+<sqlMap namespace="RoleSQL">
+    
+    <resultMap id="roleResult" class="com.benclaus.koperasi.model.usm.Role">
+		<result property="roleCode" column="roleCode"/>
+		<result property="description" column="description"/>		
+	</resultMap>
+	
+	<resultMap id="roleMenuResult" class="com.benclaus.koperasi.model.usm.RoleMenu">
+    	<result property="menuCode" column="menuCode"/>
+    	<result property="description" column="description"/>
+		<!--<result property="name" column="name"/>
+    	<result property="child" column="menuCode" select="getChildCount"/>-->		
+	</resultMap>
+	
+	<select id="getPagingRole" resultMap="roleResult" parameterClass="java.util.Map">
+		<dynamic>	
+			SELECT 
+				roleCode, description
+			FROM 
+				ms_role 
+			WHERE 
+				statusid=1 
+			<isNotEmpty prepend = " AND " property="searchValue">
+				UCASE($searchColumn$) LIKE '%' CONCAT #searchValue# CONCAT '%'
+			</isNotEmpty>
+			ORDER BY
+				roleCode
+		</dynamic>			
+    </select>
+    
+    <select id="getCountRowRole" resultClass="java.lang.Integer" parameterClass="java.util.Map">
+		<dynamic>    
+			SELECT 
+				COUNT(*) 
+			FROM 
+				ms_role 
+			WHERE 
+				statusid=1
+			<isNotEmpty prepend = " AND " property="searchValue">
+				UCASE($searchColumn$) LIKE '%' CONCAT #searchValue# CONCAT '%'
+			</isNotEmpty>
+		</dynamic>
+    </select>
+    
+	<insert id="insertRole" parameterClass="com.benclaus.koperasi.model.usm.Role">
+    	INSERT INTO 
+    		ms_role(roleCode, description, createdBy, statusid) 
+    	VALUES
+    		(#roleCode#, #description#, #createdBy#, 1)
+    </insert>
+
+	<update id="updateRole" parameterClass="com.benclaus.koperasi.model.usm.Role">
+		UPDATE 
+			ms_role 
+		SET 
+			DESCRIPTION = #description# 
+		WHERE 
+			ROLECODE = #roleCode# AND statusid=1
+    </update>
+
+	<update id="deleteRole" parameterClass="com.benclaus.koperasi.model.usm.Role">
+    	UPDATE 
+    		ms_role 
+    	SET 
+    		statusid = 0 
+    	WHERE 
+    		ROLECODE = #roleCode#
+    </update>
+
+
+	<update id="deleteRoleMenuAll" parameterClass="com.benclaus.koperasi.model.usm.Role">
+    	UPDATE 
+    		ms_rolemenu
+    	SET 
+    		DELETED = 1 
+    	WHERE 
+    		ROLECODE = #roleCode#
+    </update>    
+    
+	<select id="getRole" resultMap="roleResult" parameterClass="java.lang.String">
+		SELECT 
+			roleCode, description
+		FROM 
+			ms_role 
+		WHERE 
+			roleCode = #value# AND statusid=1 
+		ORDER BY 
+			roleCode
+    </select>   
+    <select id="getRoles" resultMap="roleResult" parameterClass="java.lang.String">
+		SELECT 
+			roleCode, description
+		FROM 
+			ms_role 
+		WHERE 
+			statusid=1 
+		ORDER BY 
+			roleCode
+    </select>    
+    
+	<select id="getRoleMenuHas" resultMap="roleMenuResult" parameterClass="com.benclaus.koperasi.model.usm.RoleMenu">
+    	SELECT 
+    		rm.ROLECODE, m.menuCode, m.description 
+    	FROM 
+    		ms_rolemenu rm, ms_menum 
+    	WHERE 
+    		m.deleted=0 AND m.menuCode = rm.menuCode AND rm.ROLECODE = #roleCode# AND  m.PARENTMENUCODE = #parentMenuCode#
+	</select>    
+    
+	<select id="getRoleMenuNoHas" resultMap="roleMenuResult" parameterClass="com.benclaus.koperasi.model.usm.RoleMenu">
+		SELECT 
+			menuCode, description 
+		FROM 
+			ms_menu
+		WHERE 
+			deleted=0 AND PARENTMENUCODE = #parentMenuCode# AND menuCode 
+		NOT IN 
+			(SELECT 
+				menuCode 
+			 FROM 
+			 	ms_rolemenu 
+			 WHERE 
+			 	ROLECODE=#roleCode#) 
+	</select>
+	
+	<insert id="insertRoleMenu" parameterClass="com.benclaus.koperasi.model.usm.RoleMenu">
+    	INSERT INTO 
+    		ms_rolemenu(ROLECODE, menuCode, CREATEDBY, DELETED) 
+    	VALUES
+    		(#roleCode#, #menuCode#, #createdBy#, 0)
+	</insert>
+
+	<delete id="deleteRoleMenu" parameterClass="com.benclaus.koperasi.model.usm.RoleMenu">
+    	DELETE FROM 
+    		ms_rolemenu 
+    	WHERE 
+    		ROLECODE = #roleCode# AND menuCode = #menuCode#
+	</delete>
+    
+	
+	<select id="getDeleteRoleMenu" resultMap="roleMenuResult" parameterClass="com.benclaus.koperasi.model.usm.RoleMenu">
+		SELECT 
+			rm.ROLECODE, rm.menuCode, m.PARENTMENUCODE, m.MENULEVEL, m.description 
+		FROM 
+			ms_rolemenu rm, ms_menum 
+		WHERE 
+			rm.menuCode = m.menuCode AND rm.ROLECODE = #roleCode# AND PARENTMENUCODE = #menuCode#
+	</select>	
+	
+    
+    <select id="getChildCountHas" resultClass="java.lang.Integer">
+		select 
+			count(*) 
+		from 
+			ms_rolemenu t1, ms_menut2 
+		where 
+			t1.menucode = t2.menucode and t1.rolecode = #roleCode# and t2.parentmenucode = #menuCode#
+    </select>
+    
+</sqlMap>
+

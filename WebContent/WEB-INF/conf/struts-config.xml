@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN"
+                               "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+  -->
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.2//EN" 
+		"http://struts.apache.org/dtds/struts-config_1_2.dtd">
+
+<struts-config>
+	<form-beans>
+		<form-bean name="nullForm" type="org.apache.struts.validator.DynaValidatorForm"></form-bean>
+	
+		<form-bean name="loginForm" type="org.apache.struts.validator.DynaValidatorForm">
+			<form-property name="userCode" type="java.lang.String" />
+			<form-property name="password" type="java.lang.String" />
+			<form-property name="jsPassword" type="java.lang.String" />
+			<form-property name="loginButton" type="java.lang.String" />
+		</form-bean>
+		
+		<form-bean name="passwordForm" type="org.apache.struts.validator.DynaValidatorForm">
+			<form-property name="dispatch" type="java.lang.String" />
+			<form-property name="userCode" type="java.lang.String" />
+			<form-property name="password" type="java.lang.String" />
+			<form-property name="newPassword" type="java.lang.String" />
+		</form-bean>
+		
+		<form-bean name="profileForm" type="org.apache.struts.validator.DynaValidatorForm">
+			<form-property name="dispatch" type="java.lang.String" />
+			<form-property name="userCode" type="java.lang.String" />
+			<form-property name="firstName" type="java.lang.String" />
+			<form-property name="lastName" type="java.lang.String" />
+			<form-property name="emailAddress" type="java.lang.String" />
+			<form-property name="mobile" type="java.lang.String" />
+			<form-property name="roleCode" type="java.lang.String" />
+			<form-property name="companyName" type="java.lang.String" />
+			<form-property name="statusLabel" type="java.lang.String" />
+		</form-bean>
+		
+		<form-bean name="homeForm" type="org.apache.struts.validator.DynaValidatorForm">
+			<form-property name="compId" type="java.lang.String" />
+		</form-bean>
+		
+	</form-beans>
+
+	<global-forwards>
+		<forward name="invalidPage" path="/invalidPage.jsp" />
+		<forward name="analyze" path="/analysis/analysis.do?dispatch=analyze" />
+	</global-forwards>
+
+	<action-mappings>
+		<action path="/home" name="homeForm" type="com.benclaus.koperasi.action.HomeAction" scope="request" parameter="dispatch" validate="false">
+			<forward name="continue" path="/home.jsp" />
+		</action>
+		<action path="/home/setCompany" name="nullForm" type="com.benclaus.koperasi.action.HomeAction" scope="request" parameter="dispatch" validate="false">
+			<forward name="continue" path="/home.jsp" />
+		</action>	
+		
+		<action path="/login" name="loginForm" type="com.benclaus.koperasi.action.LoginAction" scope="request" validate="false">
+			<forward name="success" path="/main.jsp" />
+			<forward name="fail" path="/login.jsp" />
+			<forward name="renewPassword" path="/usm/renewPassword.do?dispatch=update" />
+		</action>
+		
+		<action path="/logout" type="com.benclaus.koperasi.action.LogoutAction">
+			<forward name="continue" path="/logout.jsp"></forward>
+		</action>
+		
+		<action path="/usm/changePassword" name="passwordForm" type="com.benclaus.koperasi.action.usm.ChangePasswordDispatchAction" scope="request" parameter="dispatch" validate="false">
+			<forward name="continue" path="/usm/changePassword.jsp" />
+		</action>
+		<action path="/usm/profile" name="profileForm" type="com.benclaus.koperasi.action.usm.ProfileAction" scope="request" parameter="dispatch" validate="false">
+			<forward name="continue" path="/master/profile.jsp" />
+		</action>
+		
+		<action path="/usm/renewPassword" name="passwordForm" type="com.benclaus.koperasi.action.usm.RenewPasswordDispatchAction" scope="request" parameter="dispatch" validate="false">
+			<forward name="continue" path="/usm/login.jsp" />
+			<forward name="renewPassword" path="/usm/renewPassword.jsp" />
+		</action>
+	</action-mappings>
+
+	<message-resources parameter="com.benclaus.koperasi.resources.ApplicationResources" />
+
+	<plug-in className="org.apache.struts.validator.ValidatorPlugIn">
+		<set-property property="pathnames" value="/WEB-INF/conf/validator-rules.xml, /WEB-INF/conf/validation.xml" />
+	</plug-in>
+	
+</struts-config>

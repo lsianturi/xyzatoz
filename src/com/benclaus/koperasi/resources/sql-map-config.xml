@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMapConfig
+PUBLIC "-//ibatis.apache.org//DTD SQL Map Config 2.0//EN"
+"http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
+
+<sqlMapConfig>
+	<properties resource="database.properties" />
+	
+	<settings cacheModelsEnabled="true" enhancementEnabled="true"
+		lazyLoadingEnabled="true" errorTracingEnabled="true" maxRequests="128"
+		maxSessions="48" maxTransactions="32" useStatementNamespaces="true" />
+	<!-- 	
+	<settings cacheModelsEnabled="true" enhancementEnabled="true" 
+		  lazyLoadingEnabled="true" maxRequests="50" maxSessions="20"  
+		  maxTransactions="20" useStatementNamespaces="true" />
+		 -->
+	<transactionManager type="JDBC">
+		<dataSource type="SIMPLE">
+			<property name="JDBC.Driver" value="${jdbc.driver}" />
+			<property name="JDBC.ConnectionURL" value="${jdbc.url}" />
+			<property name="JDBC.Username" value="${jdbc.username}" />
+			<property name="JDBC.Password" value="${jdbc.password}" />
+			<!-- OPTIONAL PROPERTIES BELOW -->
+			<property name="Pool.MaximumActiveConnections" value="5" />
+			<property name="Pool.MaximumIdleConnections" value="3" />
+			<property name="Pool.MaximumCheckoutTime" value="120000"/>
+			<property name="Pool.TimeToWait" value="10000"/>
+			<property name="Pool.PingQuery" value="select 1 from dual"/>
+			<property name="Pool.PingEnabled" value="true"/>
+			<property name="Pool.PingConnectionsOlderThan" value="1000"/>
+			<property name="Pool.PingConnectionsNotUsedFor" value="1000"/>
+		</dataSource>
+	</transactionManager>
+
+	<!-- system module -->
+	<sqlMap resource="com/benclaus/koperasi/resources/sql/system/AllSQL.xml" />
+	<sqlMap resource="com/benclaus/koperasi/resources/sql/system/AuditTrailSQL.xml" />
+
+	<!-- user management module -->
+	<sqlMap resource="com/benclaus/koperasi/resources/sql/usm/UsmSQL.xml" />
+	<sqlMap resource="com/benclaus/koperasi/resources/sql/usm/MenuSQL.xml" />
+	<sqlMap resource="com/benclaus/koperasi/resources/sql/usm/RoleSQL.xml" />
+	<sqlMap resource="com/benclaus/koperasi/resources/sql/usm/UserSQL.xml" />
+	
+	<!-- absensi module -->
+	<sqlMap resource="com/benclaus/koperasi/resources/sql/app/ConfigSQL.xml" />
+	<sqlMap resource="com/benclaus/koperasi/resources/sql/app/DataSQL.xml" />
+	<sqlMap resource="com/benclaus/koperasi/resources/sql/app/ReportSQL.xml" />
+	<sqlMap resource="com/benclaus/koperasi/resources/sql/app/A3SQL.xml" />
+</sqlMapConfig>

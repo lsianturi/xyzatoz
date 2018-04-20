@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN"
+                               "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+  -->
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.2//EN" 
+		"http://struts.apache.org/dtds/struts-config_1_2.dtd">
+
+<struts-config>
+	<form-beans>
+		<form-bean name="pillarForm" type="org.apache.struts.validator.DynaValidatorForm">
+			<form-property name="dispatch" type="java.lang.String" />
+			<form-property name="pilarId" type="java.lang.Integer" />
+			<form-property name="name" type="java.lang.String" />
+		</form-bean>
+		
+		<form-bean name="companySearch" type="org.apache.struts.validator.DynaValidatorForm">
+			<form-property name="dispatch" type="java.lang.String" initial="prepare" />
+			<form-property name="user" type="java.lang.String" />
+			<form-property name="name" type="java.lang.String" />
+			<form-property name="pageIndex" type="java.lang.String" initial="1" />	
+			<form-property name="totalPage" type="java.lang.String" />
+			<form-property name="totalSize" type="java.lang.String" />		
+		</form-bean>
+		
+		<form-bean name="companyForm" type="org.apache.struts.validator.DynaValidatorForm">
+			<form-property name="dispatch" type="java.lang.String" />
+			<form-property name="companyId" type="java.lang.Integer" />
+			<form-property name="pilar" type="java.lang.Integer" />
+			<form-property name="name" type="java.lang.String" />
+			<form-property name="user" type="java.lang.String" />
+			<form-property name="prefix" type="java.lang.String" />
+		</form-bean>
+		
+		<form-bean name="bookSearch" type="org.apache.struts.validator.DynaValidatorForm">
+			<form-property name="dispatch" type="java.lang.String" initial="prepare" />
+			<form-property name="companyId" type="java.lang.Integer" />
+			<form-property name="book" type="java.lang.Integer" />
+			<form-property name="user" type="java.lang.String" />
+			<form-property name="pageIndex" type="java.lang.String" initial="1" />	
+			<form-property name="totalPage" type="java.lang.String" />
+			<form-property name="totalSize" type="java.lang.String" />		
+		</form-bean>
+		
+		<form-bean name="bookForm" type="org.apache.struts.validator.DynaValidatorForm">
+			<form-property name="dispatch" type="java.lang.String" />
+			<form-property name="id" type="java.lang.Integer" />
+			<form-property name="companyId" type="java.lang.Integer" />
+			<form-property name="bookId" type="java.lang.Integer" />
+			<form-property name="theValue" type="java.lang.String" />
+			<form-property name="valuePeriod" type="java.lang.String" />
+		</form-bean>
+		
+		<form-bean name="bookItemSearch" type="org.apache.struts.validator.DynaValidatorForm">
+			<form-property name="dispatch" type="java.lang.String" initial="prepare" />
+			<form-property name="bookId" type="java.lang.Integer" />
+			<form-property name="name" type="java.lang.String" />
+			<form-property name="pageIndex" type="java.lang.String" initial="1" />	
+			<form-property name="totalPage" type="java.lang.String" />
+			<form-property name="totalSize" type="java.lang.String" />		
+		</form-bean>
+		
+		<form-bean name="bookItemForm" type="org.apache.struts.validator.DynaValidatorForm">
+			<form-property name="dispatch" type="java.lang.String" />
+			<form-property name="id" type="java.lang.Integer" />
+			<form-property name="bookId" type="java.lang.Integer" />
+			<form-property name="name" type="java.lang.String" />
+		</form-bean>
+		
+		<form-bean name="mapSearch" type="org.apache.struts.validator.DynaValidatorForm">
+			<form-property name="dispatch" type="java.lang.String" initial="prepare" />
+			<form-property name="usercode" type="java.lang.String" />
+			<form-property name="companyId" type="java.lang.Integer" />
+			<form-property name="bookId" type="java.lang.Integer" />
+			<form-property name="bookItemId" type="java.lang.Integer" />
+			<form-property name="pageIndex" type="java.lang.String" initial="1" />	
+			<form-property name="totalPage" type="java.lang.String" />
+			<form-property name="totalSize" type="java.lang.String" />		
+		</form-bean>
+		
+		<form-bean name="mapForm" type="org.apache.struts.validator.DynaValidatorForm">
+			<form-property name="dispatch" type="java.lang.String" />
+			<form-property name="usercode" type="java.lang.String" />
+			<form-property name="companyId" type="java.lang.Integer" />
+			<form-property name="bookId" type="java.lang.Integer" />
+			<form-property name="bookItemId" type="java.lang.Integer" />
+			<form-property name="id" type="java.lang.Integer[]" />
+			<form-property name="cellFy" type="java.lang.String[]" />
+			<form-property name="cellYtdPrevActual" type="java.lang.String[]" />
+			<form-property name="cellYtdCurrentActual" type="java.lang.String[]" />
+			<form-property name="cellYtdCurrentPlan" type="java.lang.String[]" />
+			<form-property name="formula" type="java.lang.String[]" />
+		</form-bean>
+		
+        
+	</form-beans>
+	
+	<action-mappings>
+		<action path="/pillar" name="nullForm" type="com.benclaus.koperasi.action.app.master.PillarAction" scope="request" parameter="dispatch" validate="false">
+			<forward name="main" path="/app/pilar.jsp" />
+			<forward name="success" path="/app/pilarEdit.jsp" />
+		</action>
+		<action path="/updatePillar" name="pillarForm" type="com.benclaus.koperasi.action.app.master.PillarAction" scope="request" parameter="dispatch" validate="false">
+			<forward name="main" path="/app/pilar.jsp" />
+			<forward name="success" path="/app/pilarEdit.jsp" />
+		</action>
+		<action path="/savePillar" name="pillarForm" type="com.benclaus.koperasi.action.app.master.PillarAction" scope="request" parameter="dispatch" validate="false">
+			<forward name="success" path="/pillar.do?dispatch=returned" />
+			<forward name="fail" path="/app/pilarEdit.jsp" />
+		</action>
+		
+		<action path="/company" name="companySearch" type="com.benclaus.koperasi.action.app.master.CompanyAction" scope="request" validate="false" parameter="dispatch">
+    		<forward name="continue" path="/app/company.jsp" />	
+    		<forward name="fail" path="/main.jsp" />
+    	</action>
+    	<action path="/updateCompany" name="companyForm" type="com.benclaus.koperasi.action.app.master.CompanyAction" scope="request" parameter="dispatch" validate="false">
+			<forward name="continue" path="/company.do?dispatch=returned" />
+			<forward name="success" path="/app/companyEdit.jsp" />
+			<forward name="fail" path="/company.do?dispatch=returned" />
+		</action>
+    	<action path="/saveCompany" name="companyForm" type="com.benclaus.koperasi.action.app.master.CompanyAction" scope="request" parameter="dispatch" validate="false">
+			<forward name="success" path="/company.do?dispatch=returned" />
+			<forward name="fail" path="/app/companyEdit.jsp" />
+		</action>
+		
+		<action path="/book" name="bookSearch" type="com.benclaus.koperasi.action.app.master.CompanyBookAction" scope="request" validate="false" parameter="dispatch">
+    		<forward name="continue" path="/app/book.jsp" />	
+    		<forward name="fail" path="/main.jsp" />
+    	</action>
+    	<action path="/updateBook" name="bookForm" type="com.benclaus.koperasi.action.app.master.CompanyBookAction" scope="request" parameter="dispatch" validate="false">
+			<forward name="continue" path="/book.do?dispatch=returned" />
+			<forward name="success" path="/app/bookEdit.jsp" />
+			<forward name="fail" path="/book.do?dispatch=returned" />
+		</action>
+    	<action path="/saveBook" name="bookForm" type="com.benclaus.koperasi.action.app.master.CompanyBookAction" scope="request" parameter="dispatch" validate="false">
+			<forward name="success" path="/book.do?dispatch=returned" />
+			<forward name="fail" path="/app/bookEdit.jsp" />
+		</action>
+		
+		<action path="/bookItem" name="bookItemSearch" type="com.benclaus.koperasi.action.app.master.BookItemAction" scope="request" validate="false" parameter="dispatch">
+    		<forward name="continue" path="/app/bookItem.jsp" />	
+    		<forward name="fail" path="/main.jsp" />
+    	</action>
+    	<action path="/updateBookItem" name="bookItemForm" type="com.benclaus.koperasi.action.app.master.BookItemAction" scope="request" parameter="dispatch" validate="false">
+			<forward name="continue" path="/bookItem.do?dispatch=returned" />
+			<forward name="success" path="/app/bookItemEdit.jsp" />
+			<forward name="fail" path="/bookItem.do?dispatch=returned" />
+		</action>
+    	<action path="/saveBookItem" name="bookItemForm" type="com.benclaus.koperasi.action.app.master.BookItemAction" scope="request" parameter="dispatch" validate="false">
+			<forward name="success" path="/bookItem.do?dispatch=returned" />
+			<forward name="fail" path="/app/bookItemEdit.jsp" />
+		</action>
+		
+		<action path="/mapping" name="mapSearch" type="com.benclaus.koperasi.action.app.master.MappingAction" scope="request" validate="false" parameter="dispatch">
+    		<forward name="continue" path="/app/mapping.jsp" />	
+    		<forward name="fail" path="/main.jsp" />
+    	</action>
+    	<action path="/updateMapping" name="mapForm" type="com.benclaus.koperasi.action.app.master.MappingAction" scope="request" parameter="dispatch" validate="false">
+			<forward name="continue" path="/mapping.do?dispatch=returned" />
+			<forward name="success" path="/app/mappingEdit.jsp" />
+			<forward name="fail" path="/mapping.do?dispatch=returned" />
+		</action>
+    	<action path="/saveMapping" name="mapForm" type="com.benclaus.koperasi.action.app.master.MappingAction" scope="request" parameter="dispatch" validate="false">
+			<forward name="success" path="/mapping.do?dispatch=returned" />
+			<forward name="fail" path="/app/mappingEdit.jsp" />
+		</action>
+		
+		
+	</action-mappings>
+</struts-config>

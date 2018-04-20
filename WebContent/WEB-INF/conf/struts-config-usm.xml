@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN"
+                               "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+  -->
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.2//EN" 
+		"http://struts.apache.org/dtds/struts-config_1_2.dtd">
+
+<struts-config>
+	<form-beans>
+		<form-bean name="menuForm" type="org.apache.struts.validator.DynaValidatorForm">
+			<form-property name="menuCode" type="java.lang.String" />
+			<form-property name="parentMenuCode" type="java.lang.String" />
+			<form-property name="name" type="java.lang.String" />
+			<form-property name="description" type="java.lang.String" />
+			<form-property name="menuType" type="java.lang.String" />
+			<form-property name="systemMenu" type="java.lang.String" />
+			<form-property name="menuOrder" type="java.lang.String" />
+			<form-property name="menuLevel" type="java.lang.String" />
+			<form-property name="command" type="java.lang.String" />
+			<form-property name="dispatch" type="java.lang.String" />
+			<form-property name="back" type="java.lang.String" />
+			<form-property name="searchColumn" type="java.lang.String" />
+			<form-property name="searchValue" type="java.lang.String" />
+			<form-property name="pageIndex" type="java.lang.String" initial="1" />
+			<form-property name="totalPage" type="java.lang.String" />
+			<form-property name="totalSize" type="java.lang.String" />
+		</form-bean>
+		
+		<form-bean name="roleForm" type="org.apache.struts.validator.DynaValidatorForm">
+			<form-property name="roleCode" type="java.lang.String" />
+			<form-property name="name" type="java.lang.String" />
+			<form-property name="description" type="java.lang.String" />
+			<form-property name="menuCode" type="java.lang.String" />
+			<form-property name="menuLevel" type="java.lang.String" />
+			<form-property name="parentMenuCode" type="java.lang.String" />
+			<form-property name="dispatch" type="java.lang.String" />
+			<form-property name="searchColumn" type="java.lang.String" />
+			<form-property name="searchValue" type="java.lang.String" />
+			<form-property name="pageIndex" type="java.lang.String" initial="1" />
+			<form-property name="totalPage" type="java.lang.String" />
+			<form-property name="totalSize" type="java.lang.String" />
+		</form-bean>
+		
+		<form-bean name="userForm" type="org.apache.struts.validator.DynaValidatorForm">
+			<form-property name="userCode" type="java.lang.String" />
+			<form-property name="firstName" type="java.lang.String" />
+			<form-property name="lastName" type="java.lang.String" />
+			<form-property name="mobile" type="java.lang.String" />			
+			<form-property name="password" type="java.lang.String" />
+			<form-property name="passwordConf" type="java.lang.String" />
+			<form-property name="sessionTimeOut" type="java.lang.String" />
+			<form-property name="lastLogon" type="java.util.Date" />
+			<form-property name="activeStatus" type="java.lang.String" />
+			<form-property name="activeStatusLabel" type="java.lang.String" />
+			<form-property name="userRoleHas" type="java.util.List" />
+			<form-property name="userRoleNoHas" type="java.util.List" />
+			<form-property name="roleCode" type="java.lang.String" />
+			<form-property name="dispatch" type="java.lang.String" />
+			<form-property name="searchColumn" type="java.lang.String" />
+			<form-property name="searchValue" type="java.lang.String" />
+			<form-property name="pageIndex" type="java.lang.String" initial="1" />
+			<form-property name="totalPage" type="java.lang.String" />
+			<form-property name="totalSize" type="java.lang.String" />
+		</form-bean>	
+		
+		<form-bean name="searchLoginTrailForm" type="org.apache.struts.validator.DynaValidatorForm">
+			<form-property name="dispatch" type="java.lang.String" initial="prepare" />
+			<form-property name="searchColumn" type="java.lang.String" />
+			<form-property name="searchValue" type="java.lang.String" />
+			<form-property name="pageIndex" type="java.lang.String" initial="1" />
+		</form-bean>
+					
+		<form-bean name="monitorForm" type="org.apache.struts.validator.DynaValidatorForm">
+			<form-property name="dispatch" type="java.lang.String" initial="prepare" />
+			<form-property name="lastUpdBy" type="java.lang.String" />
+			<form-property name="lastUpdDtm" type="java.lang.String" />
+			<form-property name="lastUpdDtmHeader" type="java.lang.String" />
+			<form-property name="isLastUpdDtmFill" type="java.lang.String" />			
+			<form-property name="searchColumn" type="java.lang.String" />
+			<form-property name="searchValue" type="java.lang.String" />
+			<form-property name="pageIndex" type="java.lang.String" initial="1" />
+			<form-property name="totalPage" type="java.lang.String" />
+			<form-property name="totalSize" type="java.lang.String" />
+		</form-bean>
+	</form-beans>
+
+	<action-mappings>
+		<action path="/usm/MenuAction" name="menuForm" type="com.benclaus.koperasi.action.usm.MenuAction"  scope="request"  parameter="dispatch" validate="false">
+			<forward name="main" path="/usm/Menu.jsp" />
+			<forward name="add" path="/usm/MenuAdd.jsp" />
+			<forward name="update" path="/usm/MenuEdit.jsp" />
+			<forward name="tree" path="/usm/MenuTree.jsp" />
+		</action>
+		
+		<action path="/usm/RoleAction" name="roleForm" type="com.benclaus.koperasi.action.usm.RoleAction" scope="request" parameter="dispatch" validate="false">
+			<forward name="main" path="/usm/Role.jsp" />
+			<forward name="add" path="/usm/RoleAdd.jsp" />
+			<forward name="update" path="/usm/RoleEdit.jsp" />
+			<forward name="addmenu" path="/usm/RoleAddMenu.jsp" />
+		</action>
+		
+		<action path="/usm/UserAction" name="userForm" type="com.benclaus.koperasi.action.usm.UserAction" scope="request" parameter="dispatch" validate="false">
+			<forward name="main" path="/usm/User.jsp" />
+			<forward name="add" path="/usm/UserAdd.jsp" />
+			<forward name="update" path="/usm/UserEdit.jsp" />
+			<forward name="success" path="/plan.do?dispatch=returned" />
+		</action>		
+
+		<action path="/usm/loginTrail" name="searchLoginTrailForm" type="com.benclaus.koperasi.action.usm.LoginTrailDispatchAction"  scope="request" parameter="dispatch" validate="false">
+			<forward name="continue" path="/usm/loginTrail.jsp" />
+		</action>
+	
+		<action path="/usm/MonitorAction" name="monitorForm" type="com.benclaus.koperasi.action.usm.MonitorAction" scope="request" parameter="dispatch" validate="false">
+			<forward name="main" path="/usm/monitor.jsp" />
+			<forward name="detail" path="/usm/monitorDetail.jsp" />
+		</action>
+	</action-mappings>
+</struts-config>

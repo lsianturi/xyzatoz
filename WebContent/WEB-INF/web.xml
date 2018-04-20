@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+ "http://java.sun.com/dtd/web-app_2_3.dtd" >
+	
+<web-app id="koperasi">
+	
+	<display-name>Koperasi</display-name>
+	
+	<context-param>
+		<param-name>shutdown-on-unload</param-name>
+		<param-value>true</param-value>
+	</context-param>
+	<context-param>
+		<param-name>start-scheduler-on-load</param-name>
+		<param-value>true</param-value>
+	</context-param>
+	
+	<filter>
+		<filter-name>No Caching Filter</filter-name>
+		<filter-class>com.benclaus.koperasi.utility.NoCacheFilter</filter-class>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>No Caching Filter</filter-name>
+		<url-pattern>*.do</url-pattern>
+	</filter-mapping>
+
+	<listener>
+		<listener-class>com.benclaus.koperasi.utility.SessionHolder</listener-class>
+	</listener>
+	
+	<!-- <listener>
+		<listener-class>org.quartz.ee.servlet.QuartzInitializerListener</listener-class>
+	</listener> -->
+	
+	<servlet>
+		<servlet-name>action</servlet-name>
+		<servlet-class>org.apache.struts.action.ActionServlet</servlet-class>
+		<init-param>
+			<param-name>config</param-name>
+			<param-value>
+				/WEB-INF/conf/struts-config.xml,
+				/WEB-INF/conf/struts-config-usm.xml,
+				/WEB-INF/conf/struts-config-conf.xml,
+				/WEB-INF/conf/struts-config-data.xml
+  			</param-value>
+		</init-param>
+		<init-param>
+			<param-name>validate</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+	<servlet>
+		<servlet-name>ReportViewer</servlet-name>
+		<servlet-class>com.benclaus.koperasi.report.ReportViewer</servlet-class>
+		<load-on-startup>3</load-on-startup>
+	</servlet>
+	<servlet>
+		<servlet-name>Initializer</servlet-name>
+		<servlet-class>com.benclaus.koperasi.utility.Initializer</servlet-class>
+		<init-param>
+			<param-name>scheduler</param-name>
+			<param-value>@scheduler@</param-value> 
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>action</servlet-name>
+		<url-pattern>*.do</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>Initializer</servlet-name>
+		<url-pattern>/Initializer</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>ReportViewer</servlet-name>
+		<url-pattern>/ReportViewer</url-pattern>
+	</servlet-mapping>
+
+	<welcome-file-list>
+		<welcome-file>index.jsp</welcome-file>
+	</welcome-file-list>
+		<taglib>
+			<taglib-uri>/tags/struts-bean</taglib-uri>
+			<taglib-location>/WEB-INF/tld/struts-bean.tld</taglib-location>
+		</taglib>
+		<taglib>
+			<taglib-uri>/tags/struts-html</taglib-uri>
+			<taglib-location>/WEB-INF/tld/struts-html.tld</taglib-location>
+		</taglib>
+		<taglib>
+			<taglib-uri>/tags/struts-logic</taglib-uri>
+			<taglib-location>/WEB-INF/tld/struts-logic.tld</taglib-location>
+		</taglib>
+		
+	<!--	<taglib>
+			<taglib-uri>/tags/struts-nested</taglib-uri>
+			<taglib-location>/WEB-INF/tld/struts-nested.tld</taglib-location>
+		</taglib>
+		-->
+</web-app>

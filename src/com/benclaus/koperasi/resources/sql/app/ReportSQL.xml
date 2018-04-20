@@ -1,0 +1,394 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap
+PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ReportSQL">
+	
+	<!-- <resultMap id="reportResult" class="com.benclaus.koperasi.model.AbsenReport">
+		<result property="company" column="company_id" />
+		<result property="employeeNo" column="employeeNo" />
+		<result property="month" column="bulan" />
+		<result property="year" column="tahun" />
+		<result property="fullName" column="fullName" />
+		<result property="file" column="fileName" />
+	</resultMap>
+	<resultMap id="summaryAbsen" class="com.benclaus.koperasi.model.InLateSummary">
+		<result property="lateIn" column="sum_lateIn" />
+		<result property="earlyOut" column="sum_earlyOut" />
+		<result property="overTime" column="sum_overTime" />
+		<result property="underTime" column="sum_underTime" />
+	</resultMap>
+	
+	<resultMap id="summaryResult" class="com.benclaus.koperasi.model.AbsenSummary">
+		<result property="company" column="company_id" />
+		<result property="year" column="tahun" />
+		<result property="file" column="fileName" />
+	</resultMap>
+	
+
+	<insert id="insertAbsensiReport" parameterClass="com.benclaus.koperasi.model.AbsenReport">
+    	INSERT INTO 
+    		absensi_rpt (company_id, employeeNo, bulan, tahun, fileName) 
+    	VALUES 
+    		(#company#, #employeeNo#, #month#, #year#, #file#)
+    </insert>
+    
+    <insert id="insertSummaryReport" parameterClass="com.benclaus.koperasi.model.AbsenSummary">
+    	INSERT INTO 
+    		absensi_summary_rpt (company_id, tahun, fileName) 
+    	VALUES 
+    		(#company#, #year#, #file#)
+    </insert>
+    
+    
+    CALCULATE related querys
+    
+    <delete id="deleteAbsensiReportByMonth" parameterClass="java.util.Map">
+    	delete FROM absensi_rpt where company_id =#company# and bulan = #month# and tahun=#year#
+    	<isNotEmpty prepend=" AND " property="empId">employeeNo=#empId#</isNotEmpty>
+    </delete>
+    
+    <select id="getInLateOverTimeSummary" resultMap="summaryAbsen" parameterClass="java.util.Map">
+    <![CDATA[
+		
+		select fGetHourSecond(Sec_to_Time(sum(Time_to_Sec(b.lateIn)))) as sum_lateIn, 
+			fGetHourSecond(Sec_to_Time(sum(Time_to_Sec(b.earlyOut)))) as sum_earlyOut, 
+			fGetHourSecond(Sec_to_Time(sum(Time_to_Sec(b.totalWork)))) as totalWork,
+				fGetHourSecond(Sec_to_Time(sum(Time_to_Sec(b.overTime)))) as sum_overTime, 
+				fGetHourSecond(Sec_to_Time(sum(Time_to_Sec(b.underTime)))) as sum_underTime
+				
+				from (select adddate(date(#firstDate#), numlist.id) as `tgl` from
+				(SELECT n1.i + n10.i*10 + n100.i*100 AS id
+				   FROM num n1 cross join num as n10 cross join num as n100) as numlist
+				where adddate(date(#firstDate#), numlist.id) <= LAST_DAY(date(#firstDate#))) as a
+				left join (
+				select distinct a.tglKerja AS absensi_tglKerja, a.type as absensi_type,
+				             a.jamMasuk ,
+				             a.jamKeluar , a.leaveType, a.leaveRemark,
+				
+				if(TIME(a.jamMasuk) > fGetJamMasuk(#company#), TIMEDIFF( time(a.jamMasuk), fGetJamMasuk(#company#)), null) as lateIn,
+				if(TIME(a.jamKeluar) < fGetJamKeluar(#company#, a.tglKerja),  TIMEDIFF( fGetJamKeluar(#company#, a.tglKerja), time(a.jamKeluar)), null) as earlyOut,
+				
+				TIMEDIFF(a.jamKeluar, a.jamMasuk) totalWork,
+				if(TIMEDIFF(a.jamKeluar, a.jamMasuk) > fGetTotalWork(#company#, a.tglKerja), TIMEDIFF(TIMEDIFF(a.jamKeluar, a.jamMasuk),fGetTotalWork(#company#, a.tglKerja)), null)  as overTime,
+				if(TIMEDIFF(a.jamKeluar, a.jamMasuk) < fGetTotalWork(#company#, a.tglKerja), TIMEDIFF(fGetTotalWork(#company#, a.tglKerja), TIMEDIFF(a.jamKeluar, a.jamMasuk)), null)  as underTime
+				FROM
+				             employee e INNER JOIN absensi a ON e.employeeNo = a.employeeNo and e.company_id = a.company_id
+				        WHERE
+				          a.employeeNo = #empId# and a.company_id = #company#
+				 AND month(a.tglKerja) =#bulan#
+				 AND year(a.tglKerja) = #tahun#) as b on a.tgl = b.absensi_tglKerja
+		]]>
+		 this is the old version
+    	select concat(
+		 Sec_to_Time(sum(Time_to_Sec(IF((STRCMP(TIMEDIFF( a.jamMasuk,str_to_date(concat(a.tglKerja,'08:00:00'),'%Y-%m-%d %H:%i:%s')), '00:00:00')>0),
+			TIMEDIFF( a.jamMasuk,str_to_date(concat(a.tglKerja,'08:00:00'),'%Y-%m-%d %H:%i:%s')),null)))),' ') as sum_lateIn,
+		
+		concat(Sec_to_Time(sum(Time_to_Sec(IF((STRCMP(TIMEDIFF(str_to_date(concat(a.tglKerja,'17:00:00'),'%Y-%m-%d %H:%i:%s'),a.jamKeluar), '00:00:00')>0),
+			TIMEDIFF(str_to_date(concat(a.tglKerja,'17:00:00'),'%Y-%m-%d %H:%i:%s'),a.jamKeluar),null)))),' ') as sum_earlyOut,
+		
+		concat(Sec_to_Time(sum(Time_to_Sec(IF((STRCMP(TIMEDIFF(a.jamKeluar, str_to_date(concat(a.tglKerja,'17:00:00'),'%Y-%m-%d %H:%i:%s')), '00:00:00')>0),
+			TIMEDIFF(a.jamKeluar, str_to_date(concat(a.tglKerja,'17:00:00'),'%Y-%m-%d %H:%i:%s')),null)))),' ') as sum_overTime
+		FROM
+		             employee e INNER JOIN absensi a ON e.employeeNo = a.employeeNo
+		        WHERE
+		             a.employeeNo = #empId#
+		 AND month(a.tglKerja) = #month#
+		 AND year(a.tglKerja) = #year#
+		group by   a.employeeNo
+		 AND month(a.tglKerja)
+		 AND year(a.tglKerja)
+	</select>
+	<select id="getReportListByMonth" resultMap="reportResult">
+		select e.company_id, a.employeeNo ,a.bulan,a.tahun, concat(e.firstName,' ', e.lastName) as fullName, a.fileName 
+		FROM employee e 
+		INNER JOIN absensi_rpt a ON e.employeeNo = a.employeeNo
+		WHERE
+		a.bulan= #month# AND a.tahun = #year# and e.company_id = #company#
+		<isNotEmpty prepend=" AND " property="empId">a.employeeNo=#empId#</isNotEmpty>
+		order by e.firstName
+	</select>
+	<select id="getSummaryReportList" resultMap="summaryResult">
+		select a.tahun, a.fileName 
+		FROM absensi_summary_rpt a 
+		WHERE a.tahun = #year#
+	</select>
+	
+	 <delete id="deleteSummaryReport" parameterClass="java.util.Map">
+    	delete FROM absensi_summary_rpt where tahun=#year#
+    </delete>
+	<select id="getSummaryReportListSize" resultClass="java.lang.Integer">
+		select count(a.tahun)
+		FROM absensi_summary_rpt a 
+		WHERE a.tahun = #year#
+	</select>
+	<select id="getReportListByMonthCount" resultClass="java.lang.Integer" parameterClass="java.util.Map">
+		select count(a.employeeNo)
+		FROM employee e 
+		INNER JOIN absensi_rpt a ON e.employeeNo = a.employeeNo
+		WHERE
+		 a.bulan= #month#
+		 AND a.tahun = #year#
+		 <isNotEmpty prepend=" AND " property="empId">a.employeeNo=#empId#</isNotEmpty>
+	</select>
+	
+	<select id="getDistinctAbsenEmpId" resultClass="com.benclaus.koperasi.model.Employee" parameterClass="java.util.Map">
+		SELECT distinct e.company_id as companyId, c.`name` as companyName, e.employeeNo, e.firstName, e.lastName, e.job_level as jobLevel, e.email
+	    	FROM employee e
+	    	inner join company c on c.id = e.company_id where e.company_id = #company#
+	    	<isNotEmpty prepend=" AND " property="empId">e.employeeNo=#empId#</isNotEmpty>
+	</select>
+	
+	<select id="getSummaryReport" resultMap="summaryAbsen" parameterClass="java.util.Map">
+    <![CDATA[	
+    	select c.*,d.feb, e.mar, f.apr, g.may, h.jun, i.jul, j.aug, k.sept, l.okt, m.nov, n.des, o.tot from (
+		select b.employeeNo, b.fullName, 
+				concat(Sec_to_Time(sum(Time_to_Sec(IF(STRCMP(TIMEDIFF(str_to_date(concat(b.tglKerja,'09:00:00'),'%Y-%m-%d %H:%i:%s'), str_to_date(concat(b.tglKerja,TIMEDIFF(b.keluar,b.masuk)),'%Y-%m-%d %H:%i:%s')), '00:00:00')>0,
+				TIMEDIFF(str_to_date(concat(b.tglKerja,'09:00:00'),'%Y-%m-%d %H:%i:%s'), str_to_date(concat(b.tglKerja,TIMEDIFF(b.keluar,b.masuk)),'%Y-%m-%d %H:%i:%s')),null) ))),' ')
+					as jan
+				from (
+							select a.employeeNo, concat(e.firstName, ' ', e.lastName) as fullName, a.tglKerja AS tglKerja,
+							IF(fGetJamMasuk(#company#) is NULL, a.jamMasuk, 
+									IF(STRCMP(TIMEDIFF(a.jamMasuk,str_to_date(concat(a.tglKerja,fGetJamMasuk(#company#)),'%Y-%m-%d %H:%i:%s')), '00:00:00')<0, str_to_date(concat(a.tglKerja,fGetJamMasuk(#company#)),'%Y-%m-%d %H:%i:%s'), a.jamMasuk)) as masuk,
+							IF(fGetJamKeluar(#company#) is NULL, a.jamKeluar, 
+									IF(STRCMP(TIMEDIFF(a.jamKeluar,str_to_date(concat(a.tglKerja,fGetJamKeluar(#company#)),'%Y-%m-%d %H:%i:%s')), '00:00:00')>0, str_to_date(concat(a.tglKerja,fGetJamKeluar(#company#)),'%Y-%m-%d %H:%i:%s'), a.jamKeluar)) as keluar
+		
+							FROM employee e INNER JOIN absensi a ON e.employeeNo = a.employeeNo
+							WHERE	month(a.tglKerja) = 1 
+		 						AND year(a.tglKerja) = #year#
+					
+						) as b 
+		group by b.employeeNo ) c
+
+		left join (
+		select b.employeeNo, 
+						concat(Sec_to_Time(sum(Time_to_Sec(IF(STRCMP(TIMEDIFF(str_to_date(concat(b.tglKerja,'09:00:00'),'%Y-%m-%d %H:%i:%s'), str_to_date(concat(b.tglKerja,TIMEDIFF(b.keluar,b.masuk)),'%Y-%m-%d %H:%i:%s')), '00:00:00')>0,
+						TIMEDIFF(str_to_date(concat(b.tglKerja,'09:00:00'),'%Y-%m-%d %H:%i:%s'), str_to_date(concat(b.tglKerja,TIMEDIFF(b.keluar,b.masuk)),'%Y-%m-%d %H:%i:%s')),null) ))),' ')
+							as feb
+						from (
+									select a.employeeNo, a.tglKerja AS tglKerja,
+									IF(fGetJamMasuk(#company#) is NULL, a.jamMasuk, 
+											IF(STRCMP(TIMEDIFF(a.jamMasuk,str_to_date(concat(a.tglKerja,fGetJamMasuk(#company#)),'%Y-%m-%d %H:%i:%s')), '00:00:00')<0, str_to_date(concat(a.tglKerja,fGetJamMasuk(#company#)),'%Y-%m-%d %H:%i:%s'), a.jamMasuk)) as masuk,
+									IF(fGetJamKeluar(#company#) is NULL, a.jamKeluar, 
+											IF(STRCMP(TIMEDIFF(a.jamKeluar,str_to_date(concat(a.tglKerja,fGetJamKeluar(#company#)),'%Y-%m-%d %H:%i:%s')), '00:00:00')>0, str_to_date(concat(a.tglKerja,fGetJamKeluar(#company#)),'%Y-%m-%d %H:%i:%s'), a.jamKeluar)) as keluar
+				
+									FROM employee e INNER JOIN absensi a ON e.employeeNo = a.employeeNo
+									WHERE	month(a.tglKerja) = 2
+				 						AND year(a.tglKerja) = #year#
+							
+								) as b 
+				group by b.employeeNo ) d on d.employeeNo = c.employeeNo
+		
+		left join (
+		select b.employeeNo, 
+						concat(Sec_to_Time(sum(Time_to_Sec(IF(STRCMP(TIMEDIFF(str_to_date(concat(b.tglKerja,'09:00:00'),'%Y-%m-%d %H:%i:%s'), str_to_date(concat(b.tglKerja,TIMEDIFF(b.keluar,b.masuk)),'%Y-%m-%d %H:%i:%s')), '00:00:00')>0,
+						TIMEDIFF(str_to_date(concat(b.tglKerja,'09:00:00'),'%Y-%m-%d %H:%i:%s'), str_to_date(concat(b.tglKerja,TIMEDIFF(b.keluar,b.masuk)),'%Y-%m-%d %H:%i:%s')),null) ))),' ')
+							as mar
+						from (
+									select a.employeeNo, a.tglKerja AS tglKerja,
+									IF(fGetJamMasuk(#company#) is NULL, a.jamMasuk, 
+											IF(STRCMP(TIMEDIFF(a.jamMasuk,str_to_date(concat(a.tglKerja,fGetJamMasuk(#company#)),'%Y-%m-%d %H:%i:%s')), '00:00:00')<0, str_to_date(concat(a.tglKerja,fGetJamMasuk(#company#)),'%Y-%m-%d %H:%i:%s'), a.jamMasuk)) as masuk,
+									IF(fGetJamKeluar(#company#) is NULL, a.jamKeluar, 
+											IF(STRCMP(TIMEDIFF(a.jamKeluar,str_to_date(concat(a.tglKerja,fGetJamKeluar(#company#)),'%Y-%m-%d %H:%i:%s')), '00:00:00')>0, str_to_date(concat(a.tglKerja,fGetJamKeluar(#company#)),'%Y-%m-%d %H:%i:%s'), a.jamKeluar)) as keluar
+				
+									FROM employee e INNER JOIN absensi a ON e.employeeNo = a.employeeNo
+									WHERE	month(a.tglKerja) = 3
+				 						AND year(a.tglKerja) = #year#
+							
+								) as b 
+				group by b.employeeNo ) e on e.employeeNo = c.employeeNo
+		
+		left join (
+		select b.employeeNo, 
+						concat(Sec_to_Time(sum(Time_to_Sec(IF(STRCMP(TIMEDIFF(str_to_date(concat(b.tglKerja,'09:00:00'),'%Y-%m-%d %H:%i:%s'), str_to_date(concat(b.tglKerja,TIMEDIFF(b.keluar,b.masuk)),'%Y-%m-%d %H:%i:%s')), '00:00:00')>0,
+						TIMEDIFF(str_to_date(concat(b.tglKerja,'09:00:00'),'%Y-%m-%d %H:%i:%s'), str_to_date(concat(b.tglKerja,TIMEDIFF(b.keluar,b.masuk)),'%Y-%m-%d %H:%i:%s')),null) ))),' ')
+							as apr
+						from (
+									select a.employeeNo, a.tglKerja AS tglKerja,
+									IF(fGetJamMasuk(#company#) is NULL, a.jamMasuk, 
+											IF(STRCMP(TIMEDIFF(a.jamMasuk,str_to_date(concat(a.tglKerja,fGetJamMasuk(#company#)),'%Y-%m-%d %H:%i:%s')), '00:00:00')<0, str_to_date(concat(a.tglKerja,fGetJamMasuk(#company#)),'%Y-%m-%d %H:%i:%s'), a.jamMasuk)) as masuk,
+									IF(fGetJamKeluar(#company#) is NULL, a.jamKeluar, 
+											IF(STRCMP(TIMEDIFF(a.jamKeluar,str_to_date(concat(a.tglKerja,fGetJamKeluar(#company#)),'%Y-%m-%d %H:%i:%s')), '00:00:00')>0, str_to_date(concat(a.tglKerja,fGetJamKeluar(#company#)),'%Y-%m-%d %H:%i:%s'), a.jamKeluar)) as keluar
+				
+									FROM employee e INNER JOIN absensi a ON e.employeeNo = a.employeeNo
+									WHERE	month(a.tglKerja) = 4
+				 						AND year(a.tglKerja) = #year#
+							
+								) as b 
+				group by b.employeeNo ) f on f.employeeNo = c.employeeNo
+		
+		left join (
+		select b.employeeNo, 
+						concat(Sec_to_Time(sum(Time_to_Sec(IF(STRCMP(TIMEDIFF(str_to_date(concat(b.tglKerja,'09:00:00'),'%Y-%m-%d %H:%i:%s'), str_to_date(concat(b.tglKerja,TIMEDIFF(b.keluar,b.masuk)),'%Y-%m-%d %H:%i:%s')), '00:00:00')>0,
+						TIMEDIFF(str_to_date(concat(b.tglKerja,'09:00:00'),'%Y-%m-%d %H:%i:%s'), str_to_date(concat(b.tglKerja,TIMEDIFF(b.keluar,b.masuk)),'%Y-%m-%d %H:%i:%s')),null) ))),' ')
+							as may
+						from (
+									select a.employeeNo, a.tglKerja AS tglKerja,
+									IF(fGetJamMasuk(#company#) is NULL, a.jamMasuk, 
+											IF(STRCMP(TIMEDIFF(a.jamMasuk,str_to_date(concat(a.tglKerja,fGetJamMasuk(#company#)),'%Y-%m-%d %H:%i:%s')), '00:00:00')<0, str_to_date(concat(a.tglKerja,fGetJamMasuk(#company#)),'%Y-%m-%d %H:%i:%s'), a.jamMasuk)) as masuk,
+									IF(fGetJamKeluar(#company#) is NULL, a.jamKeluar, 
+											IF(STRCMP(TIMEDIFF(a.jamKeluar,str_to_date(concat(a.tglKerja,fGetJamKeluar(#company#)),'%Y-%m-%d %H:%i:%s')), '00:00:00')>0, str_to_date(concat(a.tglKerja,fGetJamKeluar(#company#)),'%Y-%m-%d %H:%i:%s'), a.jamKeluar)) as keluar
+				
+									FROM employee e INNER JOIN absensi a ON e.employeeNo = a.employeeNo
+									WHERE	month(a.tglKerja) = 5
+				 						AND year(a.tglKerja) = #year#
+							
+								) as b 
+				group by b.employeeNo ) g on g.employeeNo = c.employeeNo
+		
+		left join (
+		select b.employeeNo, 
+						concat(Sec_to_Time(sum(Time_to_Sec(IF(STRCMP(TIMEDIFF(str_to_date(concat(b.tglKerja,'09:00:00'),'%Y-%m-%d %H:%i:%s'), str_to_date(concat(b.tglKerja,TIMEDIFF(b.keluar,b.masuk)),'%Y-%m-%d %H:%i:%s')), '00:00:00')>0,
+						TIMEDIFF(str_to_date(concat(b.tglKerja,'09:00:00'),'%Y-%m-%d %H:%i:%s'), str_to_date(concat(b.tglKerja,TIMEDIFF(b.keluar,b.masuk)),'%Y-%m-%d %H:%i:%s')),null) ))),' ')
+							as jun
+						from (
+									select a.employeeNo, a.tglKerja AS tglKerja,
+									IF(fGetJamMasuk(#company#) is NULL, a.jamMasuk, 
+											IF(STRCMP(TIMEDIFF(a.jamMasuk,str_to_date(concat(a.tglKerja,fGetJamMasuk(#company#)),'%Y-%m-%d %H:%i:%s')), '00:00:00')<0, str_to_date(concat(a.tglKerja,fGetJamMasuk(#company#)),'%Y-%m-%d %H:%i:%s'), a.jamMasuk)) as masuk,
+									IF(fGetJamKeluar(#company#) is NULL, a.jamKeluar, 
+											IF(STRCMP(TIMEDIFF(a.jamKeluar,str_to_date(concat(a.tglKerja,fGetJamKeluar(#company#)),'%Y-%m-%d %H:%i:%s')), '00:00:00')>0, str_to_date(concat(a.tglKerja,fGetJamKeluar(#company#)),'%Y-%m-%d %H:%i:%s'), a.jamKeluar)) as keluar
+				
+									FROM employee e INNER JOIN absensi a ON e.employeeNo = a.employeeNo
+									WHERE	month(a.tglKerja) = 6
+				 						AND year(a.tglKerja) = #year#
+							
+								) as b 
+				group by b.employeeNo ) h on h.employeeNo = c.employeeNo
+		
+		left join (
+		select b.employeeNo, 
+						concat(Sec_to_Time(sum(Time_to_Sec(IF(STRCMP(TIMEDIFF(str_to_date(concat(b.tglKerja,'09:00:00'),'%Y-%m-%d %H:%i:%s'), str_to_date(concat(b.tglKerja,TIMEDIFF(b.keluar,b.masuk)),'%Y-%m-%d %H:%i:%s')), '00:00:00')>0,
+						TIMEDIFF(str_to_date(concat(b.tglKerja,'09:00:00'),'%Y-%m-%d %H:%i:%s'), str_to_date(concat(b.tglKerja,TIMEDIFF(b.keluar,b.masuk)),'%Y-%m-%d %H:%i:%s')),null) ))),' ')
+							as jul
+						from (
+									select a.employeeNo, a.tglKerja AS tglKerja,
+									IF(fGetJamMasuk(#company#) is NULL, a.jamMasuk, 
+											IF(STRCMP(TIMEDIFF(a.jamMasuk,str_to_date(concat(a.tglKerja,fGetJamMasuk(#company#)),'%Y-%m-%d %H:%i:%s')), '00:00:00')<0, str_to_date(concat(a.tglKerja,fGetJamMasuk(#company#)),'%Y-%m-%d %H:%i:%s'), a.jamMasuk)) as masuk,
+									IF(fGetJamKeluar(#company#) is NULL, a.jamKeluar, 
+											IF(STRCMP(TIMEDIFF(a.jamKeluar,str_to_date(concat(a.tglKerja,fGetJamKeluar(#company#)),'%Y-%m-%d %H:%i:%s')), '00:00:00')>0, str_to_date(concat(a.tglKerja,fGetJamKeluar(#company#)),'%Y-%m-%d %H:%i:%s'), a.jamKeluar)) as keluar
+				
+									FROM employee e INNER JOIN absensi a ON e.employeeNo = a.employeeNo
+									WHERE	month(a.tglKerja) = 7
+				 						AND year(a.tglKerja) = #year#
+							
+								) as b 
+				group by b.employeeNo ) i on i.employeeNo = c.employeeNo
+		
+		left join (
+		select b.employeeNo, 
+						concat(Sec_to_Time(sum(Time_to_Sec(IF(STRCMP(TIMEDIFF(str_to_date(concat(b.tglKerja,'09:00:00'),'%Y-%m-%d %H:%i:%s'), str_to_date(concat(b.tglKerja,TIMEDIFF(b.keluar,b.masuk)),'%Y-%m-%d %H:%i:%s')), '00:00:00')>0,
+						TIMEDIFF(str_to_date(concat(b.tglKerja,'09:00:00'),'%Y-%m-%d %H:%i:%s'), str_to_date(concat(b.tglKerja,TIMEDIFF(b.keluar,b.masuk)),'%Y-%m-%d %H:%i:%s')),null) ))),' ')
+							as aug
+						from (
+									select a.employeeNo, a.tglKerja AS tglKerja,
+									IF(fGetJamMasuk(#company#) is NULL, a.jamMasuk, 
+											IF(STRCMP(TIMEDIFF(a.jamMasuk,str_to_date(concat(a.tglKerja,fGetJamMasuk(#company#)),'%Y-%m-%d %H:%i:%s')), '00:00:00')<0, str_to_date(concat(a.tglKerja,fGetJamMasuk(#company#)),'%Y-%m-%d %H:%i:%s'), a.jamMasuk)) as masuk,
+									IF(fGetJamKeluar(#company#) is NULL, a.jamKeluar, 
+											IF(STRCMP(TIMEDIFF(a.jamKeluar,str_to_date(concat(a.tglKerja,fGetJamKeluar(#company#)),'%Y-%m-%d %H:%i:%s')), '00:00:00')>0, str_to_date(concat(a.tglKerja,fGetJamKeluar(#company#)),'%Y-%m-%d %H:%i:%s'), a.jamKeluar)) as keluar
+				
+									FROM employee e INNER JOIN absensi a ON e.employeeNo = a.employeeNo
+									WHERE	month(a.tglKerja) = 8
+				 						AND year(a.tglKerja) = #year#
+							
+								) as b 
+				group by b.employeeNo ) j on j.employeeNo = c.employeeNo
+		
+		left join (
+		select b.employeeNo, 
+						concat(Sec_to_Time(sum(Time_to_Sec(IF(STRCMP(TIMEDIFF(str_to_date(concat(b.tglKerja,'09:00:00'),'%Y-%m-%d %H:%i:%s'), str_to_date(concat(b.tglKerja,TIMEDIFF(b.keluar,b.masuk)),'%Y-%m-%d %H:%i:%s')), '00:00:00')>0,
+						TIMEDIFF(str_to_date(concat(b.tglKerja,'09:00:00'),'%Y-%m-%d %H:%i:%s'), str_to_date(concat(b.tglKerja,TIMEDIFF(b.keluar,b.masuk)),'%Y-%m-%d %H:%i:%s')),null) ))),' ')
+							as sept
+						from (
+									select a.employeeNo, a.tglKerja AS tglKerja,
+									IF(fGetJamMasuk(#company#) is NULL, a.jamMasuk, 
+											IF(STRCMP(TIMEDIFF(a.jamMasuk,str_to_date(concat(a.tglKerja,fGetJamMasuk(#company#)),'%Y-%m-%d %H:%i:%s')), '00:00:00')<0, str_to_date(concat(a.tglKerja,fGetJamMasuk(#company#)),'%Y-%m-%d %H:%i:%s'), a.jamMasuk)) as masuk,
+									IF(fGetJamKeluar(#company#) is NULL, a.jamKeluar, 
+											IF(STRCMP(TIMEDIFF(a.jamKeluar,str_to_date(concat(a.tglKerja,fGetJamKeluar(#company#)),'%Y-%m-%d %H:%i:%s')), '00:00:00')>0, str_to_date(concat(a.tglKerja,fGetJamKeluar(#company#)),'%Y-%m-%d %H:%i:%s'), a.jamKeluar)) as keluar
+				
+									FROM employee e INNER JOIN absensi a ON e.employeeNo = a.employeeNo
+									WHERE	month(a.tglKerja) = 9
+				 						AND year(a.tglKerja) = #year#
+							
+								) as b 
+				group by b.employeeNo ) k on k.employeeNo = c.employeeNo
+		
+		left join (
+		select b.employeeNo, 
+						concat(Sec_to_Time(sum(Time_to_Sec(IF(STRCMP(TIMEDIFF(str_to_date(concat(b.tglKerja,'09:00:00'),'%Y-%m-%d %H:%i:%s'), str_to_date(concat(b.tglKerja,TIMEDIFF(b.keluar,b.masuk)),'%Y-%m-%d %H:%i:%s')), '00:00:00')>0,
+						TIMEDIFF(str_to_date(concat(b.tglKerja,'09:00:00'),'%Y-%m-%d %H:%i:%s'), str_to_date(concat(b.tglKerja,TIMEDIFF(b.keluar,b.masuk)),'%Y-%m-%d %H:%i:%s')),null) ))),' ')
+							as okt
+						from (
+									select a.employeeNo, a.tglKerja AS tglKerja,
+									IF(fGetJamMasuk(#company#) is NULL, a.jamMasuk, 
+											IF(STRCMP(TIMEDIFF(a.jamMasuk,str_to_date(concat(a.tglKerja,fGetJamMasuk(#company#)),'%Y-%m-%d %H:%i:%s')), '00:00:00')<0, str_to_date(concat(a.tglKerja,fGetJamMasuk(#company#)),'%Y-%m-%d %H:%i:%s'), a.jamMasuk)) as masuk,
+									IF(fGetJamKeluar(#company#) is NULL, a.jamKeluar, 
+											IF(STRCMP(TIMEDIFF(a.jamKeluar,str_to_date(concat(a.tglKerja,fGetJamKeluar(#company#)),'%Y-%m-%d %H:%i:%s')), '00:00:00')>0, str_to_date(concat(a.tglKerja,fGetJamKeluar(#company#)),'%Y-%m-%d %H:%i:%s'), a.jamKeluar)) as keluar
+				
+									FROM employee e INNER JOIN absensi a ON e.employeeNo = a.employeeNo
+									WHERE	month(a.tglKerja) = 10
+				 						AND year(a.tglKerja) = #year#
+							
+								) as b 
+				group by b.employeeNo ) l on l.employeeNo = c.employeeNo
+		
+		left join (
+		select b.employeeNo, 
+						concat(Sec_to_Time(sum(Time_to_Sec(IF(STRCMP(TIMEDIFF(str_to_date(concat(b.tglKerja,'09:00:00'),'%Y-%m-%d %H:%i:%s'), str_to_date(concat(b.tglKerja,TIMEDIFF(b.keluar,b.masuk)),'%Y-%m-%d %H:%i:%s')), '00:00:00')>0,
+						TIMEDIFF(str_to_date(concat(b.tglKerja,'09:00:00'),'%Y-%m-%d %H:%i:%s'), str_to_date(concat(b.tglKerja,TIMEDIFF(b.keluar,b.masuk)),'%Y-%m-%d %H:%i:%s')),null) ))),' ')
+							as nov
+						from (
+									select a.employeeNo, a.tglKerja AS tglKerja,
+									IF(fGetJamMasuk(#company#) is NULL, a.jamMasuk, 
+											IF(STRCMP(TIMEDIFF(a.jamMasuk,str_to_date(concat(a.tglKerja,fGetJamMasuk(#company#)),'%Y-%m-%d %H:%i:%s')), '00:00:00')<0, str_to_date(concat(a.tglKerja,fGetJamMasuk(#company#)),'%Y-%m-%d %H:%i:%s'), a.jamMasuk)) as masuk,
+									IF(fGetJamKeluar(#company#) is NULL, a.jamKeluar, 
+											IF(STRCMP(TIMEDIFF(a.jamKeluar,str_to_date(concat(a.tglKerja,fGetJamKeluar(#company#)),'%Y-%m-%d %H:%i:%s')), '00:00:00')>0, str_to_date(concat(a.tglKerja,fGetJamKeluar(#company#)),'%Y-%m-%d %H:%i:%s'), a.jamKeluar)) as keluar
+				
+									FROM employee e INNER JOIN absensi a ON e.employeeNo = a.employeeNo
+									WHERE	month(a.tglKerja) = 11
+				 						AND year(a.tglKerja) = #year#
+							
+								) as b 
+				group by b.employeeNo ) m on m.employeeNo = c.employeeNo
+		
+		left join (
+		select b.employeeNo, 
+						concat(Sec_to_Time(sum(Time_to_Sec(IF(STRCMP(TIMEDIFF(str_to_date(concat(b.tglKerja,'09:00:00'),'%Y-%m-%d %H:%i:%s'), str_to_date(concat(b.tglKerja,TIMEDIFF(b.keluar,b.masuk)),'%Y-%m-%d %H:%i:%s')), '00:00:00')>0,
+						TIMEDIFF(str_to_date(concat(b.tglKerja,'09:00:00'),'%Y-%m-%d %H:%i:%s'), str_to_date(concat(b.tglKerja,TIMEDIFF(b.keluar,b.masuk)),'%Y-%m-%d %H:%i:%s')),null) ))),' ')
+							as des
+						from (
+									select a.employeeNo, a.tglKerja AS tglKerja,
+									IF(fGetJamMasuk(#company#) is NULL, a.jamMasuk, 
+											IF(STRCMP(TIMEDIFF(a.jamMasuk,str_to_date(concat(a.tglKerja,fGetJamMasuk(#company#)),'%Y-%m-%d %H:%i:%s')), '00:00:00')<0, str_to_date(concat(a.tglKerja,fGetJamMasuk(#company#)),'%Y-%m-%d %H:%i:%s'), a.jamMasuk)) as masuk,
+									IF(fGetJamKeluar(#company#) is NULL, a.jamKeluar, 
+											IF(STRCMP(TIMEDIFF(a.jamKeluar,str_to_date(concat(a.tglKerja,fGetJamKeluar(#company#)),'%Y-%m-%d %H:%i:%s')), '00:00:00')>0, str_to_date(concat(a.tglKerja,fGetJamKeluar(#company#)),'%Y-%m-%d %H:%i:%s'), a.jamKeluar)) as keluar
+				
+									FROM employee e INNER JOIN absensi a ON e.employeeNo = a.employeeNo
+									WHERE	month(a.tglKerja) = 12
+				 						AND year(a.tglKerja) = #year#
+							
+								) as b 
+				group by b.employeeNo ) n on n.employeeNo = c.employeeNo
+		
+		left join (
+		select b.employeeNo, 
+						concat(Sec_to_Time(sum(Time_to_Sec(IF(STRCMP(TIMEDIFF(str_to_date(concat(b.tglKerja,'09:00:00'),'%Y-%m-%d %H:%i:%s'), str_to_date(concat(b.tglKerja,TIMEDIFF(b.keluar,b.masuk)),'%Y-%m-%d %H:%i:%s')), '00:00:00')>0,
+						TIMEDIFF(str_to_date(concat(b.tglKerja,'09:00:00'),'%Y-%m-%d %H:%i:%s'), str_to_date(concat(b.tglKerja,TIMEDIFF(b.keluar,b.masuk)),'%Y-%m-%d %H:%i:%s')),null) ))),' ')
+							as tot
+						from (
+									select a.employeeNo, a.tglKerja AS tglKerja,
+									IF(fGetJamMasuk(#company#) is NULL, a.jamMasuk, 
+											IF(STRCMP(TIMEDIFF(a.jamMasuk,str_to_date(concat(a.tglKerja,fGetJamMasuk(#company#)),'%Y-%m-%d %H:%i:%s')), '00:00:00')<0, str_to_date(concat(a.tglKerja,fGetJamMasuk(#company#)),'%Y-%m-%d %H:%i:%s'), a.jamMasuk)) as masuk,
+									IF(fGetJamKeluar(#company#) is NULL, a.jamKeluar, 
+											IF(STRCMP(TIMEDIFF(a.jamKeluar,str_to_date(concat(a.tglKerja,fGetJamKeluar(#company#)),'%Y-%m-%d %H:%i:%s')), '00:00:00')>0, str_to_date(concat(a.tglKerja,fGetJamKeluar(#company#)),'%Y-%m-%d %H:%i:%s'), a.jamKeluar)) as keluar
+				
+									FROM employee e INNER JOIN absensi a ON e.employeeNo = a.employeeNo
+									WHERE	year(a.tglKerja) = #year#
+							
+								) as b 
+				group by b.employeeNo ) o on o.employeeNo = c.employeeNo
+    ]]>
+	</select> -->
+</sqlMap>
+
+

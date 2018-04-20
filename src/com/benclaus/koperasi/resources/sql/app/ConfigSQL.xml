@@ -1,0 +1,436 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap
+PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ConfigSQL">
+	
+	<resultMap id="pilarResult" class="com.benclaus.koperasi.model.Pillar">
+		<result property="id" column="id" />
+		<result property="name" column="pilar_name" />
+	</resultMap>
+	
+	<resultMap id="companyResult" class="com.benclaus.koperasi.model.Company">
+		<result property="id" column="id" />
+		<result property="name" column="company_name" />
+		<result property="pillar.id" column="pilar_id" />
+		<result property="pillar.name" column="pilar_name" />
+		<result property="user.userCode" column="USERCODE" />
+		<result property="user.firstName" column="FIRSTNAME" />
+		<result property="user.lastName" column="LASTNAME" />
+		<result property="prefix" column="prefix" />
+	</resultMap>
+	
+	<resultMap id="bookResult" class="com.benclaus.koperasi.model.CompanyBook">
+		<result property="id" column="id" />
+		<result property="company.id" column="company_id" />
+		<result property="company.name" column="company_name" />
+		<result property="book.id" column="book_id" />
+		<result property="book.name" column="book_name" />
+		<result property="fullAmount" column="fullAmount" />
+		<result property="inThousand" column="inThousand" />
+		<result property="inMio" column="inMio" />
+		<result property="inBio" column="inBio" />
+		<result property="periodic" column="periodic" />
+		<result property="ytd" column="ytd" />
+	</resultMap>
+	
+	<resultMap id="bookItemResult" class="com.benclaus.koperasi.model.BookItem">
+		<result property="id" column="id" />
+		<result property="book.id" column="book_id" />
+		<result property="book.name" column="book_name" />
+		<result property="name" column="name" />
+	</resultMap>
+	
+	<resultMap id="mappingResult" class="com.benclaus.koperasi.model.Mapping">
+		<result property="id" column="id" />
+		<result property="bookItem.id" column="bookItem_id" />
+		<result property="bookItem.name" column="bookItem_name" />
+		<result property="bookItem.book.id" column="bookItem_book_id" />
+		<result property="bookItem.book.name" column="bookItem_book_name" />
+		<result property="company.id" column="company_id" />
+		<result property="company.name" column="company_name" />
+		<result property="company.user.userCode" column="company_usercode" />
+		<result property="cellFy" column="cell_fy" />
+		<result property="cellYtdPrevActual" column="cell_ytd_prev_year_actual" />
+		<result property="cellYtdCurrentActual" column="cell_ytd_current_actual" />
+		<result property="cellYtdCurrentPlan" column="cell_ytd_current_plan" />
+		<result property="formula" column="source_formula" />
+	</resultMap>
+	
+	
+	
+	
+	<select id="getRorConfig" resultClass="com.benclaus.koperasi.model.Config" >
+		SELECT DISTINCT xls_src_dir as excelSrcDir, 
+						xls_bak_dir as excelBakDir,
+						xls_a3_tpl_dir as A3TemplateDir,
+						process_interval_time processInterval
+		 FROM `ror_config` limit 1;
+	</select>
+	
+	
+	
+	<select id="getSsoUrl" resultClass="java.lang.String" >
+		SELECT DISTINCT sso_url FROM `ror_config` LIMIT 1;
+	</select>
+	
+	<!-- ==================================================================== PILLAR START =================  -->
+	<select id="getPillars" resultMap="pilarResult">
+		SELECT DISTINCT id, pilar_name 
+		FROM `Pillar` ORDER BY id
+	</select>
+	
+	<select id="getPillar" resultMap="pilarResult">
+		SELECT DISTINCT id, pilar_name 
+		FROM `Pillar` WHERE id = #value#
+	</select>
+	
+	<update id="deletePillar" parameterClass="java.lang.Integer">
+		DELETE FROM Pillar 
+		WHERE id = #value#;
+	</update>
+	
+	<update id="insertPillar" parameterClass="com.benclaus.koperasi.model.Pillar">
+		INSERT INTO Pillar (pilar_name) VALUES (#name#)
+	</update>
+	<update id="updatePillar" parameterClass="com.benclaus.koperasi.model.Pillar">
+		UPDATE Pillar SET pilar_name= #name# 
+		WHERE id = #id#
+	</update>	
+	<!-- ==================================================================== PILLAR END =================  -->
+	
+	
+	
+	<!-- ==================================================================== COMPANY START =================  -->
+	<select id="searchCompany" resultMap="companyResult">
+		SELECT c.id, c.company_name, c.prefix, c.pilar_id, p.pilar_name, u.USERCODE, u.FIRSTNAME, u.LASTNAME
+		FROM `Company` c 
+		INNER JOIN Pillar p ON c.pilar_id = p.id
+		LEFT JOIN ms_user u ON c.usercode = u.USERCODE
+		<dynamic prepend=" WHERE">
+			<isNotNull property="compId" prepend="AND">
+				c.id = #compId#
+			</isNotNull>
+			<isNotEmpty property="user" prepend="AND">
+				c.usercode = #user#
+			</isNotEmpty>
+			<isNotEmpty property="name" prepend="AND">
+				c.company_name LIKE CONCAT('%',#name# ,'%')
+			</isNotEmpty>
+		</dynamic>
+		ORDER BY c.id, c.company_name, c.usercode
+	</select>
+	
+	<select id="searchCompanySize" resultClass="java.lang.Integer">
+		SELECT count(*)
+		FROM `Company` c 
+		INNER JOIN Pillar p ON c.pilar_id = p.id
+		LEFT JOIN ms_user u ON c.usercode = u.USERCODE
+		<dynamic prepend=" WHERE">
+			<isNotNull property="compId" prepend="AND">
+				c.id = #compId#
+			</isNotNull>
+			<isNotEmpty property="user" prepend="AND">
+				c.usercode = #user#
+			</isNotEmpty>
+			<isNotEmpty property="name" prepend="AND">
+				c.company_name LIKE CONCAT('%',#name# ,'%')
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<select id="getSPMList" resultMap="AllSQL.labelValueResult">
+		SELECT USERCODE as value, CONCAT(FIRSTNAME,' ',IFNULL(LASTNAME,'')) label
+		FROM ms_user
+		WHERE ROLECODE = 'SPM'
+	</select>
+	
+	<insert id="insertCompany" parameterClass="com.benclaus.koperasi.model.Company">
+		INSERT INTO Company (company_name, pilar_id, usercode, prefix) VALUES (#name#, #pillar.id#, #user.userCode#, #prefix#)
+	</insert>
+	<select id="getCompanyByName" resultMap="companyResult">
+		SELECT c.id, c.company_name, c.prefix, c.pilar_id, p.pilar_name, u.USERCODE, u.FIRSTNAME, u.LASTNAME
+		FROM `Company` c 
+		INNER JOIN Pillar p ON c.pilar_id = p.id
+		LEFT JOIN ms_user u ON c.usercode = u.USERCODE
+		where c.company_name = #companyName# AND c.usercode=#spmCode#
+	</select>
+	
+	<select id="getCompanyByPrefix" resultMap="companyResult">
+		SELECT c.id, c.company_name, c.prefix, c.pilar_id, p.pilar_name, u.USERCODE, u.FIRSTNAME, u.LASTNAME
+		FROM `Company` c 
+		INNER JOIN Pillar p ON c.pilar_id = p.id
+		LEFT JOIN ms_user u ON c.usercode = u.USERCODE
+		where c.prefix=#value#
+	</select>
+	
+	<update id="updateCompany" parameterClass="com.benclaus.koperasi.model.Company">
+		UPDATE Company SET company_name=#name#, pilar_id=#pillar.id#, usercode=#user.userCode#, prefix = #prefix#
+		WHERE id = #id#
+	</update>
+	<update id="deleteCompany" >
+		DELETE FROM Company
+		WHERE id = #value#
+	</update>
+	<select id="getCompanyList" resultMap="AllSQL.labelValueResult">
+		SELECT id as value, company_name label
+		FROM Company
+	</select>
+	
+	<!-- ==================================================================== COMPANY END =================  -->
+	
+	
+	
+	
+	<!-- ==================================================================== BOOK START =================  -->
+	<select id="searchBook" resultMap="bookResult">
+		SELECT c.id, c.company_id, c1.company_name, c.book_id, b.book_name, c.fullAmount, c.inThousand, c.inMio, c.inBio, c.periodic, c.ytd
+		FROM Company_books c 
+		INNER JOIN Company c1 ON c.company_id = c1.id
+		INNER JOIN Books b ON c.book_id = b.id
+		<dynamic prepend=" WHERE">
+			<isNotEqual property="companyId"  compareValue="0" prepend="AND">
+				c.company_id = #companyId#
+			</isNotEqual>
+			<isNotEqual property="book" compareValue="0" prepend="AND">
+				c.book_id = #book#
+			</isNotEqual>
+			<isNotNull property="id"  prepend="AND">
+				c.id = #id#
+			</isNotNull>
+			<isNotEmpty property="user" prepend="AND">
+				c1.usercode = #user#
+			</isNotEmpty>
+		</dynamic>
+		ORDER BY c.company_id, b.id
+	</select>
+	
+	<select id="searchBookSize" resultClass="java.lang.Integer">
+		SELECT count(*)
+		FROM Company_books c 
+		INNER JOIN Company c1 ON c.company_id = c1.id
+		INNER JOIN Books b ON c.book_id = b.id
+		<dynamic prepend=" WHERE">
+			<isNotEqual property="companyId"  compareValue="0" prepend="AND">
+				c.company_id = #companyId#
+			</isNotEqual>
+			<isNotEqual property="book" compareValue="0" prepend="AND">
+				c.book_id = #book#
+			</isNotEqual>
+			<isNotNull property="id"  prepend="AND">
+				c.id = #id#
+			</isNotNull>
+			<isNotEmpty property="user" prepend="AND">
+				c1.usercode = #user#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<select id="getBookList" resultMap="AllSQL.labelValueResult">
+		SELECT id as value, book_name label
+		FROM Books
+	</select>
+	
+	<insert id="insertBook" parameterClass="com.benclaus.koperasi.model.CompanyBook" >
+		INSERT INTO Company_books (`company_id`, `book_id`, `fullAmount`, `inThousand`, `inMio`, `inBio`, `periodic`, `ytd`) 
+		VALUES (#company.id#, #book.id#, #fullAmount#, #inThousand#, #inMio#, #inBio#, #periodic#, #ytd#)
+	</insert>
+	<update id="updateBook" parameterClass="com.benclaus.koperasi.model.CompanyBook">
+		UPDATE Company_books SET  `fullAmount`=#fullAmount#, `inThousand`=#inThousand#, `inMio`=#inMio#, `inBio`=#inBio#, `periodic`=#periodic#, `ytd`=#ytd#
+		WHERE `company_id`=#company.id# AND `book_id`=#book.id#
+	</update>
+	<select id="getUnavailableBook" resultClass="com.benclaus.koperasi.model.Book">
+		select id, book_name as name
+		FROM Books b 
+		WHERE b.id not in (select b.id from Books b 
+		INNER JOIN Company_books cb on cb.book_id = b.id
+		where company_id = #value#)
+	</select>
+	<update id="deleteBook" >
+		DELETE FROM Company_books
+		WHERE id = #value#
+	</update>
+	
+	
+	<!-- ==================================================================== BOOK END =================  -->
+	
+	
+	
+	<!-- ==================================================================== BOOK ITEM START =================  -->
+	<select id="searchBookItem" resultMap="bookItemResult">
+		SELECT bi.id, bi.book_id, b.book_name, bi.name 
+		FROM Book_items bi
+		INNER JOIN Books b ON bi.book_id = b.id
+		<dynamic prepend=" WHERE">
+			<isNotEqual property="bookId"  compareValue="0" prepend="AND">
+				bi.book_id = #bookId#
+			</isNotEqual>
+			<isNotEmpty property="name" prepend="AND">
+				bi.name LIKE CONCAT('%',#name# ,'%')
+			</isNotEmpty>
+		</dynamic>
+		ORDER BY bi.id, bi.name
+	</select>
+	
+	<select id="searchBookItemSize" resultClass="java.lang.Integer">
+		SELECT count(*)
+		FROM Book_items bi
+		INNER JOIN Books b ON bi.book_id = b.id
+		<dynamic prepend=" WHERE">
+			<isNotEqual property="bookId"  compareValue="0" prepend="AND">
+				bi.book_id = #bookId#
+			</isNotEqual>
+			<isNotEmpty property="name" prepend="AND">
+				bi.name LIKE CONCAT('%',#name# ,'%')
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<insert id="insertBookItem" parameterClass="com.benclaus.koperasi.model.BookItem">
+		INSERT INTO Book_items (book_id, name) VALUES (#book.id#, #name#)
+	</insert>
+	<select id="getBookItem" resultMap="bookItemResult">
+		SELECT bi.id, bi.book_id, b.book_name, bi.name    
+		FROM `Book_items` bi
+		INNER JOIN Books b ON b.id = bi.book_id
+		WHERE bi.id = #value#
+	</select>
+	<update id="updateBookItem" parameterClass="com.benclaus.koperasi.model.BookItem">
+		UPDATE Book_items SET name=#name#, book_id = #book.id#
+		WHERE id = #id#
+	</update>
+	<update id="deleteBookItem" >
+		DELETE FROM Book_items
+		WHERE id = #value#
+	</update>
+	
+	<select id="getBookItemList" resultMap="AllSQL.labelValueResult">
+		SELECT id as `value`, `name` label
+		FROM Book_items
+	</select>
+	
+	<!-- ==================================================================== BOOK ITEM END =================  -->
+	
+	
+	
+	
+	<!-- ==================================================================== BOOK MAPPING START =================  -->
+	<select id="getUnavailableMappingByCompany" resultMap="mappingResult">
+		SELECT 0 as id, c.book_item_id bookItem_id, '' bookItem_name, 0 as bookItem_book_id, '' as bookItem_book_name,
+			c.company_id, '' as company_name, '' as company_usercode, '' cell_fy, '' cell_ytd_prev_year_actual,
+			'' cell_ytd_current_actual, '' cell_ytd_current_plan,'' source_formula 
+			FROM
+			(SELECT bi.id book_item_id,bi.`name`, b.company_id, b.company_name
+				FROM Book_items bi
+				INNER JOIN (SELECT cb.id, cb.company_id, c.company_name, cb.book_id  
+					FROM Company_books cb 
+					INNER JOIN Company c on c.id = cb.company_id
+					WHERE cb.company_id = #value# ) b on b.book_id = bi.book_id) c
+					LEFT JOIN Mappings m on m.book_item_id = c.book_item_id and m.company_id = c.company_id
+					WHERE m.book_item_id is NULL 
+	</select>
+	<select id="getUnavailableMapping" resultMap="mappingResult">
+		SELECT 0 as id, c.book_item_id bookItem_id, '' bookItem_name, 0 as bookItem_book_id, '' as bookItem_book_name,
+			c.company_id, '' as company_name, '' as company_usercode, '' cell_fy, '' cell_ytd_prev_year_actual,
+			'' cell_ytd_current_actual, '' cell_ytd_current_plan,'' source_formula 
+			FROM
+			(SELECT bi.id book_item_id,bi.`name`, b.company_id, b.company_name
+				FROM Book_items bi
+				INNER JOIN (SELECT cb.id, cb.company_id, c.company_name, cb.book_id  
+					FROM Company_books cb 
+					INNER JOIN Company c on c.id = cb.company_id) b on b.book_id = bi.book_id) c
+					LEFT JOIN Mappings m on m.book_item_id = c.book_item_id and m.company_id = c.company_id
+					WHERE m.book_item_id is NULL 
+	</select>
+	
+	<insert id="insertMapping" parameterClass="com.benclaus.koperasi.model.Mapping">
+		INSERT INTO Mappings (book_item_id, company_id) VALUES (#bookItem.id#, #company.id#)
+	</insert>
+	
+	<select id="searchMapping" resultMap="mappingResult">
+		SELECT m.id, bi.id bookItem_id, bi.name as bookItem_name, b.id as bookItem_book_id, b.book_name bookItem_book_name,
+			m.company_id, c.company_name as company_name, c.usercode as company_usercode, m.cell_fy, m.cell_ytd_prev_year_actual, 
+			m.cell_ytd_current_actual, m.cell_ytd_current_plan, m.source_formula
+			FROM Mappings m
+			INNER JOIN Book_items bi ON bi.id = m.book_item_id
+			INNER JOIN Books b on b.id = bi.book_id
+			inner JOIN Company c ON c.id = m.company_id
+		<dynamic prepend=" WHERE">
+			<isNotEmpty property="usercode" prepend="AND">
+				c.usercode = #usercode#
+			</isNotEmpty>
+			<isNotEqual property="companyId"  compareValue="0" prepend="AND">
+				c.id = #companyId#
+			</isNotEqual>
+			<isNotEqual property="bookId" compareValue="0" prepend="AND">
+				b.id = #bookId#
+			</isNotEqual>
+			<isNotEqual property="bookItemId" compareValue="0" prepend="AND">
+				bi.id = #bookItemId#
+			</isNotEqual>
+		</dynamic>
+		ORDER BY c.pilar_id, c.id, b.id, bi.id
+	</select>
+	
+	<select id="searchMappingSize" resultClass="java.lang.Integer">
+		SELECT count(*)
+		FROM Mappings m
+			INNER JOIN Book_items bi ON bi.id = m.book_item_id
+			INNER JOIN Books b on b.id = bi.book_id
+			inner JOIN Company c ON c.id = m.company_id
+		<dynamic prepend=" WHERE">
+			<isNotEmpty property="usercode" prepend="AND">
+				c.usercode = #usercode#
+			</isNotEmpty>
+			<isNotEqual property="companyId"  compareValue="0" prepend="AND">
+				c.id = #companyId#
+			</isNotEqual>
+			<isNotEqual property="bookId" compareValue="0" prepend="AND">
+				b.id = #bookId#
+			</isNotEqual>
+			<isNotEqual property="bookItemId" compareValue="0" prepend="AND">
+				bi.id = #bookItemId#
+			</isNotEqual>
+		</dynamic>
+	</select>
+	
+	<select id="getMapping" resultMap="mappingResult">
+		SELECT m.id, bi.id bookItem_id, bi.name as bookItem_name, b.id as bookItem_book_id, b.book_name bookItem_book_name,
+			m.company_id, c.company_name as company_name, c.usercode as company_usercode, m.cell_fy, m.cell_ytd_prev_year_actual, 
+			m.cell_ytd_current_actual, m.cell_ytd_current_plan, m.source_formula
+			FROM Mappings m
+			INNER JOIN Book_items bi ON bi.id = m.book_item_id
+			INNER JOIN Books b on b.id = bi.book_id
+			inner JOIN Company c ON c.id = m.company_id
+		WHERE m.id = #value#	
+	</select>
+	
+	<update id="updateMapping" parameterClass="com.benclaus.koperasi.model.Mapping">
+		UPDATE Mappings SET cell_fy=#cellFy#, cell_ytd_prev_year_actual = #cellYtdPrevActual#, cell_ytd_current_actual = #cellYtdCurrentActual#, 
+			cell_ytd_current_plan = #cellYtdCurrentPlan#, source_formula=#formula#
+		WHERE id = #id#
+	</update>
+	
+	<update id="deleteMapping" parameterClass="java.lang.Integer">
+		DELETE FROM Mappings where book_item_id = #value#
+	</update>
+	
+	
+	<!-- ==================================================================== BOOK MAPPING END =================  -->
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+</sqlMap>
+

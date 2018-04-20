@@ -1,0 +1,390 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap
+PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="A3SQL">
+	<resultMap id="ytdResult" class="com.benclaus.koperasi.model.A3">
+		<result property="mapping.bookItem.id" column="bookItem_id" />
+		<result property="mapping.bookItem.name" column="bookItem_name" />
+		<result property="mapping.bookItem.book.id" column="bookItem_book_id" />
+		<result property="mapping.bookItem.book.name" column="bookItem_book_name" />
+		<result property="mapping.company.id" column="company_id" />
+		<result property="mapping.company.name" column="company_name" />
+		<result property="mapping.company.user.userCode" column="company_usercode" />
+		<result property="mapping.cellFy" column="cell_fy" />
+		<result property="mapping.cellYtdPrevActual" column="cell_ytd_prev_year_actual" />
+		<result property="mapping.cellYtdCurrentActual" column="cell_ytd_current_actual" />
+		<result property="mapping.cellYtdCurrentPlan" column="cell_ytd_current_plan" />
+		<result property="year" column="year" />
+		<result property="amountActual" column="amountActual" />
+		<result property="amountPlan" column="amountPlan" />
+		<result property="amountForecast" column="amountForecast" />
+	</resultMap>
+	
+	<resultMap id="logResult" class="com.benclaus.koperasi.model.FormulaArg">
+		<result property="id" column="id" />
+		<result property="company.id" column="company_id" />
+		<result property="company.name" column="company_name" />
+		<result property="company.user.userCode" column="usercode" />
+		<result property="year" column="year" />
+		<result property="month" column="month" />
+		<result property="fileName" column="file_name" />
+		<result property="processTime" column="createtime"/>
+	</resultMap>
+	
+	<resultMap id="logItemResult" class="com.benclaus.koperasi.model.FormulaArgItem">
+		<result property="bookItem.id" column="bookItem_id" />
+		<result property="bookItem.name" column="bookItem_name" />
+		<result property="bookItem.book.id" column="bookItem_book_id" />
+		<result property="bookItem.book.name" column="bookItem_book_name" />
+		<result property="formula" column="formula" />
+		<result property="formulaArgs" column="formula_args" />
+		<result property="value" column="value" />
+	</resultMap>
+	
+
+	<select id="getMapping" resultMap="ConfigSQL.mappingResult">
+		SELECT m.id, bi.id bookItem_id, bi.name as bookItem_name, b.id as bookItem_book_id, b.book_name bookItem_book_name,
+			m.company_id, c.company_name as company_name, c.usercode as company_usercode, m.cell_fy, m.cell_ytd_prev_year_actual, 
+			m.cell_ytd_current_actual, m.cell_ytd_current_plan, m.source_formula
+			FROM Mappings m
+			INNER JOIN Book_items bi ON bi.id = m.book_item_id
+			INNER JOIN Books b on b.id = bi.book_id
+			inner JOIN Company c ON c.id = m.company_id
+		WHERE c.prefix = #value#	
+	</select>
+	
+	<select id="getBook" resultMap="ConfigSQL.bookResult">
+		SELECT c.id, c.company_id, c1.company_name, c.book_id, b.book_name, c.fullAmount, c.inThousand, c.inMio, c.inBio, c.periodic, c.ytd
+			FROM Company_books c 
+			INNER JOIN Company c1 ON c.company_id = c1.id
+			INNER JOIN Books b ON c.book_id = b.id
+			WHERE c1.prefix = #prefix#
+	AND c.book_id = #bookId#
+	</select>
+	
+	<insert id="insertFormulaArgs" parameterClass="com.benclaus.koperasi.model.FormulaArg">
+		INSERT INTO `Formula_args` (company_id, file_name, `year`, `month`, createtime) 
+			SELECT id, #fileName# as name, #year# `year`, #month# `month`, timestamp(#processTime#) FROM `Company` WHERE prefix=#companyPrefix# 
+	</insert>
+	
+	<select id="getFormulaArg" parameterClass="com.benclaus.koperasi.model.FormulaArg" resultClass="com.benclaus.koperasi.model.FormulaArg">
+		SELECT * FROM `Formula_args`
+			WHERE file_name = #fileName# AND `year` = #year# AND `month` = #month# AND createtime = timestamp(#processTime#)
+	</select>
+	
+	<insert id="insertFormulaArgItems" parameterClass="com.benclaus.koperasi.model.FormulaArgItem">
+		INSERT INTO `Formula_args_items` (formula_id, book_item_id, formula, formula_args, `value`) 
+			VALUES (#formulaArg.id#, #bookItem.id#, #formula#, #formulaArgs#, #value#)
+	</insert>
+	
+	<update id="updateFormulaArgItems" parameterClass="com.benclaus.koperasi.model.FormulaArgItem">
+		UPDATE `Formula_args_items` SET formula = #formula#, formula_args = #formulaArgs#, `value` = #value#  
+			VALUES formula_id = #formulaArg.id# AND book_item_id = #bookItem.id#
+	</update>
+	
+	<select id="selectFormulaArg" resultMap="logResult">
+		SELECT f.id, f.company_id, c.company_name, c.usercode, f.`year`, f.`month`, f.file_name, f.createtime
+		FROM `Formula_args` f
+		INNER JOIN Company c on c.id = f.company_id
+		<dynamic prepend=" WHERE">
+			<isNotEqual property="company" compareValue="0" prepend="AND">
+				f.company_id = #company#
+			</isNotEqual>
+			<isNotEqual property="year" compareValue="0" prepend="AND">
+				f.`year` = #year#
+			</isNotEqual>
+			<isNotEqual property="month" compareValue="0" prepend="AND">
+				f.`month` = #month#
+			</isNotEqual>
+		</dynamic>
+		ORDER BY f.createtime DESC
+	</select>
+	
+	<select id="selectFormulaArgItem" resultMap="logItemResult">
+		SELECT bi.id bookItem_id, bi.`name` bookItem_name, b.id bookItem_book_id, b.book_name bookItem_book_name, 
+			fi.formula, fi.formula_args, fi.`value`
+			FROM Formula_args_items fi 
+			INNER JOIN Book_items bi on bi.id = fi.book_item_id
+			INNER JOIN Books b on b.id = bi.book_id
+			WHERE fi.formula_id = #value#
+	</select>
+	
+	
+	<select id="getDataId" resultClass="java.lang.Integer">
+		SELECT d.id
+			FROM Data d
+			<dynamic prepend=" WHERE">
+				<isNotEmpty property="company" prepend="AND">
+					d.company_id = #company#
+				</isNotEmpty>
+				<isNotEmpty property="year" prepend="AND">
+					d.`year` = #year#
+				</isNotEmpty>
+				<isNotEqual property="bookItem" compareValue="0" prepend="AND">
+					d.book_item_id = #bookItemId#
+				</isNotEqual>
+			</dynamic>
+	</select>
+	
+	<update id="updateActual" parameterClass="com.benclaus.koperasi.model.Data">
+		UPDATE `Data` SET 
+			<isNotNull property="actual1" >
+				actual1=#actual1#
+			</isNotNull>
+			<isNotNull property="actual2" >
+				actual2=#actual2#
+			</isNotNull>
+			<isNotNull property="actual3" >
+				actual3=#actual3#
+			</isNotNull>
+			<isNotNull property="actual4" >
+				actual4=#actual4#
+			</isNotNull>
+			<isNotNull property="actual5" >
+				actual5=#actual5#
+			</isNotNull>
+			<isNotNull property="actual6" >
+				actual6=#actual6#
+			</isNotNull>
+			<isNotNull property="actual7" >
+				actual7=#actual7#
+			</isNotNull>
+			<isNotNull property="actual8" >
+				actual8=#actual8#
+			</isNotNull>
+			<isNotNull property="actual9" >
+				actual9=#actual9#
+			</isNotNull>
+			<isNotNull property="actual10" >
+				actual10=#actual10#
+			</isNotNull>
+			<isNotNull property="actual11" >
+				actual11=#actual11#
+			</isNotNull>
+			<isNotNull property="actual12" >
+				actual12=#actual12#
+			</isNotNull>
+		WHERE id = #id#
+	</update>
+	
+	<select id="getPreviousAmt" parameterClass="com.benclaus.koperasi.model.Data" resultClass="java.lang.Double">
+		SELECT 
+			<isEqual property="month" compareValue="12">
+				IFNULL(actual1,0) + IFNULL(actual2,0) + IFNULL(actual3,0) + IFNULL(actual4,0) + IFNULL(actual5,0) + IFNULL(actual6,0)
+				 + IFNULL(actual7,0) + IFNULL(actual8,0) + IFNULL(actual9,0) + IFNULL(actual10,0) + IFNULL(actual11,0) prevAmt
+			</isEqual> 
+			<isEqual property="month" compareValue="11">
+				IFNULL(actual1,0) + IFNULL(actual2,0) + IFNULL(actual3,0) + IFNULL(actual4,0) + IFNULL(actual5,0) + IFNULL(actual6,0)
+				 + IFNULL(actual7,0) + IFNULL(actual8,0) + IFNULL(actual9,0) + IFNULL(actual10,0)  prevAmt 
+			</isEqual> 
+			<isEqual property="month" compareValue="10">
+				IFNULL(actual1,0) + IFNULL(actual2,0) + IFNULL(actual3,0) + IFNULL(actual4,0) + IFNULL(actual5,0) + IFNULL(actual6,0)
+				 + IFNULL(actual7,0) + IFNULL(actual8,0) + IFNULL(actual9,0)  prevAmt 
+			</isEqual> 
+			<isEqual property="month" compareValue="9">
+				IFNULL(actual1,0) + IFNULL(actual2,0) + IFNULL(actual3,0) + IFNULL(actual4,0) + IFNULL(actual5,0) + IFNULL(actual6,0)
+				 + IFNULL(actual7,0) + IFNULL(actual8,0)  prevAmt 
+			</isEqual> 
+			<isEqual property="month" compareValue="8">
+				IFNULL(actual1,0) + IFNULL(actual2,0) + IFNULL(actual3,0) + IFNULL(actual4,0) + IFNULL(actual5,0) + IFNULL(actual6,0)
+				 + IFNULL(actual7,0) prevAmt 
+			</isEqual> 
+			<isEqual property="month" compareValue="7">
+				IFNULL(actual1,0) + IFNULL(actual2,0) + IFNULL(actual3,0) + IFNULL(actual4,0) + IFNULL(actual5,0) + IFNULL(actual6,0) prevAmt 
+			</isEqual> 
+			<isEqual property="month" compareValue="6">
+				IFNULL(actual1,0) + IFNULL(actual2,0) + IFNULL(actual3,0) + IFNULL(actual4,0) + IFNULL(actual5,0)  prevAmt 
+			</isEqual> 
+			<isEqual property="month" compareValue="5">
+				IFNULL(actual1,0) + IFNULL(actual2,0) + IFNULL(actual3,0) + IFNULL(actual4,0)  prevAmt 
+			</isEqual>
+			<isEqual property="month" compareValue="4">
+				IFNULL(actual1,0) + IFNULL(actual2,0) + IFNULL(actual3,0)  prevAmt 
+			</isEqual> 
+			<isEqual property="month" compareValue="3">
+				IFNULL(actual1,0) + IFNULL(actual2,0)  prevAmt 
+			</isEqual> 
+			<isEqual property="month" compareValue="2">
+				IFNULL(actual1,0) prevAmt 
+			</isEqual> 
+			FROM `Data`
+			WHERE id = #id#
+	</select>
+	
+	<select id="getYtdDataByYear" resultMap="ytdResult">
+		SELECT d.book_item_id bookItem_id, bi.name as bookItem_name, b.id as bookItem_book_id, b.book_name bookItem_book_name,
+			d.company_id, c.company_name as company_name, c.usercode as company_usercode, d.`year`,
+			m.cell_fy, m.cell_ytd_current_actual, m.cell_ytd_current_plan, m.cell_ytd_prev_year_actual, 
+			<isEqual property="month" compareValue="12">
+			IF(d.book_item_id = 10, IFNULL(plan1,0),
+				IF( b.id = 2, IFNULL(plan12,0),
+				IFNULL(plan1,0) + IFNULL(plan2,0) + IFNULL(plan3,0) + IFNULL(plan4,0) + IFNULL(plan5,0) + IFNULL(plan6,0)
+							 + IFNULL(plan7,0) + IFNULL(plan8,0) + IFNULL(plan9,0) + IFNULL(plan10,0) + IFNULL(plan11,0) + IFNULL(plan12,0))) amountPlan,
+			IF(d.book_item_id = 10, IFNULL(actual1,0),
+				IF(b.id = 2, IFNULL(actual12,0),
+				IFNULL(actual1,0) + IFNULL(actual2,0) + IFNULL(actual3,0) + IFNULL(actual4,0) + IFNULL(actual5,0) + IFNULL(actual6,0)
+							 + IFNULL(actual7,0) + IFNULL(actual8,0) + IFNULL(actual9,0) + IFNULL(actual10,0) + IFNULL(actual11,0) + IFNULL(actual12,0))) amountActual,
+			</isEqual>
+			<isEqual property="month" compareValue="11">
+			IF(d.book_item_id = 10, IFNULL(plan1,0),
+				IF( b.id = 2, IFNULL(plan11,0),
+				IFNULL(plan1,0) + IFNULL(plan2,0) + IFNULL(plan3,0) + IFNULL(plan4,0) + IFNULL(plan5,0) + IFNULL(plan6,0)
+							 + IFNULL(plan7,0) + IFNULL(plan8,0) + IFNULL(plan9,0) + IFNULL(plan10,0) + IFNULL(plan11,0)))  amountPlan,
+			IF(d.book_item_id = 10, IFNULL(actual1,0),
+				IF(b.id = 2, IFNULL(actual11,0),
+				IFNULL(actual1,0) + IFNULL(actual2,0) + IFNULL(actual3,0) + IFNULL(actual4,0) + IFNULL(actual5,0) + IFNULL(actual6,0)
+							 + IFNULL(actual7,0) + IFNULL(actual8,0) + IFNULL(actual9,0) + IFNULL(actual10,0) + IFNULL(actual11,0)))  amountActual,
+			</isEqual>
+			<isEqual property="month" compareValue="10">
+			IF(d.book_item_id = 10, IFNULL(plan1,0),
+				IF( b.id = 2, IFNULL(plan10,0),
+				IFNULL(plan1,0) + IFNULL(plan2,0) + IFNULL(plan3,0) + IFNULL(plan4,0) + IFNULL(plan5,0) + IFNULL(plan6,0)
+							 + IFNULL(plan7,0) + IFNULL(plan8,0) + IFNULL(plan9,0) + IFNULL(plan10,0)))  amountPlan,
+			IF(d.book_item_id = 10, IFNULL(actual1,0),
+				IF(b.id = 2, IFNULL(actual10,0),
+				IFNULL(actual1,0) + IFNULL(actual2,0) + IFNULL(actual3,0) + IFNULL(actual4,0) + IFNULL(actual5,0) + IFNULL(actual6,0)
+							 + IFNULL(actual7,0) + IFNULL(actual8,0) + IFNULL(actual9,0) + IFNULL(actual10,0)))  amountActual,
+			</isEqual>
+			<isEqual property="month" compareValue="9">
+			IF(d.book_item_id = 10, IFNULL(plan1,0),
+				IF( b.id = 2, IFNULL(plan9,0),
+				IFNULL(plan1,0) + IFNULL(plan2,0) + IFNULL(plan3,0) + IFNULL(plan4,0) + IFNULL(plan5,0) + IFNULL(plan6,0)
+							 + IFNULL(plan7,0) + IFNULL(plan8,0) + IFNULL(plan9,0)))  amountPlan,
+			IF(d.book_item_id = 10, IFNULL(actual1,0),
+				IF(b.id = 2, IFNULL(actual9,0),
+				IFNULL(actual1,0) + IFNULL(actual2,0) + IFNULL(actual3,0) + IFNULL(actual4,0) + IFNULL(actual5,0) + IFNULL(actual6,0)
+							 + IFNULL(actual7,0) + IFNULL(actual8,0) + IFNULL(actual9,0))) amountActual,
+			</isEqual>
+			<isEqual property="month" compareValue="8">
+			IF(d.book_item_id = 10, IFNULL(plan1,0),
+				IF( b.id = 2, IFNULL(plan8,0),
+				IFNULL(plan1,0) + IFNULL(plan2,0) + IFNULL(plan3,0) + IFNULL(plan4,0) + IFNULL(plan5,0) + IFNULL(plan6,0)
+							 + IFNULL(plan7,0) + IFNULL(plan8,0)))  amountPlan,
+			IF(d.book_item_id = 10, IFNULL(actual1,0),
+				IF(b.id = 2, IFNULL(actual8,0),
+				IFNULL(actual1,0) + IFNULL(actual2,0) + IFNULL(actual3,0) + IFNULL(actual4,0) + IFNULL(actual5,0) + IFNULL(actual6,0)
+							 + IFNULL(actual7,0) + IFNULL(actual8,0)))  amountActual,
+			</isEqual>
+			<isEqual property="month" compareValue="7">
+			IF(d.book_item_id = 10, IFNULL(plan1,0),
+				IF( b.id = 2, IFNULL(plan7,0),
+				IFNULL(plan1,0) + IFNULL(plan2,0) + IFNULL(plan3,0) + IFNULL(plan4,0) + IFNULL(plan5,0) + IFNULL(plan6,0) + IFNULL(plan7,0)))  amountPlan,
+			IF(d.book_item_id = 10, IFNULL(actual1,0),
+				IF(b.id = 2, IFNULL(actual7,0),
+				IFNULL(actual1,0) + IFNULL(actual2,0) + IFNULL(actual3,0) + IFNULL(actual4,0) + IFNULL(actual5,0) + IFNULL(actual6,0) + IFNULL(actual7,0)))  amountActual,
+			</isEqual>
+			<isEqual property="month" compareValue="6">
+			IF(d.book_item_id = 10, IFNULL(plan1,0),
+				IF( b.id = 2, IFNULL(plan6,0),
+				IFNULL(plan1,0) + IFNULL(plan2,0) + IFNULL(plan3,0) + IFNULL(plan4,0) + IFNULL(plan5,0) + IFNULL(plan6,0))) amountPlan,
+			IF(d.book_item_id = 10, IFNULL(actual1,0),
+				IF(b.id = 2, IFNULL(actual6,0),
+				IFNULL(actual1,0) + IFNULL(actual2,0) + IFNULL(actual3,0) + IFNULL(actual4,0) + IFNULL(actual5,0) + IFNULL(actual6,0))) amountActual,
+			</isEqual>
+			<isEqual property="month" compareValue="5">
+			IF(d.book_item_id = 10, IFNULL(plan1,0),
+				IF( b.id = 2, IFNULL(plan5,0),
+				IFNULL(plan1,0) + IFNULL(plan2,0) + IFNULL(plan3,0) + IFNULL(plan4,0) + IFNULL(plan5,0))) amountPlan,
+			IF(d.book_item_id = 10, IFNULL(actual1,0),
+				IF(b.id = 2, IFNULL(actual5,0),
+				IFNULL(actual1,0) + IFNULL(actual2,0) + IFNULL(actual3,0) + IFNULL(actual4,0) + IFNULL(actual5,0)))  amountActual,
+			</isEqual>
+			<isEqual property="month" compareValue="4">
+			IF(d.book_item_id = 10, IFNULL(plan1,0),
+				IF( b.id = 2, IFNULL(plan4,0),
+				IFNULL(plan1,0) + IFNULL(plan2,0) + IFNULL(plan3,0) + IFNULL(plan4,0)))  amountPlan,
+			IF(d.book_item_id = 10, IFNULL(actual1,0),
+				IF(b.id = 2, IFNULL(actual4,0),
+				IFNULL(actual1,0) + IFNULL(actual2,0) + IFNULL(actual3,0) + IFNULL(actual4,0)))  amountActual,
+			</isEqual>
+			<isEqual property="month" compareValue="3">
+			IF(d.book_item_id = 10, IFNULL(plan1,0),
+				IF( b.id = 2, IFNULL(plan3,0),
+				IFNULL(plan1,0) + IFNULL(plan2,0) + IFNULL(plan3,0)))  amountPlan,
+			IF(d.book_item_id = 10, IFNULL(actual1,0),
+				IF(b.id = 2, IFNULL(actual3,0),
+				IFNULL(actual1,0) + IFNULL(actual2,0) + IFNULL(actual3,0)))  amountActual,
+			</isEqual>
+			<isEqual property="month" compareValue="2">
+			IF(d.book_item_id = 10, IFNULL(plan1,0),
+				IF( b.id = 2, IFNULL(plan2,0),
+				IFNULL(plan1,0) + IFNULL(plan2,0))) amountPlan,
+			IF(d.book_item_id = 10, IFNULL(actual1,0),
+				IF(b.id = 2, IFNULL(actual2,0),
+				IFNULL(actual1,0) + IFNULL(actual2,0))) amountActual,
+			</isEqual>
+			<isEqual property="month" compareValue="1">
+				IFNULL(plan1,0)  amountPlan,
+				IFNULL(actual1,0) amountActual,
+			</isEqual>
+			0 amountForecast
+
+		FROM `Mappings` m
+		INNER JOIN `Data` d ON d.company_id = m.company_id AND d.book_item_id = m.book_item_id
+		INNER JOIN Book_items bi ON bi.id = d.book_item_id
+					INNER JOIN Books b on b.id = bi.book_id
+					inner JOIN Company c ON c.id = d.company_id
+		WHERE `year` = #year#
+	</select>
+	
+	
+	
+	<select id="getFullYearPrevYearActual" resultMap="ytdResult">
+		SELECT d.book_item_id bookItem_id, bi.name as bookItem_name, b.id as bookItem_book_id, b.book_name bookItem_book_name,
+			d.company_id, c.company_name as company_name, c.usercode as company_usercode, d.`year`,
+			m.cell_fy, m.cell_ytd_current_actual, m.cell_ytd_current_plan, m.cell_ytd_prev_year_actual, 0 amountPlan,
+			IF(d.book_item_id = 10, IFNULL(actual1,0),
+				IF(b.id = 2, IFNULL(actual12,0),		
+				IFNULL(actual1,0) + IFNULL(actual2,0) + IFNULL(actual3,0) + IFNULL(actual4,0) + IFNULL(actual5,0) + IFNULL(actual6,0)
+				 + IFNULL(actual7,0) + IFNULL(actual8,0) + IFNULL(actual9,0) + IFNULL(actual10,0) + IFNULL(actual11,0) + IFNULL(actual12,0))) amountActual,
+				0 amountForecast
+
+		FROM `Mappings` m
+		INNER JOIN `Data` d ON d.company_id = m.company_id AND d.book_item_id = m.book_item_id
+		INNER JOIN Book_items bi ON bi.id = d.book_item_id
+					INNER JOIN Books b on b.id = bi.book_id
+					inner JOIN Company c ON c.id = d.company_id
+		WHERE `year` = #year#
+	</select>
+	
+	<select id="getFullYearCurrentYearActual" resultMap="ytdResult">
+		SELECT d.book_item_id bookItem_id, bi.name as bookItem_name, b.id as bookItem_book_id, b.book_name bookItem_book_name,
+			d.company_id, c.company_name as company_name, c.usercode as company_usercode, d.`year`,
+			m.cell_fy, m.cell_ytd_current_actual, m.cell_ytd_current_plan, m.cell_ytd_prev_year_actual, 
+			IF(d.book_item_id = 10, IFNULL(plan1,0),
+				IF(b.id = 2, IFNULL(plan12,0),
+				IFNULL(plan1,0) + IFNULL(plan2,0) + IFNULL(plan3,0) + IFNULL(plan4,0) + IFNULL(plan5,0) + IFNULL(plan6,0)
+							 + IFNULL(plan7,0) + IFNULL(plan8,0) + IFNULL(plan9,0) + IFNULL(plan10,0) + IFNULL(plan11,0) + IFNULL(plan12,0))) amountPlan,
+			
+			IF(d.book_item_id = 10, IFNULL(actual1,0),
+				IF(b.id = 2, IFNULL(actual12,0),
+				IFNULL(actual1,0) + IFNULL(actual2,0) + IFNULL(actual3,0) + IFNULL(actual4,0) + IFNULL(actual5,0) + IFNULL(actual6,0)
+							 + IFNULL(actual7,0) + IFNULL(actual8,0) + IFNULL(actual9,0) + IFNULL(actual10,0) + IFNULL(actual11,0) + IFNULL(actual12,0))) amountActual,
+			
+		f.amount amountForecast
+
+		FROM `Mappings` m
+		INNER JOIN `Data` d ON d.company_id = m.company_id AND d.book_item_id = m.book_item_id
+		INNER JOIN Forecast f ON f.company_id = m.company_id AND f.book_item_id = m.book_item_id
+		INNER JOIN Book_items bi ON bi.id = d.book_item_id
+					INNER JOIN Books b on b.id = bi.book_id
+					inner JOIN Company c ON c.id = d.company_id
+		WHERE d.`year` = #year# AND f.`year` = #year#
+	</select>
+	
+	<select id="getFullYearForecast" resultMap="ytdResult">
+		SELECT f.book_item_id bookItem_id, bi.name as bookItem_name, b.id as bookItem_book_id, b.book_name bookItem_book_name,
+			f.company_id, c.company_name as company_name, c.usercode as company_usercode, f.`year`,
+			m.cell_fy, m.cell_ytd_current_actual, m.cell_ytd_current_plan, m.cell_ytd_prev_year_actual, 0 amountPlan, 0 amountActual, IFNULL(f.amount,0) amountForecast
+		FROM `Mappings` m
+		INNER JOIN `Forecast` f ON f.company_id = m.company_id AND f.book_item_id = m.book_item_id
+		INNER JOIN Book_items bi ON bi.id = f.book_item_id
+					INNER JOIN Books b on b.id = bi.book_id
+					inner JOIN Company c ON c.id = f.company_id
+		WHERE `year` = #year#
+	</select>
+	
+</sqlMap>
+

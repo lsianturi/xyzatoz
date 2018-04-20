@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap
+PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="UserSQL">
+    <resultMap id="userSearchResult" class="com.benclaus.koperasi.model.usm.User">
+    	<result property="userCode" column="USERCODE"/>
+    	<result property="fullName" column="FULLNAME"/>
+    	<result property="roleCode" column="ROLECODE"/>
+    	<result property="activeStatus" column="ACTIVESTATUS"/>
+    </resultMap>
+	<resultMap id="userResult" class="com.benclaus.koperasi.model.usm.User">
+		<result property="userCode" column="USERCODE"/>
+		<result property="createdBy" column="CREATEDBY"/>
+		<result property="sessionTimeOut" column="SESSIONTIMEOUT"/>
+		<result property="activeStatus" column="ACTIVESTATUS"/>
+		<result property="statusLabel" column="statusLabel"/>
+		<result property="roleCode" column="ROLECODE"/>
+		<result property="roleName" column="ROLENAME" />
+		<result property="mobile" column="MOBILE"/>
+		<result property="emailAddress" column="EMAILADDRESS"/>
+		<result property="firstName" column="FIRSTNAME"/>
+		<result property="lastName" column="LASTNAME"/>
+		<result property="lastLogon" column="LASTLOGON"/>
+		<result property="password" column="PASSWORD"/>
+	</resultMap>
+	
+	<resultMap id="userRoleResult" class="com.benclaus.koperasi.model.usm.UserRole">
+		<result property="roleCode" column="ROLECODE"/>
+		<result property="name" column="NAME"/>
+	</resultMap>
+	
+	<resultMap id="userLoginResult" class="com.benclaus.koperasi.model.usm.User">
+		<result property="userCode" column="userCode" />
+		<result property="password" column="password" />
+		<result property="roleCode" column="roleCode" />
+		<result property="roleName" column="roleName" />
+		<result property="lastLogon" column="lastLogon" />
+		<result property="sessionTimeOut" column="sessionTimeOut" />
+		<result property="activeStatus" column="activeStatus" />
+		<result property="statusLabel" column="statusLabel" />
+		<result property="initials" column="initials" />
+		<result property="mobile" column="MOBILE"/>
+		<result property="emailAddress" column="EMAILADDRESS"/>
+		<result property="firstName" column="FIRSTNAME"/>
+		<result property="lastName" column="LASTNAME"/>
+		<result property="companyCode" column="company_id"/>
+		
+	</resultMap>
+	
+	<select id="searchUser" parameterClass="java.util.Map" resultMap="userResult">
+		SELECT t1.userCode, t2.ROLECODE, t1.lastLogon, t1.mobile,t1.emailAddress,t1.lastName,t1.firstName, t1.createdBy, t1.password,
+			t1.sessionTimeOut, t1.activeStatus, t2.description ROLENAME, if(t1.ACTIVESTATUS=0,"Inactive", "Active") as statusLabel
+		FROM ms_user t1 
+			inner join ms_role t2 on t1.rolecode=t2.rolecode
+		<dynamic>
+			<isNotEmpty prepend=" AND " property="searchValue">
+				<isNotEmpty property="searchColumn">
+					<isEqual property="searchColumn" compareValue="userCode">
+						UPPER(t1.userCode) LIKE concat('%',#searchValue#, '%')
+					</isEqual>
+					<isEqual property="searchColumn" compareValue="firstName">
+						UPPER(t1.firstName) LIKE concat('%',#searchValue#, '%')
+					</isEqual>
+					<isEqual property="searchColumn" compareValue="lastName">
+						UPPER(t1.lastname) LIKE concat('%',#searchValue#, '%')
+					</isEqual>
+					<isEqual property="searchColumn" compareValue="roleCode">
+						UPPER(t1.roleCode) LIKE concat('%',#searchValue#, '%')
+					</isEqual>
+				</isNotEmpty>
+			</isNotEmpty>
+		</dynamic>
+    </select>
+    
+    <select id="searchUserSize" parameterClass="java.util.Map" resultClass="java.lang.Integer">
+		SELECT count(t1.USERCODE)
+		FROM ms_user t1 
+			inner join ms_role t2 on t1.rolecode=t2.rolecode
+		<dynamic>
+			<isNotEmpty prepend=" AND " property="searchValue">
+				<isNotEmpty property="searchColumn">
+					<isEqual property="searchColumn" compareValue="userCode">
+						UPPER(t1.userCode) LIKE concat('%',#searchValue#, '%')
+					</isEqual>
+					<isEqual property="searchColumn" compareValue="firstName">
+						UPPER(t1.firstName) LIKE concat('%',#searchValue#, '%')
+					</isEqual>
+					<isEqual property="searchColumn" compareValue="lastName">
+						UPPER(t1.lastname) LIKE concat('%',#searchValue#, '%')
+					</isEqual>
+					<isEqual property="searchColumn" compareValue="roleCode">
+						UPPER(t1.roleCode) LIKE concat('%',#searchValue#, '%')
+					</isEqual>
+				</isNotEmpty>
+			</isNotEmpty>
+		</dynamic>
+    </select>
+	
+	<insert id="insertUser" parameterClass="com.benclaus.koperasi.model.usm.User">
+    	INSERT INTO 
+    		ms_user (USERCODE, PASSWORD, FIRSTNAME, LASTNAME, EMAILADDRESS, MOBILE, COMPANYCODE, ROLECODE, ACTIVESTATUS, CREATEDBY) 
+    	VALUES
+    		(#userCode#, 'X03MO1qnZdYdgyfeuILPmQ==', #firstName#, #lastName#, #emailAddress#, #mobile#, #companyCode#, #roleCode#, #activeStatus#, #createdBy#)
+    </insert>
+
+	<update id="updateUser" parameterClass="com.benclaus.koperasi.model.usm.User">
+		UPDATE ms_user 
+		SET FIRSTNAME=#firstName#, LASTNAME=#lastName#, EMAILADDRESS=#emailAddress#, MOBILE=#mobile#, ROLECODE=#roleCode#, 
+		ACTIVESTATUS=#activeStatus#, SESSIONTIMEOUT=#sessionTimeOut#, ACTIVESTATUS=#activeStatus# 
+		WHERE usercode=#userCode#
+    </update>
+
+	<update id="deleteUser" parameterClass="com.benclaus.koperasi.model.usm.User">
+    	UPDATE 
+    		ms_user SET activestatus = 1, LASTUPDDTM = now(), LASTUPDBY = #lastUpdBy#, LASTUPDPROCESS = #lastUpdProcess# 
+    	WHERE 
+    		USERCODE = #userCode#
+    </update>
+
+	<!-- 
+	<update id="deleteUserRoleAll" parameterClass="com.benclaus.koperasi.model.usm.User">
+    	UPDATE 
+    		vc_UserRole SET activestatus = 1, LASTUPDDTM = now(), LASTUPDBY = #lastUpdBy#, LASTUPDPROCESS = #lastUpdProcess# 
+    	WHERE 
+    		USERCODE = #userCode#
+    </update>    
+     -->
+
+	<update id="updateLastLogon" parameterClass="java.lang.String">
+		UPDATE 
+			ms_user 
+		SET 
+			lastLogon=now() WHERE userCode=#value#
+	</update>
+
+	<select id="getUser" parameterClass="java.lang.String" resultMap="userResult">
+		SELECT u.*, '' ROLENAME, '' statusLabel
+		FROM 
+			ms_user u
+		WHERE u.USERCODE = #value#
+    </select>
+    
+   
+	<select id="getDataUserRoleHas" parameterClass="java.lang.String" resultMap="userRoleResult">
+    	SELECT 
+    		ur.ROLECODE, r.NAME 
+    	FROM 
+    		vc_UserRole ur, ms_role r 
+    	WHERE 
+    		ur.ROLECODE = r.ROLECODE AND ur.USERCODE = #value#
+    </select>    
+    
+	<select id="getDataUserRoleNoHas" parameterClass="java.lang.String" resultMap="userRoleResult">
+    	SELECT 
+    		ROLECODE, NAME 
+    	FROM 
+    		ms_role 
+    	WHERE 
+    		ROLECODE 
+		NOT IN (SELECT 
+					ROLECODE 
+				FROM 
+					vc_UserRole 
+				WHERE 
+					USERCODE = #value#)
+    </select>    
+	<!-- 
+	<insert id="insertUserRole" parameterClass="com.benclaus.koperasi.model.usm.UserRole">
+    	INSERT INTO 
+	    	vc_UserRole(USERCODE, ROLECODE, CREATEDBY) 
+    	VALUES
+    		(#userCode#, #roleCode#, #createdBy#)
+    </insert>
+	
+	<delete id="deleteUserRole" parameterClass="com.benclaus.koperasi.model.usm.UserRole">
+    	DELETE FROM 
+    		vc_UserRole 
+    	WHERE 
+    		USERCODE = #userCode# AND ROLECODE = #roleCode#
+    </delete>
+	 -->
+	<update id="deactivateUser" parameterClass="com.benclaus.koperasi.model.usm.UserRole">
+		UPDATE 
+			ms_user 
+		SET 
+			activeStatus='ATSNA', lastUpdDtm=now(), lastUpdBy=#lastUpdBy#, lastUpdProcess=#lastUpdProcess# 
+		WHERE 
+			userCode=#userCode#
+	</update>
+
+	<update id="updatePassword" parameterClass="java.util.Map">
+		UPDATE 
+			ms_user 
+		SET 
+			password=#newPassword#
+		WHERE 
+			userCode=#userCode#
+	</update>
+	
+	<select id="getUserRole" parameterClass="java.lang.String" resultMap="userLoginResult">
+		SELECT t1.userCode, t2.description as roleName, t1.lastLogon, t1.mobile,t1.emailAddress,t1.lastName,t1.firstName,
+			t1.password, t1.sessionTimeOut, t1.activeStatus,
+			t1.firstname||t1.lastname as initials, t2.description rolecode, "Aktif" as statusLabel, 0 as company_id 
+		FROM ms_user t1 
+			inner join ms_role t2 on t1.rolecode=t2.rolecode
+		WHERE t1.activestatus = 1 
+		AND t1.userCode=#value# 
+	</select>
+	
+	<select id="getUserRoleEmployee" parameterClass="java.lang.String" resultMap="userLoginResult">
+		SELECT t1.email userCode, 'User' as roleName, now() as lastLogon, '0' as mobile, t1.email as emailAddress, t1.lastName,t1.firstName,
+			'' as password, 30 as sessionTimeOut, 1 as activeStatus,
+			t1.firstName||t1.lastName as initials, 'User' rolecode, "Aktif" as statusLabel, t1.company_id
+		FROM employee t1 			
+		WHERE t1.email LIKE concat('%', #value#,'%')
+	</select>
+	
+	<select id="getUserCompanies" parameterClass="java.lang.String" resultClass="com.benclaus.koperasi.utility.LabelValueBean">
+		SELECT uc.company_id as `value`, c.`name` as label
+		FROM ms_user u
+		INNER JOIN ms_user_comp uc on u.USERCODE = uc.USERCODE
+		INNER JOIN company c on uc.company_id = c.id
+		WHERE u.USERCODE = #value#
+	</select>
+	
+	<select id="getUserCompany" parameterClass="java.lang.String" resultClass="com.benclaus.koperasi.utility.LabelValueBean">
+		SELECT c.id as `value`,  c.`name` as label
+		FROM company c
+		INNER JOIN employee e on e.company_id = c.id
+		WHERE e.email LIKE CONCAT(#value#,'%'); 
+	</select>
+	
+	<update id="updateProfile" parameterClass="java.util.Map">
+		UPDATE ms_user SET FIRSTNAME=#firstName#, LASTNAME=#lastName#, EMAILADDRESS=#emailAddress#, MOBILE=#mobile#
+		WHERE usercode=#userCode#
+    </update>
+	
+</sqlMap>
+
