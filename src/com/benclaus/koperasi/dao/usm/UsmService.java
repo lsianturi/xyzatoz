@@ -22,7 +22,6 @@ public class UsmService {
 	
 	private UsmDAO dao = UsmDAO.getInstance();
 	private MenuService menuService = MenuService.getInstance();
-	private UserService userService = UserService.getInstance();
 
 	public static synchronized UsmService getInstance() {
 		if (usmService==null) usmService= new UsmService();

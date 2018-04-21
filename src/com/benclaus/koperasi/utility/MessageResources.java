@@ -27,7 +27,7 @@ public class MessageResources {
 	};
 
 	ResourceBundle rb;
-	String propName = "id/co/ggpc/ror/resources/MenuResources";
+	String propName = "com/benclaus/koperasi/resources/MenuResources";
 
 	String[] asDNames = new String[alSupported.length];
 

@@ -2,7 +2,7 @@ package com.benclaus.koperasi.utility;
 
 public interface Constant {
 	// Constant for First Menu
-	String FIRST_MENU = "ROR";
+	String FIRST_MENU = "KOP";
 	
 	//Login WebServices
 	String SSO_WS_URL="SSO_WS_URL";
