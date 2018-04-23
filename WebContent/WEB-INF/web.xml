@@ -41,6 +41,7 @@
 			<param-value>
 				/WEB-INF/conf/struts-config.xml,
 				/WEB-INF/conf/struts-config-usm.xml,
+				/WEB-INF/conf/struts-config-master.xml,
 				/WEB-INF/conf/struts-config-conf.xml,
 				/WEB-INF/conf/struts-config-data.xml
   			</param-value>

@@ -1,4 +1,4 @@
-package com.benclaus.koperasi.action.master;
+package com.benclaus.koperasi.action.app.master;
 
 import java.io.OutputStream;
 import java.util.Calendar;

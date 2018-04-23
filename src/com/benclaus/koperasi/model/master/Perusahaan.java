@@ -9,8 +9,8 @@ public class Perusahaan extends Audit {
 	private Integer id;
 	private String nama;
 	private String alamat;
-	private Integer industri;
-	private Integer area;
+	private Industri industri;
+	private Area area;
 
 	public Perusahaan() {
 		super();
@@ -42,19 +42,19 @@ public class Perusahaan extends Audit {
 		this.alamat = alamat;
 	}
 
-	public Integer getIndustri() {
+	public Industri getIndustri() {
 		return industri;
 	}
 
-	public void setIndustri(Integer industri) {
+	public void setIndustri(Industri industri) {
 		this.industri = industri;
 	}
 
-	public Integer getArea() {
+	public Area getArea() {
 		return area;
 	}
 
-	public void setArea(Integer area) {
+	public void setArea(Area area) {
 		this.area = area;
 	}
 

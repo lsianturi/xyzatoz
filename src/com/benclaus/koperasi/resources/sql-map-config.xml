@@ -47,4 +47,7 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map Config 2.0//EN"
 	<sqlMap resource="com/benclaus/koperasi/resources/sql/app/DataSQL.xml" />
 	<sqlMap resource="com/benclaus/koperasi/resources/sql/app/ReportSQL.xml" />
 	<sqlMap resource="com/benclaus/koperasi/resources/sql/app/A3SQL.xml" />
+	
+	<!-- Master module -->
+	<sqlMap resource="com/benclaus/koperasi/resources/sql/master/PrshnSQL.xml" />
 </sqlMapConfig>

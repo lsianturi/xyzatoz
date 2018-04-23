@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN"
+                               "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+  -->
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.2//EN" 
+		"http://struts.apache.org/dtds/struts-config_1_2.dtd">
+
+<struts-config>
+	<form-beans>
+		<form-bean name="perusahaanSearch" type="org.apache.struts.validator.DynaValidatorForm">
+			<form-property name="dispatch" type="java.lang.String" initial="prepare" />
+			<form-property name="nama" type="java.lang.String" />
+			<form-property name="industri" type="java.lang.String" />
+			<form-property name="area" type="java.lang.String" />
+			<form-property name="pageIndex" type="java.lang.String" initial="1" />	
+			<form-property name="totalPage" type="java.lang.String" />
+			<form-property name="totalSize" type="java.lang.String" />		
+		</form-bean>
+		
+		<form-bean name="perusahaanForm" type="org.apache.struts.validator.DynaValidatorForm">
+			<form-property name="dispatch" type="java.lang.String" />
+			<form-property name="id" type="java.lang.Integer" />
+			<form-property name="nama" type="java.lang.String" />
+			<form-property name="alamat" type="java.lang.String" />
+			<form-property name="area" type="java.lang.Integer" />
+			<form-property name="industri" type="java.lang.Integer" />
+		</form-bean>
+		
+	</form-beans>
+	
+	<action-mappings>
+		<action path="/perusahaan" name="perusahaanSearch" type="com.benclaus.koperasi.action.app.master.PerusahaanAction" scope="request" validate="false" parameter="dispatch">
+    		<forward name="continue" path="/app/master/perusahaan.jsp" />	
+    		<forward name="fail" path="/main.jsp" />
+    	</action>
+    	<action path="/updatePerusahaan" name="perusahaanForm" type="com.benclaus.koperasi.action.app.master.PerusahaanAction" scope="request" parameter="dispatch" validate="false">
+			<forward name="continue" path="/perusahaan.do?dispatch=returned" />
+			<forward name="success" path="/app/master/perusahaanEdit.jsp" />
+			<forward name="fail" path="/perusahaan.do?dispatch=returned" />
+		</action>
+    	<action path="/savePerusahaan" name="perusahaanForm" type="com.benclaus.koperasi.action.app.master.PerusahaanAction" scope="request" parameter="dispatch" validate="false">
+			<forward name="success" path="/perusahaan.do?dispatch=returned" />
+			<forward name="fail" path="/app/master/perusahaanEdit.jsp" />
+		</action>
+		
+		
+	</action-mappings>
+</struts-config>

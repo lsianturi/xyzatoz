@@ -20,18 +20,19 @@
 				<arg0 key="form.pilar.name" />
 			</field>
 		</form>
-		<form name="companyForm">
-			<!-- <field property="pilarId" depends="required">
-				<arg0 key="form.pilar.name" />
-			</field> -->
-			<field property="name" depends="required">
-				<arg0 key="form.company.pilar" />
+		
+		<form name="perusahaanForm">
+			<field property="nama" depends="required">
+				<arg0 key="form.company.name" />
 			</field>
-			<field property="user" depends="required">
-				<arg0 key="form.company.spm" />
+			<field property="alamat" depends="required">
+				<arg0 key="form.company.address" />
 			</field>
-			<field property="prefix" depends="required">
-				<arg0 key="form.company.prefix" />
+			<field property="industri" depends="required">
+				<arg0 key="form.company.industri" />
+			</field>
+			<field property="area" depends="required">
+				<arg0 key="form.company.area" />
 			</field>
 		</form>
 		
