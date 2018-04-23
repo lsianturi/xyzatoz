@@ -52,6 +52,10 @@ public class PerusahaanDao extends BaseDAO {
 		log.info("PrshnSQL.updatePerusahaan");
 		return (Integer) super.update("PrshnSQL.updatePerusahaan", perusahaan);
 	}
+	public Integer deletePerusahaan(Integer id) throws DaoException {
+		log.info("PrshnSQL.deletePerusahaan");
+		return (Integer) super.update("PrshnSQL.deletePerusahaan", id);
+	}
 	
 	public Perusahaan getPerusahaan(Integer id) throws DaoException {
 		log.info("PrshnSQL.getPerusahaan");

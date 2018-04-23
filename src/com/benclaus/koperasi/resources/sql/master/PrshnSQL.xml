@@ -49,9 +49,15 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 		INSERT INTO ms_perusahaan (`id`, `nama`, `alamat`, `industri`, `area`) 
 		VALUES (#id#, #nama#, #alamat#, #industri.id#, #area.id#)
 	</insert>
+	
 	<update id="updatePerusahaan" parameterClass="com.benclaus.koperasi.model.master.Perusahaan">
 		UPDATE ms_perusahaan SET  `nama` = #nama#, `alamat`=#alamat#, `industri`=#industri.id#, `area`=#area.id#
 		WHERE `id`=#id#
+	</update>
+	
+	<update id="deletePerusahaan" parameterClass="java.lang.Integer">
+		UPDATE ms_perusahaan SET  `deleted` = 1
+		WHERE `id`=#value#
 	</update>
 	
 	<select id="getPerusahaan" resultMap="prshnResult">

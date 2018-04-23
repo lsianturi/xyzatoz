@@ -11,6 +11,8 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.DynaActionForm;
 
 import com.benclaus.koperasi.action.SecurityAction;
@@ -88,7 +90,7 @@ public class PerusahaanAction extends SecurityAction {
 		if (forward != null)
 			return forward;
 
-		ActionErrors errors = new ActionErrors();
+		ActionMessages errors = new ActionMessages();
 		HttpSession session = request.getSession();
 		DynaActionForm mapForm = (DynaActionForm) form;
 		// Revalidate form if needed
@@ -115,7 +117,7 @@ public class PerusahaanAction extends SecurityAction {
 			session.setAttribute(MENU_PRSHN_VIEW, sessionForm);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			errors.add(Constant.GLOBALERROR, new ActionError("error.exception", e.getMessage()));
+			errors.add(Constant.GLOBALERROR, new ActionMessage("error.exception", e.getMessage()));
 		}
 
 		if (errors.size() > 0) {
@@ -150,7 +152,7 @@ public class PerusahaanAction extends SecurityAction {
 
 		log.debug("Add");
 
-		ActionErrors errors = new ActionErrors();
+		ActionMessages errors = new ActionMessages();
 		// Check Menu Access
 		ActionForward forward = new ActionForward();
 		DynaActionForm planForm = (DynaActionForm) form;
@@ -163,7 +165,7 @@ public class PerusahaanAction extends SecurityAction {
 
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			errors.add(Constant.GLOBALERROR, new ActionError("error.exception", e.getMessage()));
+			errors.add(Constant.GLOBALERROR, new ActionMessage("error.exception", e.getMessage()));
 		}
 
 		if (errors.size() > 0) {
@@ -186,14 +188,14 @@ public class PerusahaanAction extends SecurityAction {
 		forward = hasMenuAccess(mapping, request, MENU_PRSHN_ADD);
 		if (forward != null)
 			return forward;
-		ActionErrors errors = new ActionErrors();
+		ActionMessages errors = new ActionMessages();
 		HttpSession session = request.getSession();
 		DynaActionForm planForm = (DynaActionForm) form;
 
 		Login userLogin = (Login) session.getAttribute(Constant.SES_USERLOGIN);
 		// check loggedIn
 		if (userLogin == null) {
-			errors.add(Constant.GLOBALERROR, new ActionError("error.invalidLogin"));
+			errors.add(Constant.GLOBALERROR, new ActionMessage("error.invalidLogin"));
 		}
 
 		try {
@@ -209,13 +211,13 @@ public class PerusahaanAction extends SecurityAction {
 				service.insertPerusahaan(prshn);
 
 			} else {
-				errors.add(Constant.GLOBALERROR, new ActionError("error.invalidToken"));
+				errors.add(Constant.GLOBALERROR, new ActionMessage("error.invalidToken"));
 				saveErrors(request, errors);
 				return mapping.findForward("invalidPage");
 			}
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			errors.add(Constant.GLOBALERROR, new ActionError("error.exception", e.getMessage()));
+			errors.add(Constant.GLOBALERROR, new ActionMessage("error.exception", e.getMessage()));
 		}
 
 		if (errors.size() > 0) {
@@ -231,9 +233,9 @@ public class PerusahaanAction extends SecurityAction {
 
 		log.debug("Update");
 
-		ActionErrors errors = new ActionErrors();
+		ActionMessages errors = new ActionMessages();
 		// Check Menu Access
-		HttpSession session = request.getSession();
+//		HttpSession session = request.getSession();
 		ActionForward forward = new ActionForward();
 		DynaActionForm planForm = (DynaActionForm) form;
 		forward = hasMenuAccess(mapping, request, MENU_PRSHN_UPD);
@@ -250,7 +252,7 @@ public class PerusahaanAction extends SecurityAction {
 
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			errors.add(Constant.GLOBALERROR, new ActionError("error.exception", e.getMessage()));
+			errors.add(Constant.GLOBALERROR, new ActionMessage("error.exception", e.getMessage()));
 		}
 
 		if (errors.size() > 0) {
@@ -274,14 +276,14 @@ public class PerusahaanAction extends SecurityAction {
 		forward = hasMenuAccess(mapping, request, MENU_PRSHN_UPD);
 		if (forward != null)
 			return forward;
-		ActionErrors errors = new ActionErrors();
+		ActionMessages errors = new ActionMessages();
 		HttpSession session = request.getSession();
 		DynaActionForm planForm = (DynaActionForm) form;
 
 		Login userLogin = (Login) session.getAttribute(Constant.SES_USERLOGIN);
 		// check loggedIn
 		if (userLogin == null) {
-			errors.add(Constant.GLOBALERROR, new ActionError("error.invalidLogin"));
+			errors.add(Constant.GLOBALERROR, new ActionMessage("error.invalidLogin"));
 		}
 
 		try {
@@ -297,13 +299,13 @@ public class PerusahaanAction extends SecurityAction {
 				service.updatePerusahaan(prshn);
 
 			} else {
-				errors.add(Constant.GLOBALERROR, new ActionError("error.invalidToken"));
+				errors.add(Constant.GLOBALERROR, new ActionMessage("error.invalidToken"));
 				saveErrors(request, errors);
 				return mapping.findForward("invalidPage");
 			}
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			errors.add(Constant.GLOBALERROR, new ActionError("error.exception", e.getMessage()));
+			errors.add(Constant.GLOBALERROR, new ActionMessage("error.exception", e.getMessage()));
 		}
 
 		if (errors.size() > 0) {
@@ -311,6 +313,58 @@ public class PerusahaanAction extends SecurityAction {
 			return mapping.findForward("fail");
 		}
 
+		return mapping.findForward("continue");
+	}
+	
+	public ActionForward delete(
+			ActionMapping mapping,
+			ActionForm form,
+			HttpServletRequest request,
+			HttpServletResponse response)
+			throws Exception {
+
+		log.debug("Delete");
+		
+		// Check Menu Access
+
+		ActionForward forward = new ActionForward();
+		forward = hasMenuAccess(mapping, request, MENU_PRSHN_DEL);
+		if (forward != null)
+			return forward;
+
+		ActionErrors errors = new ActionErrors();
+		HttpSession session = request.getSession();
+		DynaActionForm compForm = (DynaActionForm) form;
+
+		Login userLogin = (Login) session.getAttribute(Constant.SES_USERLOGIN);
+		if (userLogin == null) {
+			errors.add(
+				Constant.GLOBALERROR,
+				new ActionError("error.invalidLogin"));
+		}
+
+		try {
+			// do delete
+			//int affectedRow = companyService.deleteCompany(companyForm.getMap(), userLogin.getUser(), "delete");
+			Integer id = Integer.parseInt(request.getParameter("id"));
+			
+			int affectedRow = service.deletePerusahaan(id);
+			if (affectedRow == 0)
+				errors.add(Constant.GLOBALERROR,
+					new ActionError("error.deleteFail", getMessage(request, "error.noRowUpdated")));
+
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			errors.add(
+				Constant.GLOBALERROR,
+				new ActionError("error.exception", e.getMessage()));
+		}
+
+		if (errors.size() > 0) {
+			saveErrors(request, errors);
+		}
+
+		// Return to Search
 		return mapping.findForward("continue");
 	}
 

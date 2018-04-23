@@ -26,7 +26,9 @@
 		doGoToUrl('<c:url value="/updatePerusahaan.do?dispatch=add" />');
 	}
 	function del(id) {
-		doGoToUrl('<c:url value="/updatePerusahaan.do?dispatch=delete"/>'+'&id='+id);
+		if (window.confirm('<bean:message key="form.deleteMessage"></bean:message>')) {
+			doGoToUrl('<c:url value="/updatePerusahaan.do?dispatch=delete"/>'+'&id='+id);
+		}
 	}
 	function edit(id) {
 		doGoToUrl('<c:url value="/updatePerusahaan.do?dispatch=update"/>'+'&id='+id);

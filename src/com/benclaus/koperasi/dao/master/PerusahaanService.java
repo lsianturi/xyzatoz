@@ -65,7 +65,16 @@ public class PerusahaanService {
 	
 	public Integer updatePerusahaan(Perusahaan perusahaan) {
 		try {
-			return dao.updatePerusahaan( perusahaan);
+			return dao.updatePerusahaan(perusahaan);
+		} catch (Exception e) {
+			log.debug(e);
+		}
+		return 0;
+	}
+	
+	public Integer deletePerusahaan(Integer id) {
+		try {
+			return dao.deletePerusahaan(id);
 		} catch (Exception e) {
 			log.debug(e);
 		}
