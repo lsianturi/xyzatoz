@@ -22,11 +22,14 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 			INNER JOIN ms_industri i on i.id = p.industri
 			INNER JOIN ms_area a on a.id = p.area 
 			where deleted = 0
+			<isNotEmpty property="nama" prepend="AND">
+				p.nama LIKE concat('%',#nama#,'%')
+			</isNotEmpty>
 			<isNotEmpty property="industri" prepend="AND">
-				industri = #industri#
+				p.industri = #industri#
 			</isNotEmpty>
 			<isNotEmpty property="area" prepend="AND">
-				area = #area#
+				p.area = #area#
 			</isNotEmpty>
 	</select>
 	
@@ -36,13 +39,15 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 			INNER JOIN ms_industri i on i.id = p.industri
 			INNER JOIN ms_area a on a.id = p.area  
 			where deleted = 0
-			<isNotEmpty property="industri" prepend=" AND " >
-				industri = #industri#
+			<isNotEmpty property="nama" prepend="AND">
+				p.nama LIKE concat('%',#nama#,'%')
 			</isNotEmpty>
-			<isNotEmpty property="area" prepend=" AND ">
-				area = #area#
+			<isNotEmpty property="industri" prepend="AND">
+				p.industri = #industri#
 			</isNotEmpty>
-		
+			<isNotEmpty property="area" prepend="AND">
+				p.area = #area#
+			</isNotEmpty>
 	</select>
 	
 	<insert id="insertPerusahaan" parameterClass="com.benclaus.koperasi.model.master.Perusahaan" >
