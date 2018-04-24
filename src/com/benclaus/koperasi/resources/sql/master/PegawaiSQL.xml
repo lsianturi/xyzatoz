@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap
+PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="PegawaiSQL">
+	
+	
+	<resultMap id="pegawaiResult" class="com.benclaus.koperasi.model.master.Perusahaan">
+		<result property="id" column="id" />
+		<result property="nama" column="nama" />
+		<result property="alamat" column="alamat" />
+		<result property="industri.id" column="industri_id" />
+		<result property="industri.nama" column="industri_nama" />
+		<result property="area.id" column="area_id" />
+		<result property="area.nama" column="area_nama" />
+	</resultMap>
+	
+	<select id="searchPerusahaan" resultMap="prshnResult" parameterClass="java.util.Map" >
+		SELECT p.id, p.nama, p.alamat, i.id industri_id, i.nama industri_nama, a.id area_id, a.nama area_nama
+			FROM ms_perusahaan p
+			INNER JOIN ms_industri i on i.id = p.industri
+			INNER JOIN ms_area a on a.id = p.area 
+			where deleted = 0
+			<isNotEmpty property="nama" prepend="AND">
+				p.nama LIKE concat('%',#nama#,'%')
+			</isNotEmpty>
+			<isNotEmpty property="industri" prepend="AND">
+				p.industri = #industri#
+			</isNotEmpty>
+			<isNotEmpty property="area" prepend="AND">
+				p.area = #area#
+			</isNotEmpty>
+	</select>
+	
+	<select id="searchPerusahaanSize" resultClass="java.lang.Integer" parameterClass="java.util.Map" >
+		SELECT count(*) 
+			FROM ms_perusahaan p
+			INNER JOIN ms_industri i on i.id = p.industri
+			INNER JOIN ms_area a on a.id = p.area  
+			where deleted = 0
+			<isNotEmpty property="nama" prepend="AND">
+				p.nama LIKE concat('%',#nama#,'%')
+			</isNotEmpty>
+			<isNotEmpty property="industri" prepend="AND">
+				p.industri = #industri#
+			</isNotEmpty>
+			<isNotEmpty property="area" prepend="AND">
+				p.area = #area#
+			</isNotEmpty>
+	</select>
+	
+	<insert id="insertPerusahaan" parameterClass="com.benclaus.koperasi.model.master.Perusahaan" >
+		INSERT INTO ms_perusahaan (`id`, `nama`, `alamat`, `industri`, `area`) 
+		VALUES (#id#, #nama#, #alamat#, #industri.id#, #area.id#)
+	</insert>
+	
+	<update id="updatePerusahaan" parameterClass="com.benclaus.koperasi.model.master.Perusahaan">
+		UPDATE ms_perusahaan SET  `nama` = #nama#, `alamat`=#alamat#, `industri`=#industri.id#, `area`=#area.id#
+		WHERE `id`=#id#
+	</update>
+	
+	<update id="deletePerusahaan" parameterClass="java.lang.Integer">
+		UPDATE ms_perusahaan SET  `deleted` = 1
+		WHERE `id`=#value#
+	</update>
+	
+	<select id="getPerusahaan" resultMap="prshnResult">
+		SELECT p.id, p.nama, p.alamat, i.id industri_id, i.nama industri_nama, a.id area_id, a.nama area_nama
+			FROM ms_perusahaan p
+			INNER JOIN ms_industri i on i.id = p.industri
+			INNER JOIN ms_area a on a.id = p.area 
+			WHERE p.deleted = 0
+			AND p.id = #value#
+	</select>
+	
+	<select id="getIndustries" resultClass="com.benclaus.koperasi.model.master.Industri">
+		SELECT id, nama
+			FROM ms_industri
+	</select>
+	
+	<select id="getAreas" resultClass="com.benclaus.koperasi.model.master.Area">
+		SELECT id, nama
+			FROM ms_area
+	</select>
+	
+</sqlMap>
+
