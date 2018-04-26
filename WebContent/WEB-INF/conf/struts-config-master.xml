@@ -27,6 +27,29 @@
 			<form-property name="industri" type="java.lang.Integer" />
 		</form-bean>
 		
+		
+		<form-bean name="pegawaiSearch" type="org.apache.struts.validator.DynaValidatorForm">
+			<form-property name="dispatch" type="java.lang.String" initial="prepare" />
+			<form-property name="nama" type="java.lang.String" />
+			<form-property name="statusPegawai" type="java.lang.String" />
+			<form-property name="domisili" type="java.lang.String" />
+			<form-property name="pageIndex" type="java.lang.String" initial="1" />	
+			<form-property name="totalPage" type="java.lang.String" />
+			<form-property name="totalSize" type="java.lang.String" />		
+		</form-bean>
+		
+		<form-bean name="pegawaiForm" type="org.apache.struts.validator.DynaValidatorForm">
+			<form-property name="dispatch" type="java.lang.String" />
+			<form-property name="id" type="java.lang.Integer" />
+			<form-property name="nama" type="java.lang.String" />
+			<form-property name="alamat" type="java.lang.String" />
+			<form-property name="domisili" type="java.lang.String" />
+			<form-property name="telepon" type="java.lang.String" />
+			<form-property name="statusPegawai" type="java.lang.Integer" />
+			<form-property name="tglMasuk" type="java.lang.String" />
+			<form-property name="keterangan" type="java.lang.String" />
+		</form-bean>
+		
 	</form-beans>
 	
 	<action-mappings>
@@ -42,6 +65,21 @@
     	<action path="/savePerusahaan" name="perusahaanForm" type="com.benclaus.koperasi.action.app.master.PerusahaanAction" scope="request" parameter="dispatch" validate="false">
 			<forward name="success" path="/perusahaan.do?dispatch=returned" />
 			<forward name="fail" path="/app/master/perusahaanEdit.jsp" />
+		</action>
+		
+		
+		<action path="/pegawai" name="pegawaiSearch" type="com.benclaus.koperasi.action.app.master.PegawaiAction" scope="request" validate="false" parameter="dispatch">
+    		<forward name="continue" path="/app/master/pegawai.jsp" />	
+    		<forward name="fail" path="/main.jsp" />
+    	</action>
+    	<action path="/updatePegawai" name="pegawaiForm" type="com.benclaus.koperasi.action.app.master.PegawaiAction" scope="request" parameter="dispatch" validate="false">
+			<forward name="continue" path="/pegawai.do?dispatch=returned" />
+			<forward name="success" path="/app/master/pegawaiEdit.jsp" />
+			<forward name="fail" path="/pegawai.do?dispatch=returned" />
+		</action>
+    	<action path="/savePegawai" name="pegawaiForm" type="com.benclaus.koperasi.action.app.master.PegawaiAction" scope="request" parameter="dispatch" validate="false">
+			<forward name="success" path="/pegawai.do?dispatch=returned" />
+			<forward name="fail" path="/app/master/pegawaiEdit.jsp" />
 		</action>
 		
 		

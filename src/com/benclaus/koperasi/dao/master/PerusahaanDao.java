@@ -35,7 +35,7 @@ public class PerusahaanDao extends BaseDAO {
 	private PerusahaanDao() { super(); }
 	
 	public PaginatedList searchPerusahaan(Map map) throws DaoException {
-		log.info("PrshnSQL.searchPlan");
+		log.info("PrshnSQL.searchPerusahaan");
 		return (PaginatedList) super.getPaginatedList("PrshnSQL.searchPerusahaan", map);
 	}
 	public Integer searchPerusahaanSize(Map map) throws DaoException {

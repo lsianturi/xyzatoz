@@ -50,4 +50,5 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map Config 2.0//EN"
 	
 	<!-- Master module -->
 	<sqlMap resource="com/benclaus/koperasi/resources/sql/master/PrshnSQL.xml" />
+	<sqlMap resource="com/benclaus/koperasi/resources/sql/master/PegawaiSQL.xml" />
 </sqlMapConfig>

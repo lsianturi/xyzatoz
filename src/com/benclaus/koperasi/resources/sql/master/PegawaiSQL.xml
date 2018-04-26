@@ -5,84 +5,79 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 
 <sqlMap namespace="PegawaiSQL">
 	
-	
-	<resultMap id="pegawaiResult" class="com.benclaus.koperasi.model.master.Perusahaan">
+	<resultMap id="pegawaiResult" class="com.benclaus.koperasi.model.master.Pegawai">
 		<result property="id" column="id" />
 		<result property="nama" column="nama" />
 		<result property="alamat" column="alamat" />
-		<result property="industri.id" column="industri_id" />
-		<result property="industri.nama" column="industri_nama" />
-		<result property="area.id" column="area_id" />
-		<result property="area.nama" column="area_nama" />
+		<result property="domisili" column="domisili" />
+		<result property="telepon" column="telepon" />
+		<result property="statusPegawai.id" column="status_id" />
+		<result property="statusPegawai.status" column="status_nama" />
+		<result property="tglMasuk" column="tgl_masuk" />
+		<result property="keterangan" column="keterangan" />
 	</resultMap>
 	
-	<select id="searchPerusahaan" resultMap="prshnResult" parameterClass="java.util.Map" >
-		SELECT p.id, p.nama, p.alamat, i.id industri_id, i.nama industri_nama, a.id area_id, a.nama area_nama
-			FROM ms_perusahaan p
-			INNER JOIN ms_industri i on i.id = p.industri
-			INNER JOIN ms_area a on a.id = p.area 
-			where deleted = 0
+	<select id="searchPegawai" resultMap="pegawaiResult" parameterClass="java.util.Map" >
+		SELECT p.id, p.nama, p.alamat, p.domisili, p.telepon, s.id status_id, s.status status_nama, p.tgl_masuk, p.keterangan
+			FROM ms_pegawai p
+			INNER JOIN ms_sts_pegawai s on s.id = p.status_pegawai
+			where p.deleted = 0
 			<isNotEmpty property="nama" prepend="AND">
 				p.nama LIKE concat('%',#nama#,'%')
 			</isNotEmpty>
-			<isNotEmpty property="industri" prepend="AND">
-				p.industri = #industri#
+			<isNotEmpty property="statusPegawai" prepend="AND">
+				p.status_pegawai = #statusPegawai#
 			</isNotEmpty>
-			<isNotEmpty property="area" prepend="AND">
-				p.area = #area#
+			<isNotEmpty property="domisili" prepend="AND">
+				p.domisili LIKE concat('%', #domisili#, '%')
 			</isNotEmpty>
 	</select>
 	
-	<select id="searchPerusahaanSize" resultClass="java.lang.Integer" parameterClass="java.util.Map" >
+	<select id="searchPegawaiSize" resultClass="java.lang.Integer" parameterClass="java.util.Map" >
 		SELECT count(*) 
-			FROM ms_perusahaan p
-			INNER JOIN ms_industri i on i.id = p.industri
-			INNER JOIN ms_area a on a.id = p.area  
-			where deleted = 0
+			FROM ms_pegawai p
+			INNER JOIN ms_sts_pegawai s on s.id = p.status_pegawai
+			where p.deleted = 0
 			<isNotEmpty property="nama" prepend="AND">
 				p.nama LIKE concat('%',#nama#,'%')
 			</isNotEmpty>
-			<isNotEmpty property="industri" prepend="AND">
-				p.industri = #industri#
+			<isNotEmpty property="statusPegawai" prepend="AND">
+				p.status_pegawai = #statusPegawai#
 			</isNotEmpty>
-			<isNotEmpty property="area" prepend="AND">
-				p.area = #area#
+			<isNotEmpty property="domisili" prepend="AND">
+				p.domisili LIKE concat('%', #domisili#, '%')
 			</isNotEmpty>
 	</select>
 	
-	<insert id="insertPerusahaan" parameterClass="com.benclaus.koperasi.model.master.Perusahaan" >
-		INSERT INTO ms_perusahaan (`id`, `nama`, `alamat`, `industri`, `area`) 
-		VALUES (#id#, #nama#, #alamat#, #industri.id#, #area.id#)
+	<insert id="insertPegawai" parameterClass="com.benclaus.koperasi.model.master.Pegawai" >
+		INSERT INTO ms_pegawai (`nama`, `alamat`, `domisili`, `telepon`, `status_pegawai`, `tgl_masuk`, `keterangan`) 
+		VALUES (#nama#, #alamat#, #domisili#, #telepon#, #statusPegawai.id#, #tglMasuk#, #keterangan#)
 	</insert>
 	
-	<update id="updatePerusahaan" parameterClass="com.benclaus.koperasi.model.master.Perusahaan">
-		UPDATE ms_perusahaan SET  `nama` = #nama#, `alamat`=#alamat#, `industri`=#industri.id#, `area`=#area.id#
+	<update id="updatePegawai" parameterClass="com.benclaus.koperasi.model.master.Pegawai">
+		UPDATE ms_pegawai SET  `nama` = #nama#, `alamat`=#alamat#, `domisili`=#domisili#, `telepon`=#telepon#, `status_pegawai` = #statusPegawai#,
+			`tgl_masuk` = #tglMasuk#, keterangan = #keterangan#
 		WHERE `id`=#id#
 	</update>
 	
-	<update id="deletePerusahaan" parameterClass="java.lang.Integer">
-		UPDATE ms_perusahaan SET  `deleted` = 1
+	<update id="deletePegawai" parameterClass="java.lang.Integer">
+		UPDATE ms_pegawai SET  `deleted` = 1
 		WHERE `id`=#value#
 	</update>
 	
-	<select id="getPerusahaan" resultMap="prshnResult">
-		SELECT p.id, p.nama, p.alamat, i.id industri_id, i.nama industri_nama, a.id area_id, a.nama area_nama
-			FROM ms_perusahaan p
-			INNER JOIN ms_industri i on i.id = p.industri
-			INNER JOIN ms_area a on a.id = p.area 
+	<select id="getPegawai" resultMap="pegawaiResult">
+		SELECT p.id, p.nama, p.alamat, p.domisili, p.telepon, s.id status_id, s.status status_nama, p.tgl_masuk, p.keterangan
+			FROM ms_pegawai p
+			INNER JOIN ms_sts_pegawai s on s.id = p.status_pegawai
 			WHERE p.deleted = 0
 			AND p.id = #value#
 	</select>
 	
-	<select id="getIndustries" resultClass="com.benclaus.koperasi.model.master.Industri">
-		SELECT id, nama
-			FROM ms_industri
+	<select id="getStatusPegawai" resultClass="com.benclaus.koperasi.model.master.StatusPK">
+		SELECT id, status
+			FROM ms_sts_pegawai
 	</select>
 	
-	<select id="getAreas" resultClass="com.benclaus.koperasi.model.master.Area">
-		SELECT id, nama
-			FROM ms_area
-	</select>
 	
 </sqlMap>
 

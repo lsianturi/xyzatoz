@@ -15,12 +15,6 @@
 			</field>
 		</form>
 		
-		<form name="pillarForm">
-			<field property="name" depends="required">
-				<arg0 key="form.pilar.name" />
-			</field>
-		</form>
-		
 		<form name="perusahaanForm">
 			<field property="nama" depends="required">
 				<arg0 key="form.company.name" />
@@ -33,6 +27,35 @@
 			</field>
 			<field property="area" depends="required">
 				<arg0 key="form.company.area" />
+			</field>
+		</form>
+		
+		<form name="pegawaiForm">
+			<field property="nama" depends="required">
+				<arg0 key="form.pegawai.name" />
+			</field>
+			<field property="alamat" depends="required">
+				<arg0 key="form.pegawai.address" />
+			</field>
+			<field property="telepon" depends="required">
+				<arg0 key="form.pegawai.telepon" />
+			</field>
+			<field property="statusPegawai" depends="required">
+				<arg0 key="form.pegawai.statusPegawai" />
+			</field>
+		</form>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		<form name="pillarForm">
+			<field property="name" depends="required">
+				<arg0 key="form.pilar.name" />
 			</field>
 		</form>
 		

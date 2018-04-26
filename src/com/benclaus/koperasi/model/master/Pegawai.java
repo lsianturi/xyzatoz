@@ -11,9 +11,9 @@ public class Pegawai extends Audit{
 	private Integer id;
 	private String nama;
 	private String alamat;
-	private String kota;
+	private String domisili;
 	private String telepon;
-	private String statusKaryawan;
+	private StatusPK statusPegawai;
 	private Date tglMasuk ;
 	private String keterangan;
 
@@ -47,14 +47,6 @@ public class Pegawai extends Audit{
 		this.alamat = alamat;
 	}
 
-	public String getKota() {
-		return kota;
-	}
-
-	public void setKota(String kota) {
-		this.kota = kota;
-	}
-
 	public String getTelepon() {
 		return telepon;
 	}
@@ -63,12 +55,20 @@ public class Pegawai extends Audit{
 		this.telepon = telepon;
 	}
 
-	public String getStatusKaryawan() {
-		return statusKaryawan;
+	public String getDomisili() {
+		return domisili;
 	}
 
-	public void setStatusKaryawan(String statusKaryawan) {
-		this.statusKaryawan = statusKaryawan;
+	public void setDomisili(String domisili) {
+		this.domisili = domisili;
+	}
+
+	public StatusPK getStatusPegawai() {
+		return statusPegawai;
+	}
+
+	public void setStatusPegawai(StatusPK statusPegawai) {
+		this.statusPegawai = statusPegawai;
 	}
 
 	public Date getTglMasuk() {
@@ -89,7 +89,7 @@ public class Pegawai extends Audit{
 
 	public String toString() {
         StringBuffer strBuff = new StringBuffer();
-        strBuff.append("[SOUT MS_NASABAH]>>>>> ");        
+        strBuff.append("[SOUT MS_PEGAWAI]>>>>> ");        
             try{
                 Field[] fields = Menu.class.getDeclaredFields();
                 for (int i = 1; i < fields.length; i++) {
