@@ -1,5 +1,8 @@
 package com.benclaus.koperasi.action.app.master;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -18,6 +21,7 @@ import com.benclaus.koperasi.action.SecurityAction;
 import com.benclaus.koperasi.dao.Page;
 import com.benclaus.koperasi.dao.master.PegawaiService;
 import com.benclaus.koperasi.model.master.Pegawai;
+import com.benclaus.koperasi.model.master.StatusPK;
 import com.benclaus.koperasi.model.usm.Login;
 import com.benclaus.koperasi.utility.Constant;
 import com.benclaus.koperasi.utility.DAFContainer;
@@ -31,6 +35,7 @@ public class PegawaiAction extends SecurityAction {
 	private String MENU_PEG_DEL= "MST_PEG_del";
 
 	private PegawaiService service = PegawaiService.getInstance();
+	private SimpleDateFormat sdf = new SimpleDateFormat("DD/mm/YYYY");
 
 	private void prepareData(HttpServletRequest request) {
 
@@ -171,7 +176,7 @@ public class PegawaiAction extends SecurityAction {
 
 		saveToken(request);
 		planForm.set("dispatch", Constant.ADDSAVE);
-		return mapping.findForward("success");
+		return mapping.findForward("continue");
 
 	}
 	
@@ -199,11 +204,9 @@ public class PegawaiAction extends SecurityAction {
 			if (isTokenValid(request)) {
 				saveToken(request);
 				Pegawai prshn = new Pegawai();
-				prshn.setId((Integer)planForm.get("id"));
-				prshn.setAlamat(planForm.getString("alamat"));
-				prshn.setNama(planForm.getString("nama"));
-//				prshn.setArea(new Area((Integer)planForm.get("area")));
-//				prshn.setIndustri(new Industri((Integer)planForm.get("industri")));
+				BeanUtils.copyProperties(prshn, planForm);
+				prshn.setStatusPegawai(new StatusPK((Integer)planForm.get("stsPegawai")));
+				prshn.setTglMasuk(sdf.parse(planForm.getString("tanggalMasuk")));
 				service.insertPegawai(prshn);
 
 			} else {
@@ -211,6 +214,9 @@ public class PegawaiAction extends SecurityAction {
 				saveErrors(request, errors);
 				return mapping.findForward("invalidPage");
 			}
+		} catch (ParseException pe) {
+			log.error(pe.getMessage(), pe);
+			errors.add(Constant.GLOBALERROR, new ActionMessage("error.exception", getMessage(request, "error.invalidDate")));
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			errors.add(Constant.GLOBALERROR, new ActionMessage("error.exception", e.getMessage()));
@@ -221,7 +227,7 @@ public class PegawaiAction extends SecurityAction {
 			return mapping.findForward("fail");
 		}
 
-		return mapping.findForward("continue");
+		return mapping.findForward("success");
 	}
 
 	public ActionForward update(ActionMapping mapping, ActionForm form, HttpServletRequest request,
@@ -243,8 +249,8 @@ public class PegawaiAction extends SecurityAction {
 			Integer id = Integer.parseInt(request.getParameter("id"));
 			Pegawai prshn = service.getPegawai(id);
 			BeanUtils.copyProperties(planForm, prshn);
-//			planForm.set("area", prshn.getArea().getId());
-//			planForm.set("industri", prshn.getIndustri().getId());
+			planForm.set("stsPegawai", prshn.getStatusPegawai().getId());
+			planForm.set("tanggalMasuk", sdf.format(prshn.getTglMasuk()));
 
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
@@ -259,7 +265,7 @@ public class PegawaiAction extends SecurityAction {
 		saveToken(request);
 
 		planForm.set("dispatch", Constant.UPDATESAVE);
-		return mapping.findForward("success");
+		return mapping.findForward("continue");
 
 	}
 
@@ -287,11 +293,9 @@ public class PegawaiAction extends SecurityAction {
 			if (isTokenValid(request)) {
 				saveToken(request);
 				Pegawai prshn = new Pegawai();
-				prshn.setId((Integer)planForm.get("id"));
-				prshn.setAlamat(planForm.getString("alamat"));
-				prshn.setNama(planForm.getString("nama"));
-//				prshn.setArea(new Area((Integer)planForm.get("area")));
-//				prshn.setIndustri(new Industri((Integer)planForm.get("industri")));
+				BeanUtils.copyProperties(prshn, planForm);
+				prshn.setStatusPegawai(new StatusPK((Integer)planForm.get("stsPegawai")));
+				prshn.setTglMasuk(sdf.parse(planForm.getString("tanggalMasuk")));
 				service.updatePegawai(prshn);
 
 			} else {

@@ -47,7 +47,7 @@
 <html:form action="/updatePerusahaan" onsubmit="return validatePerusahaanForm(this);">
 	<html:hidden property="dispatch"></html:hidden>
 	<html:hidden property="id"></html:hidden>
-	<table width="100%" border="1">
+	<table width="100%" border="0">
 		<tbody>
 			<tr>
 				<td class="conLabel"><bean:message key="form.company.name"></bean:message></td>
@@ -58,7 +58,7 @@
 			<tr>
 				<td class="conLabel"><bean:message key="form.company.address"></bean:message></td>
 				<td class="conText">
-					<html:textarea property="alamat" rows="2" cols="60"></html:textarea>
+					<html:textarea property="alamat" rows="3" cols="60"></html:textarea>
 				</td>
 			</tr>
 			<tr>

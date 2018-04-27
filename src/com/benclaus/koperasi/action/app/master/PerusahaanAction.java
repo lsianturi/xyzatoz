@@ -175,7 +175,7 @@ public class PerusahaanAction extends SecurityAction {
 
 		saveToken(request);
 		planForm.set("dispatch", Constant.ADDSAVE);
-		return mapping.findForward("success");
+		return mapping.findForward("continue");
 
 	}
 	
@@ -225,7 +225,7 @@ public class PerusahaanAction extends SecurityAction {
 			return mapping.findForward("fail");
 		}
 
-		return mapping.findForward("continue");
+		return mapping.findForward("success");
 	}
 
 	public ActionForward update(ActionMapping mapping, ActionForm form, HttpServletRequest request,
@@ -263,7 +263,7 @@ public class PerusahaanAction extends SecurityAction {
 		saveToken(request);
 
 		planForm.set("dispatch", Constant.UPDATESAVE);
-		return mapping.findForward("success");
+		return mapping.findForward("continue");
 
 	}
 
@@ -313,7 +313,7 @@ public class PerusahaanAction extends SecurityAction {
 			return mapping.findForward("fail");
 		}
 
-		return mapping.findForward("continue");
+		return mapping.findForward("success");
 	}
 	
 	public ActionForward delete(

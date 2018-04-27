@@ -1,7 +1,5 @@
 package com.benclaus.koperasi.exception;
 
-import java.sql.SQLException;
-
 import org.apache.struts.util.MessageResources;
 /**
  * @author Lambok
@@ -10,7 +8,7 @@ import org.apache.struts.util.MessageResources;
 public class DaoException extends com.ibatis.dao.client.DaoException {
 	static final long serialVersionUID=1L;
 
-	protected static MessageResources messages = MessageResources.getMessageResources("id/co/ggpc/ror/resources/ApplicationResources");
+	protected static MessageResources messages = MessageResources.getMessageResources("com/benclaus/koperasi/resources/ApplicationResources");
 	public DaoException() {
 		super();
 	}	

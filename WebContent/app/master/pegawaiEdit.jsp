@@ -17,9 +17,9 @@
 	}
 
 </script>
-<script src="../scripts/view.js"></script>
-<script src="../scripts/staticJS.jsp"></script>
-<script src="../scripts/calendar2.js"></script>
+<script src="scripts/view.js"></script>
+<script src="scripts/staticJS.jsp"></script>
+<script src="scripts/calendar2.js"></script>
 <html:javascript formName="pegawaiForm" dynamicJavascript="true" staticJavascript="false"/>
 </HEAD>
 <BODY>
@@ -48,7 +48,7 @@
 <html:form action="/updatePegawai" onsubmit="return validatePegawaiForm(this);">
 	<html:hidden property="dispatch"></html:hidden>
 	<html:hidden property="id"></html:hidden>
-	<table width="100%" border="1">
+	<table width="100%" border="0">
 		<tbody>
 			<tr>
 				<td class="conLabel"><bean:message key="form.pegawai.name"></bean:message></td>
@@ -59,13 +59,13 @@
 			<tr>
 				<td class="conLabel"><bean:message key="form.pegawai.address"></bean:message></td>
 				<td class="conText">
-					<html:textarea property="alamat" rows="2" cols="60"></html:textarea>
+					<html:textarea property="alamat" rows="3" cols="60"></html:textarea>
 				</td>
 			</tr>
 			<tr>
 				<td class="conLabel"><bean:message key="form.pegawai.domisili"></bean:message></td>
 				<td class="conText">
-					<html:textarea property="domisili" rows="2" cols="60"></html:textarea>
+					<html:textarea property="domisili" rows="3" cols="60"></html:textarea>
 				</td>
 			</tr>
 			<tr>
@@ -77,8 +77,8 @@
 			<tr>
 				<td class="conLabel"><bean:message key="form.pegawai.tglMasuk"></bean:message></td>
 				<td class="conText">
-					<html:text property="tglMasuk" maxlength="14" size="20"></html:text>
-					<a href="javascript:cal1.popup();"><img src="../icons/cal.gif"  border="0" height="16" width="16"></a>
+					<html:text property="tanggalMasuk" maxlength="14" size="20"></html:text>
+					<a href="javascript:cal1.popup();"><img src="icons/cal.gif"  border="0" height="16" width="16"></a>
 				</td>
 			</tr>
 			<tr>
@@ -90,7 +90,7 @@
 			<tr>
 				<td width="100" class="conLabel"><bean:message key="form.pegawai.statusPegawai"></bean:message></td>
 				<td class="conText">
-					<html:select property="statusPegawai">
+					<html:select property="stsPegawai">
 						<html:options collection="StatusList" property="id" labelProperty="status" />
 					</html:select>
 				</td>
@@ -110,7 +110,7 @@
 </html:form>
 </BODY>
 <script language="JavaScript">
-	var cal1 = new calendar2(document.forms['pegawaiForm'].elements['tglMasuk']);
+	var cal1 = new calendar2(document.forms['pegawaiForm'].elements['tanggalMasuk']);
 	cal1.year_scroll = true;
 	cal1.time_comp = false;
 </script>

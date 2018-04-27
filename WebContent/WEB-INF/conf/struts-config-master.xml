@@ -45,8 +45,8 @@
 			<form-property name="alamat" type="java.lang.String" />
 			<form-property name="domisili" type="java.lang.String" />
 			<form-property name="telepon" type="java.lang.String" />
-			<form-property name="statusPegawai" type="java.lang.Integer" />
-			<form-property name="tglMasuk" type="java.lang.String" />
+			<form-property name="stsPegawai" type="java.lang.Integer" />
+			<form-property name="tanggalMasuk" type="java.lang.String" />
 			<form-property name="keterangan" type="java.lang.String" />
 		</form-bean>
 		
@@ -58,27 +58,18 @@
     		<forward name="fail" path="/main.jsp" />
     	</action>
     	<action path="/updatePerusahaan" name="perusahaanForm" type="com.benclaus.koperasi.action.app.master.PerusahaanAction" scope="request" parameter="dispatch" validate="false">
-			<forward name="continue" path="/perusahaan.do?dispatch=returned" />
-			<forward name="success" path="/app/master/perusahaanEdit.jsp" />
-			<forward name="fail" path="/perusahaan.do?dispatch=returned" />
-		</action>
-    	<action path="/savePerusahaan" name="perusahaanForm" type="com.benclaus.koperasi.action.app.master.PerusahaanAction" scope="request" parameter="dispatch" validate="false">
 			<forward name="success" path="/perusahaan.do?dispatch=returned" />
+			<forward name="continue" path="/app/master/perusahaanEdit.jsp" />
 			<forward name="fail" path="/app/master/perusahaanEdit.jsp" />
 		</action>
-		
 		
 		<action path="/pegawai" name="pegawaiSearch" type="com.benclaus.koperasi.action.app.master.PegawaiAction" scope="request" validate="false" parameter="dispatch">
     		<forward name="continue" path="/app/master/pegawai.jsp" />	
     		<forward name="fail" path="/main.jsp" />
     	</action>
     	<action path="/updatePegawai" name="pegawaiForm" type="com.benclaus.koperasi.action.app.master.PegawaiAction" scope="request" parameter="dispatch" validate="false">
-			<forward name="continue" path="/pegawai.do?dispatch=returned" />
-			<forward name="success" path="/app/master/pegawaiEdit.jsp" />
-			<forward name="fail" path="/pegawai.do?dispatch=returned" />
-		</action>
-    	<action path="/savePegawai" name="pegawaiForm" type="com.benclaus.koperasi.action.app.master.PegawaiAction" scope="request" parameter="dispatch" validate="false">
 			<forward name="success" path="/pegawai.do?dispatch=returned" />
+			<forward name="continue" path="/app/master/pegawaiEdit.jsp" />
 			<forward name="fail" path="/app/master/pegawaiEdit.jsp" />
 		</action>
 		

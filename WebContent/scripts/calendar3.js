@@ -50,7 +50,7 @@ function cal_popup3 (str_datetime) {
 	if (!this.dt_current) return;
 
 	var obj_calwindow = window.open(
-		'/ror/calendar.html?id=' + this.id + '&s=' + this.dt_selected.valueOf() + '&c=' + this.dt_current.valueOf(),
+		'/koperasi/calendar.html?id=' + this.id + '&s=' + this.dt_selected.valueOf() + '&c=' + this.dt_current.valueOf(),
 		'Calendar', 'width=200,height=' + (this.time_comp ? 215 : 190) +
 		',status=no,resizable=no,top=200,left=200,dependent=yes,alwaysRaised=yes'
 	);
