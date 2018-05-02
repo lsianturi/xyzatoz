@@ -14,6 +14,7 @@ public class Pegawai extends Audit{
 	private String domisili;
 	private String telepon;
 	private StatusPK statusPegawai;
+	private StatusPK statusSipil;
 	private Date tglMasuk ;
 	private String keterangan;
 
@@ -69,6 +70,14 @@ public class Pegawai extends Audit{
 
 	public void setStatusPegawai(StatusPK statusPegawai) {
 		this.statusPegawai = statusPegawai;
+	}
+
+	public StatusPK getStatusSipil() {
+		return statusSipil;
+	}
+
+	public void setStatusSipil(StatusPK statusSipil) {
+		this.statusSipil = statusSipil;
 	}
 
 	public Date getTglMasuk() {

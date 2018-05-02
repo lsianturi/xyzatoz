@@ -63,6 +63,15 @@
 				</td>
 			</tr>
 			<tr>
+				<td width="100" class="conLabel"><bean:message key="form.pegawai.statusSipil"></bean:message></td>
+				<td class="conText" colspan="3">
+					<html:select property="statusSipil">
+						<html:option value=""><bean:message key="form.all"></bean:message></html:option>
+						<html:options collection="SipilList" property="id" labelProperty="status" />
+					</html:select>
+				</td>
+			</tr>
+			<tr>
 				<td width="100" class="conLabel"><bean:message key="form.pegawai.statusPegawai"></bean:message></td>
 				<td class="conText" colspan="3">
 					<html:select property="statusPegawai">

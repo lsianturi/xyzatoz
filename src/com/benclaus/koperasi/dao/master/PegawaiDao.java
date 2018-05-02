@@ -65,4 +65,8 @@ public class PegawaiDao extends BaseDAO {
 		log.info("PegawaiSQL.getStatusPegawai");
 		return (List<StatusPK>) super.getList("PegawaiSQL.getStatusPegawai", null);
 	}
+	public List<StatusPK> getStatusSipil() throws DaoException {
+		log.info("PegawaiSQL.getStatusSipil");
+		return (List<StatusPK>) super.getList("PegawaiSQL.getStatusSipil", null);
+	}
 }

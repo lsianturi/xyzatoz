@@ -99,4 +99,13 @@ public class PegawaiService {
 		}
 		return null;
 	}
+	
+	public List<StatusPK> getStatusSipil() throws DaoException {
+		try {
+			return dao.getStatusSipil();
+		} catch (Exception e) {
+			log.debug(e);
+		}
+		return null;
+	}
 }

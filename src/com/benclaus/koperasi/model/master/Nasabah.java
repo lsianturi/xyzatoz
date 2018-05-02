@@ -1,6 +1,7 @@
 package com.benclaus.koperasi.model.master;
 
 import java.lang.reflect.Field;
+import java.util.Date;
 
 import com.benclaus.koperasi.model.system.Audit;
 import com.benclaus.koperasi.model.usm.Menu;
@@ -8,14 +9,24 @@ import com.benclaus.koperasi.model.usm.Menu;
 public class Nasabah extends Audit{
 	
 	private Integer id;
-	private String nik;
-	private String pt;
 	private String nama;
+	private String jenisKelamin;
+	private StatusPK statusSipil;
+	private String domisili;
+	private String alamat;
+	private String telepon;
+	private Integer agentId;
+	private Perusahaan pt;
+	private Bank bank;
 	private String bagian;
-	private String jabatan;
-	private String statusKaryawan;
-	private Integer statusSipil;
-	private String alamatKtp;
+	private String noRekening;
+	private Date tglRekening;
+	private StatusPK statusKaryawan;
+	private StatusPK jenisAnggota;
+	private StatusPK statusAnggota;
+	private String noRekeningRef;
+	private String namaRef;
+	private String keterangan;
 
 	public Nasabah() {
 		super();
@@ -23,6 +34,158 @@ public class Nasabah extends Audit{
 		super.fields = "id";
 	}
 	
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getNama() {
+		return nama;
+	}
+
+	public void setNama(String nama) {
+		this.nama = nama;
+	}
+
+	public String getJenisKelamin() {
+		return jenisKelamin;
+	}
+
+	public void setJenisKelamin(String jenisKelamin) {
+		this.jenisKelamin = jenisKelamin;
+	}
+
+	public StatusPK getStatusSipil() {
+		return statusSipil;
+	}
+
+	public void setStatusSipil(StatusPK statusSipil) {
+		this.statusSipil = statusSipil;
+	}
+
+	public String getDomisili() {
+		return domisili;
+	}
+
+	public void setDomisili(String domisili) {
+		this.domisili = domisili;
+	}
+
+	public String getAlamat() {
+		return alamat;
+	}
+
+	public void setAlamat(String alamat) {
+		this.alamat = alamat;
+	}
+
+	public String getTelepon() {
+		return telepon;
+	}
+
+	public void setTelepon(String telepon) {
+		this.telepon = telepon;
+	}
+
+	public Integer getAgentId() {
+		return agentId;
+	}
+
+	public void setAgentId(Integer agentId) {
+		this.agentId = agentId;
+	}
+
+	public Perusahaan getPt() {
+		return pt;
+	}
+
+	public void setPt(Perusahaan pt) {
+		this.pt = pt;
+	}
+
+	public Bank getBank() {
+		return bank;
+	}
+
+	public void setBank(Bank bank) {
+		this.bank = bank;
+	}
+
+	public String getBagian() {
+		return bagian;
+	}
+
+	public void setBagian(String bagian) {
+		this.bagian = bagian;
+	}
+
+	public String getNoRekening() {
+		return noRekening;
+	}
+
+	public void setNoRekening(String noRekening) {
+		this.noRekening = noRekening;
+	}
+
+	public Date getTglRekening() {
+		return tglRekening;
+	}
+
+	public void setTglRekening(Date tglRekening) {
+		this.tglRekening = tglRekening;
+	}
+
+	public StatusPK getStatusKaryawan() {
+		return statusKaryawan;
+	}
+
+	public void setStatusKaryawan(StatusPK statusKaryawan) {
+		this.statusKaryawan = statusKaryawan;
+	}
+
+	public StatusPK getJenisAnggota() {
+		return jenisAnggota;
+	}
+
+	public void setJenisAnggota(StatusPK jenisAnggota) {
+		this.jenisAnggota = jenisAnggota;
+	}
+
+	public StatusPK getStatusAnggota() {
+		return statusAnggota;
+	}
+
+	public void setStatusAnggota(StatusPK statusAnggota) {
+		this.statusAnggota = statusAnggota;
+	}
+
+	public String getNoRekeningRef() {
+		return noRekeningRef;
+	}
+
+	public void setNoRekeningRef(String noRekeningRef) {
+		this.noRekeningRef = noRekeningRef;
+	}
+
+	public String getNamaRef() {
+		return namaRef;
+	}
+
+	public void setNamaRef(String namaRef) {
+		this.namaRef = namaRef;
+	}
+
+	public String getKeterangan() {
+		return keterangan;
+	}
+
+	public void setKeterangan(String keterangan) {
+		this.keterangan = keterangan;
+	}
+
 	public String toString() {
         StringBuffer strBuff = new StringBuffer();
         strBuff.append("[SOUT MS_NASABAH]>>>>> ");        

@@ -41,6 +41,7 @@ public class PegawaiAction extends SecurityAction {
 
 		try {
 			request.setAttribute("StatusList", service.getStatusPegawai());
+			request.setAttribute("SipilList", service.getStatusSipil());
 		} catch (Exception e) {
 		}
 	}
