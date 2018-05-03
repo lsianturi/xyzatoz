@@ -107,7 +107,7 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
     	SELECT 
     		rm.ROLECODE, m.menuCode, m.description 
     	FROM 
-    		ms_rolemenu rm, ms_menum 
+    		ms_rolemenu rm, ms_menu m
     	WHERE 
     		m.deleted=0 AND m.menuCode = rm.menuCode AND rm.ROLECODE = #roleCode# AND  m.PARENTMENUCODE = #parentMenuCode#
 	</select>    
@@ -147,7 +147,7 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 		SELECT 
 			rm.ROLECODE, rm.menuCode, m.PARENTMENUCODE, m.MENULEVEL, m.description 
 		FROM 
-			ms_rolemenu rm, ms_menum 
+			ms_rolemenu rm, ms_menu m 
 		WHERE 
 			rm.menuCode = m.menuCode AND rm.ROLECODE = #roleCode# AND PARENTMENUCODE = #menuCode#
 	</select>	

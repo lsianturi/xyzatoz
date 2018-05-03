@@ -10,8 +10,8 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.log4j.Logger;
-import org.apache.struts.action.ActionError;
-import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -34,12 +34,12 @@ import com.ibatis.common.util.PaginatedList;
  */
 public final class RoleAction extends SecurityAction{
 	private static Logger log = Logger.getLogger(MenuAction.class);
-	private static final String MENU_ROLE_QUERY = "role";
-	private static final String MENU_ROLE_UPDATE = "roleupd";
-	private static final String MENU_ROLE_ADD = "roleadd";
-	private static final String MENU_ROLE_DELETE = "roledel";	
-	private static final String MENU_ROLE_ASSIGN = "assignmenu";
-	private static final String MENU_ROLE_ASSIGN_DELETE = "deleteassignmenu";
+	private static final String MENU_ROLE_QUERY = "SET_ROLE_page";
+	private static final String MENU_ROLE_UPDATE = "SET_ROLE_upd";
+	private static final String MENU_ROLE_ADD = "SET_ROLE_add";
+	private static final String MENU_ROLE_DELETE = "SET_ROLE_del";	
+	private static final String MENU_ROLE_ASSIGN = "SET_ROLE_assign";
+	private static final String MENU_ROLE_ASSIGN_DELETE = "SET_ROLE_del_as";
  
  	private MenuService menuService = MenuService.getInstance();
 	private RoleService service = RoleService.getInstance();;		 	
@@ -150,7 +150,7 @@ public final class RoleAction extends SecurityAction{
 		log.debug("addsave");
 		
 		ActionForward forward = new ActionForward();	
-		ActionErrors errors = new ActionErrors();	
+		ActionMessages errors = new ActionMessages();	
 
 		DynaActionForm dynaForm = (DynaActionForm) form;
 		HttpSession session = request.getSession();			
@@ -170,18 +170,18 @@ public final class RoleAction extends SecurityAction{
 				if (result > 0) {
 					forward = search(mapping, form, request, response);
 				}else{				
-					errors.add(Constant.GLOBALERROR, new ActionError("error.insertFail", getMessage(request, "error.noRowUpdated")));
+					errors.add(Constant.GLOBALERROR, new ActionMessage("error.insertFail", getMessage(request, "error.noRowUpdated")));
 					saveErrors(request, errors);
 					forward = add(mapping, form, request, response);			
 				}
 			}else{
-				errors.add(Constant.GLOBALERROR, new ActionError("error.invalidToken"));
+				errors.add(Constant.GLOBALERROR, new ActionMessage("error.invalidToken"));
 				saveErrors(request, errors);
 				forward = mapping.findForward("invalidPage");
 			}
 		}catch(Exception e) { 						
 			log.error(e.getMessage(), e);			
-			errors.add(Constant.GLOBALERROR, new ActionError("error.exception", e.getMessage()));
+			errors.add(Constant.GLOBALERROR, new ActionMessage("error.exception", e.getMessage()));
 			saveErrors(request, errors);
 			forward = add(mapping, form, request, response);						
 		}
@@ -192,7 +192,7 @@ public final class RoleAction extends SecurityAction{
 		log.debug("delete");
 		
 		ActionForward forward = new ActionForward();		
-		ActionErrors errors = new ActionErrors();
+		ActionMessages errors = new ActionMessages();
 		
 		DynaActionForm dynaForm = (DynaActionForm) form;
 		HttpSession session = request.getSession();		
@@ -213,7 +213,7 @@ public final class RoleAction extends SecurityAction{
 		if (result > 0) {
 			forward = search(mapping, form, request, response);
 		}else{			
-			errors.add(Constant.GLOBALERROR, new ActionError("error.deleteFail", getMessage(request, "error.noRowUpdated")));
+			errors.add(Constant.GLOBALERROR, new ActionMessage("error.deleteFail", getMessage(request, "error.noRowUpdated")));
 			saveErrors(request, errors);
 			forward = search(mapping, form, request, response);
 		}
@@ -247,7 +247,7 @@ public final class RoleAction extends SecurityAction{
 		log.debug("updateSave");
 		
 		ActionForward forward = new ActionForward();
-		ActionErrors errors = new ActionErrors();
+		ActionMessages errors = new ActionMessages();
 
 		DynaActionForm dynaForm = (DynaActionForm) form;	
 		HttpSession session = request.getSession();			
@@ -271,12 +271,12 @@ public final class RoleAction extends SecurityAction{
 			if (result > 0) {
 				forward = search(mapping, form, request, response);
 			}else{
-				errors.add(Constant.GLOBALERROR, new ActionError("error.updateFail", getMessage(request, "error.noRowUpdated")));
+				errors.add(Constant.GLOBALERROR, new ActionMessage("error.updateFail", getMessage(request, "error.noRowUpdated")));
 				saveErrors(request, errors);
 				forward = update(mapping, form, request, response);
 			}		
 		}else{
-			errors.add(Constant.GLOBALERROR, new ActionError("error.invalidToken"));
+			errors.add(Constant.GLOBALERROR, new ActionMessage("error.invalidToken"));
 			saveErrors(request, errors);
 			forward = update(mapping, form, request, response);
 		}
@@ -288,7 +288,7 @@ public final class RoleAction extends SecurityAction{
 		log.debug("addRoleMenu");		
 		
 		ActionForward forward = new ActionForward();
-		ActionErrors errors = new ActionErrors();
+		ActionMessages errors = new ActionMessages();
 		
 		DynaActionForm dynaForm = (DynaActionForm) form;	
 		HttpSession session = request.getSession();			
@@ -309,7 +309,7 @@ public final class RoleAction extends SecurityAction{
 		if (result > 0) {
 			forward = search(mapping, form, request, response);
 		}else{
-			errors.add(Constant.GLOBALERROR, new ActionError("error.updateFail", getMessage(request, "error.noRowUpdated")));
+			errors.add(Constant.GLOBALERROR, new ActionMessage("error.updateFail", getMessage(request, "error.noRowUpdated")));
 			saveErrors(request, errors);
 			forward = update(mapping, form, request, response);
 		}		
@@ -357,7 +357,7 @@ public final class RoleAction extends SecurityAction{
 	public ActionForward addAssign(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		log.debug("delAssign");
 
-		ActionErrors errors = new ActionErrors();
+		ActionMessages errors = new ActionMessages();
 		ActionForward forward = new ActionForward();
 		
 		DynaActionForm dynaForm = (DynaActionForm) form;	
@@ -377,13 +377,13 @@ public final class RoleAction extends SecurityAction{
 			if (result > 0) {
 				forward = assign(mapping, form, request, response);
 			}else{
-				errors.add(Constant.GLOBALERROR, new ActionError("error.insertFail", getMessage(request, "error.noRowUpdated")));
+				errors.add(Constant.GLOBALERROR, new ActionMessage("error.insertFail", getMessage(request, "error.noRowUpdated")));
 				saveErrors(request, errors);
 				forward = assign(mapping, form, request, response);			
 			}
 		}catch(Exception e) { 						
 			log.error(e.getMessage(), e);			
-			errors.add(Constant.GLOBALERROR, new ActionError("error.exception", e.getMessage()));
+			errors.add(Constant.GLOBALERROR, new ActionMessage("error.exception", e.getMessage()));
 			saveErrors(request, errors);
 			forward = assign(mapping, form, request, response);						
 		}		
@@ -417,7 +417,7 @@ public final class RoleAction extends SecurityAction{
 		log.debug("delAssign");
 
 		ActionForward forward = new ActionForward();		
-		ActionErrors errors = new ActionErrors();
+		ActionMessages errors = new ActionMessages();
 
 		DynaActionForm dynaForm = (DynaActionForm) form;	
 		HttpSession session = request.getSession();		
@@ -439,7 +439,7 @@ public final class RoleAction extends SecurityAction{
 		if (result > 0) {
 			forward = assign(mapping, form, request, response);			
 		}else{
-			errors.add(Constant.GLOBALERROR, new ActionError("error.deleteFail", getMessage(request, "error.noRowUpdated")));
+			errors.add(Constant.GLOBALERROR, new ActionMessage("error.deleteFail", getMessage(request, "error.noRowUpdated")));
 			saveErrors(request, errors);
 			forward = assign(mapping, form, request, response);			
 		}

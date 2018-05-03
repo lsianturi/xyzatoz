@@ -69,6 +69,14 @@
 				</td>
 			</tr>
 			<tr>
+				<td width="100" class="conLabel"><bean:message key="form.pegawai.statusSipil"></bean:message></td>
+				<td class="conText">
+					<html:select property="stsSipil">
+						<html:options collection="SipilList" property="id" labelProperty="status" />
+					</html:select>
+				</td>
+			</tr>
+			<tr>
 				<td class="conLabel"><bean:message key="form.pegawai.telepon"></bean:message></td>
 				<td class="conText">
 					<html:text property="telepon" maxlength="14" size="60"></html:text>

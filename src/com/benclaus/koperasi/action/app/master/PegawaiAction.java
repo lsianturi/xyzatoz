@@ -207,6 +207,7 @@ public class PegawaiAction extends SecurityAction {
 				Pegawai prshn = new Pegawai();
 				BeanUtils.copyProperties(prshn, planForm);
 				prshn.setStatusPegawai(new StatusPK((Integer)planForm.get("stsPegawai")));
+				prshn.setStatusSipil(new StatusPK((Integer)planForm.get("stsSipil")));
 				prshn.setTglMasuk(sdf.parse(planForm.getString("tanggalMasuk")));
 				service.insertPegawai(prshn);
 

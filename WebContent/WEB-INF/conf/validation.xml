@@ -140,6 +140,11 @@
 			</field>
 		</form>
 		
+		<form name="roleForm">
+		<field property="roleCode" depends="required">
+				<arg0 key="form.roleCode" />
+			</field>
+		</form>
 		
 		
 		
