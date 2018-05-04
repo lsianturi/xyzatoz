@@ -12,7 +12,7 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 	</resultMap>
 	
 	<insert id="insertLoginTrail" parameterClass="com.benclaus.koperasi.model.usm.LoginTrail">
-		INSERT INTO absen_logintrail(userCode, sessionId, lastUpdDtm, lastUpdProcess) 
+		INSERT INTO log_logintrail(userCode, sessionId, lastUpdDtm, lastUpdProcess) 
 		VALUES (#userCode#, #sessionId#, now(), #lastUpdProcess#)
 	</insert>
 	
@@ -21,9 +21,9 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 			SELECT 
 				userCode, sessionId, lastUpdDtm, lastUpdProcess 
 			FROM 
-				absen_logintrail
+				log_logintrail
 			<isNotEmpty property="searchValue">
-				WHERE UCASE($searchColumn$) like '%' CONCAT #searchValue# CONCAT '%'
+				WHERE UCASE($searchColumn$) like CONCAT('%', #searchValue#, '%')
 			</isNotEmpty>
 			ORDER BY 
 				lastUpdDtm DESC
@@ -35,9 +35,9 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 			SELECT 
 				COUNT(*) 
 			FROM 
-				absen_logintrail
+				log_logintrail
 			<isNotEmpty property="searchValue">
-				WHERE UCASE($searchColumn$) like '%' CONCAT #searchValue# CONCAT '%'
+				WHERE UCASE($searchColumn$) like CONCAT('%', #searchValue#, '%')
 			</isNotEmpty>
 		</dynamic>	
 	</select>

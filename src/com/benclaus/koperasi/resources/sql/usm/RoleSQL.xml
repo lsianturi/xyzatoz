@@ -26,7 +26,7 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 			WHERE 
 				statusid=1 
 			<isNotEmpty prepend = " AND " property="searchValue">
-				UCASE($searchColumn$) LIKE '%' CONCAT #searchValue# CONCAT '%'
+				UCASE($searchColumn$) LIKE CONCAT('%', #searchValue#, '%')
 			</isNotEmpty>
 			ORDER BY
 				roleCode
@@ -42,7 +42,7 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 			WHERE 
 				statusid=1
 			<isNotEmpty prepend = " AND " property="searchValue">
-				UCASE($searchColumn$) LIKE '%' CONCAT #searchValue# CONCAT '%'
+				UCASE($searchColumn$) LIKE CONCAT('%', #searchValue#, '%')
 			</isNotEmpty>
 		</dynamic>
     </select>

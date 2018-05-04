@@ -28,6 +28,8 @@ import com.benclaus.koperasi.action.SecurityAction;
 import com.benclaus.koperasi.dao.Page;
 import com.benclaus.koperasi.dao.app.ConfigService;
 import com.benclaus.koperasi.dao.app.DataService;
+import com.benclaus.koperasi.dao.master.NasabahService;
+import com.benclaus.koperasi.dao.master.StatusPKService;
 import com.benclaus.koperasi.model.Data;
 import com.benclaus.koperasi.model.usm.Login;
 import com.benclaus.koperasi.utility.Constant;
@@ -36,31 +38,24 @@ import com.ibatis.common.util.PaginatedList;
 
 public class NasabahAction extends SecurityAction {
 	private static Logger log = Logger.getLogger(NasabahAction.class);
-	private String MENU_NSB_VIEW = "MST_NSB_view";
+	private String MENU_NSB_QUERY = "MST_NSB_search";
 	private String MENU_NSB_ADD= "MST_NSB_add";
 	private String MENU_NSB_UPD = "MST_NSB_upd";
 	private String MENU_NSB_DEL= "MST_NSB_del";
 
+	private StatusPKService stService = StatusPKService.getInstance();
+	private NasabahService nService = NasabahService.getInstance();
+	
 	private DataService service = DataService.getInstance();
 	private ConfigService cfgService = ConfigService.getInstance();
 
 	private void prepareSearch(HttpServletRequest request) {
 
 		try {
-			request.setAttribute("bookList", cfgService.getBookList());
-			request.setAttribute("companyList", cfgService.getCompanyList());
-			request.setAttribute("bookItemList", cfgService.getBookItemList());
-			request.setAttribute("spmList", cfgService.getSPMList());
-			request.setAttribute("yearList", service.getDataYearList());
-		} catch (Exception e) {
-		}
-	}
-
-	private void prepareData(HttpServletRequest request) {
-		try {
-			request.setAttribute("spmList", cfgService.getSPMList());
-			request.setAttribute("companyList", cfgService.getCompanyList());
-			request.setAttribute("bookList", cfgService.getBookList());
+			request.setAttribute("PerusahaanList", stService.getPerusahaan());
+			request.setAttribute("BankList", stService.getBank());
+			request.setAttribute("JnsAgtList", stService.getJenisAnggota());
+			request.setAttribute("StsAgtList", stService.getStatusAnggota());
 		} catch (Exception e) {
 		}
 	}
@@ -73,17 +68,17 @@ public class NasabahAction extends SecurityAction {
 		HttpSession session = request.getSession();
 		DynaActionForm actualForm = (DynaActionForm) form;
 
-		forward = hasMenuAccess(mapping, request, MENU_NSB_VIEW);
+		forward = hasMenuAccess(mapping, request, MENU_NSB_QUERY);
 		if (forward != null) {
 			return forward;
 		}
 		prepareSearch(request);
-		session.removeAttribute(MENU_NSB_VIEW);
+		session.removeAttribute(MENU_NSB_QUERY);
 
-		Integer year = Calendar.getInstance().get(Calendar.YEAR);
-
-		actualForm.set("fromYear", year);
-		actualForm.set("toYear", year);
+//		Integer year = Calendar.getInstance().get(Calendar.YEAR);
+//
+//		actualForm.set("fromYear", year);
+//		actualForm.set("toYear", year);
 
 		saveToken(request);
 
@@ -98,8 +93,8 @@ public class NasabahAction extends SecurityAction {
 
 		HttpSession session = request.getSession();
 		// Replace new form with old form
-		if (session.getAttribute(MENU_NSB_VIEW) != null) {
-			DAFContainer dafProxy = (DAFContainer) session.getAttribute(MENU_NSB_VIEW);
+		if (session.getAttribute(MENU_NSB_QUERY) != null) {
+			DAFContainer dafProxy = (DAFContainer) session.getAttribute(MENU_NSB_QUERY);
 			dafProxy.populate((DynaActionForm) form);
 		}
 
@@ -113,7 +108,7 @@ public class NasabahAction extends SecurityAction {
 
 		// Check menu access
 		ActionForward forward = new ActionForward();
-		forward = hasMenuAccess(mapping, request, MENU_NSB_VIEW);
+		forward = hasMenuAccess(mapping, request, MENU_NSB_QUERY);
 		if (forward != null)
 			return forward;
 
@@ -129,8 +124,8 @@ public class NasabahAction extends SecurityAction {
 			// Set owner
 			Login userLogin = (Login) session.getAttribute(Constant.SES_USERLOGIN);
 
-			PaginatedList mapList = (PaginatedList) service.searchActual(mapForm.getMap());
-			int totalSize = service.searchActualSize(mapForm.getMap());
+			PaginatedList mapList = (PaginatedList) nService.searchNasabah(mapForm.getMap());
+			int totalSize = nService.searchNasabahSize(mapForm.getMap());
 			int page = Integer.parseInt((String) mapForm.get("pageIndex"));
 
 			if (page * mapList.getPageSize() > totalSize)
@@ -143,7 +138,7 @@ public class NasabahAction extends SecurityAction {
 			request.setAttribute("DataList", new Page(mapList, totalSize));
 
 			DAFContainer sessionForm = new DAFContainer(mapForm.getMap());
-			session.setAttribute(MENU_NSB_VIEW, sessionForm);
+			session.setAttribute(MENU_NSB_QUERY, sessionForm);
 			session.setAttribute("Data", mapList);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
@@ -165,10 +160,10 @@ public class NasabahAction extends SecurityAction {
 		HttpSession session = request.getSession();
 		DynaActionForm newForm = (DynaActionForm) form;
 
-		if (session.getAttribute(MENU_NSB_VIEW) != null) {
+		if (session.getAttribute(MENU_NSB_QUERY) != null) {
 			Object pageIndex = newForm.get("pageIndex");
 
-			DAFContainer dafProxy = (DAFContainer) session.getAttribute(MENU_NSB_VIEW);
+			DAFContainer dafProxy = (DAFContainer) session.getAttribute(MENU_NSB_QUERY);
 			dafProxy.populate((DynaActionForm) form);
 
 			((DynaActionForm) form).set("pageIndex", pageIndex);
@@ -191,7 +186,7 @@ public class NasabahAction extends SecurityAction {
 			return forward;
 
 		try {
-			prepareData(request);
+			prepareSearch(request);
 
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
@@ -225,7 +220,7 @@ public class NasabahAction extends SecurityAction {
 			return forward;
 
 		try {
-			prepareData(request);
+			prepareSearch(request);
 			Integer companyId = request.getParameter("companyId").equals("") ? 0
 					: Integer.parseInt(request.getParameter("companyId"));
 			if (companyId == 0) {
@@ -301,7 +296,7 @@ public class NasabahAction extends SecurityAction {
 		}
 
 		try {
-			prepareData(request);
+			prepareSearch(request);
 			if (isTokenValid(request)) {
 				saveToken(request);
 

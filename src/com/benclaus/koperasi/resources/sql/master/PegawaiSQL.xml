@@ -84,16 +84,5 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 			AND p.id = #value#
 	</select>
 	
-	<select id="getStatusPegawai" resultClass="com.benclaus.koperasi.model.master.StatusPK">
-		SELECT id, status
-			FROM ms_sts_pegawai
-	</select>
-	
-	<select id="getStatusSipil" resultClass="com.benclaus.koperasi.model.master.StatusPK">
-		SELECT id, status
-			FROM ms_sts_sipil
-	</select>
-	
-	
 </sqlMap>
 

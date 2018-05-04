@@ -63,11 +63,11 @@ public class PerusahaanDao extends BaseDAO {
 	}
 	
 	public List<Industri> getIndustries() throws DaoException {
-		log.info("PrshnSQL.updatePerusahaan");
+		log.info("PrshnSQL.getIndustries");
 		return (List<Industri>) super.getList("PrshnSQL.getIndustries", null);
 	}
 	public List<Area> getAreas() throws DaoException {
-		log.info("PrshnSQL.updatePerusahaan");
+		log.info("PrshnSQL.getAreas");
 		return (List<Area>) super.getList("PrshnSQL.getAreas", null);
 	}
 }

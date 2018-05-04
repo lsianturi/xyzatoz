@@ -52,6 +52,45 @@
 			<form-property name="keterangan" type="java.lang.String" />
 		</form-bean>
 		
+		<form-bean name="nasabahSearch" type="org.apache.struts.validator.DynaValidatorForm">
+			<form-property name="dispatch" type="java.lang.String" initial="prepare" />
+			<form-property name="nama" type="java.lang.String" />
+			<form-property name="telepon" type="java.lang.String" />
+			<form-property name="perusahaan" type="java.lang.String" />
+			<form-property name="bank" type="java.lang.String" />
+			<form-property name="jnsAnggota" type="java.lang.String" />	
+			<form-property name="stsAnggota" type="java.lang.String" />
+			<form-property name="agentId" type="java.lang.String" />
+			<form-property name="anAgent" type="java.lang.String" />
+			<form-property name="pageIndex" type="java.lang.String" initial="1" />	
+			<form-property name="totalPage" type="java.lang.String" />
+			<form-property name="totalSize" type="java.lang.String" />
+		</form-bean>
+		
+		<form-bean name="nasabahForm" type="org.apache.struts.validator.DynaValidatorForm">
+			<form-property name="dispatch" type="java.lang.String" />
+			<form-property name="id" type="java.lang.Integer" />
+			<form-property name="nama" type="java.lang.String" />
+			<form-property name="jnsKelamin" type="java.lang.Integer" />
+			<form-property name="stsSipil" type="java.lang.Integer" />
+			<form-property name="alamat" type="java.lang.String" />
+			<form-property name="domisili" type="java.lang.String" />
+			<form-property name="telepon" type="java.lang.String" />
+			<form-property name="agentId" type="java.lang.Integer" />
+			<form-property name="perusahaan" type="java.lang.Integer" />
+			<form-property name="bankId" type="java.lang.Integer" />
+			<form-property name="bagian" type="java.lang.String" />
+			<form-property name="noRek" type="java.lang.String" />
+			<form-property name="tglRek" type="java.lang.String" />
+			<form-property name="stsKrywn" type="java.lang.Integer" />
+			<form-property name="jnsAnggota" type="java.lang.Integer" />
+			<form-property name="stsAnggota" type="java.lang.Integer" />
+			<form-property name="noRekeningRef" type="java.lang.String" />
+			<form-property name="namaRef" type="java.lang.String" />
+			<form-property name="keterangan" type="java.lang.String" />
+			<form-property name="anAgent" type="java.lang.Integer" />
+		</form-bean>
+		
 	</form-beans>
 	
 	<action-mappings>
@@ -75,6 +114,15 @@
 			<forward name="fail" path="/app/master/pegawaiEdit.jsp" />
 		</action>
 		
+		<action path="/nasabah" name="nasabahSearch" type="com.benclaus.koperasi.action.app.master.NasabahAction" scope="request" validate="false" parameter="dispatch">
+    		<forward name="continue" path="/app/master/nasabah.jsp" />	
+    		<forward name="fail" path="/main.jsp" />
+    	</action>
+    	<action path="/updateNasabah" name="nasabahForm" type="com.benclaus.koperasi.action.app.master.NasabahAction" scope="request" parameter="dispatch" validate="false">
+			<forward name="success" path="/nasabah.do?dispatch=returned" />
+			<forward name="continue" path="/app/master/nasabahEdit.jsp" />
+			<forward name="fail" path="/app/master/nasabahEdit.jsp" />
+		</action>
 		
 	</action-mappings>
 </struts-config>

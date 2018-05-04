@@ -42,13 +42,16 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map Config 2.0//EN"
 	<sqlMap resource="com/benclaus/koperasi/resources/sql/usm/RoleSQL.xml" />
 	<sqlMap resource="com/benclaus/koperasi/resources/sql/usm/UserSQL.xml" />
 	
-	<!-- absensi module -->
+	<!-- absensi module 
 	<sqlMap resource="com/benclaus/koperasi/resources/sql/app/ConfigSQL.xml" />
 	<sqlMap resource="com/benclaus/koperasi/resources/sql/app/DataSQL.xml" />
 	<sqlMap resource="com/benclaus/koperasi/resources/sql/app/ReportSQL.xml" />
 	<sqlMap resource="com/benclaus/koperasi/resources/sql/app/A3SQL.xml" />
+	-->
 	
 	<!-- Master module -->
 	<sqlMap resource="com/benclaus/koperasi/resources/sql/master/PrshnSQL.xml" />
 	<sqlMap resource="com/benclaus/koperasi/resources/sql/master/PegawaiSQL.xml" />
+	<sqlMap resource="com/benclaus/koperasi/resources/sql/master/NasabahSQL.xml" />
+	<sqlMap resource="com/benclaus/koperasi/resources/sql/master/StatusPKSQL.xml" />
 </sqlMapConfig>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap
+PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="StatusPKSQL">
+	
+	<select id="getStatusPegawai" resultClass="com.benclaus.koperasi.model.master.StatusPK">
+		SELECT id, `status`
+			FROM ms_sts_pegawai
+	</select>
+	
+	<select id="getStatusSipil" resultClass="com.benclaus.koperasi.model.master.StatusPK">
+		SELECT id, `status`
+			FROM ms_sts_sipil
+	</select>
+	
+	<select id="getJnsKelamin" resultClass="com.benclaus.koperasi.model.master.StatusPK">
+		SELECT id, nama as `status`
+			FROM ms_jns_kelamin
+	</select>
+	
+	<select id="getStatusKaryawan" resultClass="com.benclaus.koperasi.model.master.StatusPK">
+		SELECT id, `status`
+			FROM ms_sts_krywn
+	</select>
+	
+	<select id="getJenisAnggota" resultClass="com.benclaus.koperasi.model.master.StatusPK">
+		SELECT id, jenis as `status`
+			FROM ms_jns_anggota
+	</select>
+	
+	<select id="getStatusAnggota" resultClass="com.benclaus.koperasi.model.master.StatusPK">
+		SELECT id, `status`
+			FROM ms_sts_anggota
+	</select>
+	
+	<select id="getPerusahaan" resultClass="com.benclaus.koperasi.model.master.StatusPK">
+		SELECT id, nama as `status`
+			FROM ms_perusahaan
+	</select>
+	
+	<select id="getBank" resultClass="com.benclaus.koperasi.model.master.StatusPK">
+		SELECT id, nama as `status`
+			FROM ms_bank
+	</select>
+	
+</sqlMap>
+

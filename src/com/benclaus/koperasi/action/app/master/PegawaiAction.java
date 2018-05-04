@@ -20,6 +20,7 @@ import org.apache.struts.action.DynaActionForm;
 import com.benclaus.koperasi.action.SecurityAction;
 import com.benclaus.koperasi.dao.Page;
 import com.benclaus.koperasi.dao.master.PegawaiService;
+import com.benclaus.koperasi.dao.master.StatusPKService;
 import com.benclaus.koperasi.model.master.Pegawai;
 import com.benclaus.koperasi.model.master.StatusPK;
 import com.benclaus.koperasi.model.usm.Login;
@@ -35,13 +36,14 @@ public class PegawaiAction extends SecurityAction {
 	private String MENU_PEG_DEL= "MST_PEG_del";
 
 	private PegawaiService service = PegawaiService.getInstance();
+	private StatusPKService stsService = StatusPKService.getInstance();
 	private SimpleDateFormat sdf = new SimpleDateFormat("DD/mm/YYYY");
 
 	private void prepareData(HttpServletRequest request) {
 
 		try {
-			request.setAttribute("StatusList", service.getStatusPegawai());
-			request.setAttribute("SipilList", service.getStatusSipil());
+			request.setAttribute("StatusList", stsService.getStatusPegawai());
+			request.setAttribute("SipilList", stsService.getStatusSipil());
 		} catch (Exception e) {
 		}
 	}

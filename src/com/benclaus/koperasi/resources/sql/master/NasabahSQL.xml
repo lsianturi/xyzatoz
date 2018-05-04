@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap
+PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="NasabahSQL">
+	
+	<resultMap id="nasabahSearchResult" class="com.benclaus.koperasi.model.master.Nasabah">
+		<result property="id" column="id" />
+		<result property="nama" column="nama" />
+		<result property="noRekening" column="no_rek" />
+		<result property="telepon" column="telepon" />
+		<result property="pt.nama" column="pt_nama" />
+		<result property="bank.nama" column="bank_nama" />
+		<result property="jenisAnggota.status" column="jns_agt_nama" />
+		<result property="statusAnggota.status" column="sts_agt_nama" />
+		<result property="agent.nama" column="agent_nama" />
+		<result property="anAgent" column="is_agent" />
+	</resultMap>
+	
+	<resultMap id="nasabahResult" class="com.benclaus.koperasi.model.master.Nasabah">
+		<result property="id" column="id" />
+		<result property="nama" column="nama" />
+		<result property="jenisKelamin.id" column="jns_klmn_id" />
+		<result property="statusSipil.id" column="sts_sipil_id" />
+		<result property="domisili" column="domisili" />
+		<result property="alamat" column="alamat" />
+		<result property="telepon" column="telepon" />
+		<result property="agent.id" column="agent_id" />
+		<result property="pt.id" column="pt_id" />
+		<result property="bank.id" column="bank_id" />
+		<result property="bagian" column="bagian" />
+		<result property="noRekening" column="no_rek" />
+		<result property="tglRekening" column="agent_id" />
+		<result property="statusKaryawan.id" column="sts_krywn_id" />
+		<result property="jenisAnggota.id" column="jns_agt_id" />
+		<result property="statusAnggota.id" column="sts_agt_id" />
+		<result property="noRekeningRef" column="no_rek_ref" />
+		<result property="namaRef" column="nama_ref" />
+		<result property="keterangan" column="keterangan" />
+		<result property="anAgent" column="is_agent" />
+	</resultMap>
+	
+	<select id="searchNasabah" resultMap="nasabahSearchResult" parameterClass="java.util.Map" >
+		SELECT n.id, n.nama, n.no_rek, n.telepon, n.telepon, p.nama pt_nama,
+			b.nama bank_nama, j.jenis jns_agt_nama, s.`status` sts_agt_nama, a.nama agent_nama,
+			n.is_agent
+			FROM ms_nasabah n
+			INNER JOIN ms_perusahaan p on p.id = n.perusahaan_id
+			INNER JOIN ms_bank b on b.id = n.bank_id
+			INNER JOIN ms_jns_anggota j on j.id = n.jns_anggota_id
+			INNER JOIN ms_sts_anggota s on s.id = n.sts_anggota_id
+			INNER JOIN ms_nasabah a on a.id = n.agent_id
+			where n.deleted = 0
+			<isNotEmpty property="nama" prepend="AND">
+				n.nama LIKE concat('%',#nama#,'%')
+			</isNotEmpty>
+			<isNotEmpty property="telepon" prepend="AND">
+				n.telepon = #telepon#
+			</isNotEmpty>
+			<isNotEmpty property="perusahaan" prepend="AND">
+				n.perusahaan_id = #perusahaan#
+			</isNotEmpty>
+			<isNotEmpty property="bank" prepend="AND">
+				n.bank_id = #bank#
+			</isNotEmpty>
+			<isNotEmpty property="jnsAnggota" prepend="AND">
+				n.jns_anggota_id = #jnsAnggota#
+			</isNotEmpty>
+			<isNotEmpty property="stsAnggota" prepend="AND">
+				n.sts_anggota_id LIKE = #stsAnggota#
+			</isNotEmpty>
+			<isNotEmpty property="agentId" prepend="AND">
+				n.agent_id LIKE = #agentId#
+			</isNotEmpty>
+			<isNotEmpty property="anAgent" prepend="AND">
+				n.is_agent LIKE = #anAgent#
+			</isNotEmpty>
+	</select>
+	
+	<select id="searchNasabahSize" resultClass="java.lang.Integer" parameterClass="java.util.Map" >
+		SELECT count(*) 
+			FROM ms_nasabah n
+			INNER JOIN ms_perusahaan p on p.id = n.perusahaan_id
+			INNER JOIN ms_bank b on b.id = n.bank_id
+			INNER JOIN ms_jns_anggota j on j.id = n.jns_anggota_id
+			INNER JOIN ms_sts_anggota s on s.id = n.sts_anggota_id
+			INNER JOIN ms_nasabah a on a.id = n.agent_id
+			where n.deleted = 0
+			<isNotEmpty property="nama" prepend="AND">
+				n.nama LIKE concat('%',#nama#,'%')
+			</isNotEmpty>
+			<isNotEmpty property="telepon" prepend="AND">
+				n.telepon = #telepon#
+			</isNotEmpty>
+			<isNotEmpty property="perusahaan" prepend="AND">
+				n.perusahaan_id = #perusahaan#
+			</isNotEmpty>
+			<isNotEmpty property="bank" prepend="AND">
+				n.bank_id = #bank#
+			</isNotEmpty>
+			<isNotEmpty property="jnsAnggota" prepend="AND">
+				n.jns_anggota_id = #jnsAnggota#
+			</isNotEmpty>
+			<isNotEmpty property="stsAnggota" prepend="AND">
+				n.sts_anggota_id LIKE = #stsAnggota#
+			</isNotEmpty>
+			<isNotEmpty property="agentId" prepend="AND">
+				n.agent_id LIKE = #agentId#
+			</isNotEmpty>
+			<isNotEmpty property="anAgent" prepend="AND">
+				n.is_agent LIKE = #anAgent#
+			</isNotEmpty>
+	</select>
+	<!-- 
+	<insert id="insertNasabah" parameterClass="com.benclaus.koperasi.model.master.Nasabah" >
+		INSERT INTO ms_nasabah (`nama`, `alamat`, `domisili`, `telepon`, `status_nasabah`, `status_sipil`, `tgl_masuk`, `keterangan`) 
+		VALUES (#nama#, #alamat#, #domisili#, #telepon#, #statusNasabah.id#, #statusSipil.id#, #tglMasuk#, #keterangan#)
+	</insert>
+	
+	<update id="updateNasabah" parameterClass="com.benclaus.koperasi.model.master.Nasabah">
+		UPDATE ms_nasabah SET  `nama` = #nama#, `alamat`=#alamat#, `domisili`=#domisili#, `telepon`=#telepon#, `status_nasabah` = #statusNasabah#,
+			`status_sipil`= #statusSipil.id#, `tgl_masuk` = #tglMasuk#, keterangan = #keterangan#
+		WHERE `id`=#id#
+	</update>
+	
+	<update id="deleteNasabah" parameterClass="java.lang.Integer">
+		UPDATE ms_nasabah SET  `deleted` = 1
+		WHERE `id`=#value#
+	</update>
+	
+	<select id="getNasabah" resultMap="nasabahResult">
+		SELECT p.id, p.nama, p.alamat, p.domisili, p.telepon, s.id status_id, s.status status_nama, s1.id sipil_id, s1.status sipil_nama, p.tgl_masuk, p.keterangan
+			FROM ms_nasabah p
+			INNER JOIN ms_sts_nasabah s on s.id = p.status_nasabah
+			INNER JOIN ms_sts_sipil s1 on s1.id = p.status_sipil
+			WHERE p.deleted = 0
+			AND p.id = #value#
+	</select>
+	
+ -->
+	
+	
+</sqlMap>
+

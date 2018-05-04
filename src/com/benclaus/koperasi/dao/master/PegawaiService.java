@@ -6,8 +6,6 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import com.benclaus.koperasi.exception.DaoException;
-import com.benclaus.koperasi.model.master.Area;
-import com.benclaus.koperasi.model.master.Industri;
 import com.benclaus.koperasi.model.master.Pegawai;
 import com.benclaus.koperasi.model.master.StatusPK;
 import com.ibatis.common.util.PaginatedList;
@@ -91,21 +89,5 @@ public class PegawaiService {
 		return null;
 	}
 	
-	public List<StatusPK> getStatusPegawai() throws DaoException {
-		try {
-			return dao.getStatusPegawai();
-		} catch (Exception e) {
-			log.debug(e);
-		}
-		return null;
-	}
 	
-	public List<StatusPK> getStatusSipil() throws DaoException {
-		try {
-			return dao.getStatusSipil();
-		} catch (Exception e) {
-			log.debug(e);
-		}
-		return null;
-	}
 }

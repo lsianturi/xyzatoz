@@ -10,12 +10,12 @@ public class Nasabah extends Audit{
 	
 	private Integer id;
 	private String nama;
-	private String jenisKelamin;
+	private StatusPK jenisKelamin;
 	private StatusPK statusSipil;
 	private String domisili;
 	private String alamat;
 	private String telepon;
-	private Integer agentId;
+	private Nasabah agent;
 	private Perusahaan pt;
 	private Bank bank;
 	private String bagian;
@@ -27,6 +27,7 @@ public class Nasabah extends Audit{
 	private String noRekeningRef;
 	private String namaRef;
 	private String keterangan;
+	private boolean anAgent;
 
 	public Nasabah() {
 		super();
@@ -50,11 +51,11 @@ public class Nasabah extends Audit{
 		this.nama = nama;
 	}
 
-	public String getJenisKelamin() {
+	public StatusPK getJenisKelamin() {
 		return jenisKelamin;
 	}
 
-	public void setJenisKelamin(String jenisKelamin) {
+	public void setJenisKelamin(StatusPK jenisKelamin) {
 		this.jenisKelamin = jenisKelamin;
 	}
 
@@ -88,14 +89,6 @@ public class Nasabah extends Audit{
 
 	public void setTelepon(String telepon) {
 		this.telepon = telepon;
-	}
-
-	public Integer getAgentId() {
-		return agentId;
-	}
-
-	public void setAgentId(Integer agentId) {
-		this.agentId = agentId;
 	}
 
 	public Perusahaan getPt() {
@@ -184,6 +177,22 @@ public class Nasabah extends Audit{
 
 	public void setKeterangan(String keterangan) {
 		this.keterangan = keterangan;
+	}
+
+	public Nasabah getAgent() {
+		return agent;
+	}
+
+	public void setAgent(Nasabah agent) {
+		this.agent = agent;
+	}
+
+	public boolean isAnAgent() {
+		return anAgent;
+	}
+
+	public void setAnAgent(boolean anAgent) {
+		this.anAgent = anAgent;
 	}
 
 	public String toString() {
