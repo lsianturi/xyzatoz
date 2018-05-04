@@ -34,10 +34,10 @@ import com.ibatis.common.util.PaginatedList;
  */
 public final class MenuAction extends SecurityAction{
 	private static Logger log = Logger.getLogger(MenuAction.class);
-	private String MENU_USER_MENU_QUERY = "menu";
-	private String MENU_USER_MENU_UPDATE = "menuupd";
-	private String MENU_USER_MENU_ADD = "menuadd";
-	private String MENU_USER_MENU_DELETE = "menudel";
+	private String MENU_USER_MENU_QUERY = "SET_MENU_search";
+	private String MENU_USER_MENU_UPDATE = "SET_MENU_upd";
+	private String MENU_USER_MENU_ADD = "SET_MENU_add";
+	private String MENU_USER_MENU_DELETE = "SET_MENU_del";
 	private String SubMenu = "SubMenu";
 	private String Transaction = "Transaction";
 	

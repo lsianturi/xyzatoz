@@ -34,7 +34,7 @@ import com.ibatis.common.util.PaginatedList;
  */
 public final class RoleAction extends SecurityAction{
 	private static Logger log = Logger.getLogger(MenuAction.class);
-	private static final String MENU_ROLE_QUERY = "SET_ROLE_page";
+	private static final String MENU_ROLE_QUERY = "SET_ROLE_search";
 	private static final String MENU_ROLE_UPDATE = "SET_ROLE_upd";
 	private static final String MENU_ROLE_ADD = "SET_ROLE_add";
 	private static final String MENU_ROLE_DELETE = "SET_ROLE_del";	

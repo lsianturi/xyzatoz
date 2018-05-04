@@ -146,6 +146,11 @@
 			</field>
 		</form>
 		
+		<form name="menuForm">
+		<field property="menuCode" depends="required">
+				<arg0 key="form.menuCode" />
+			</field>
+		</form>
 		
 		
 		

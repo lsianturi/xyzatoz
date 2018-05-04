@@ -29,7 +29,7 @@ import com.ibatis.common.util.PaginatedList;
 
 public class PegawaiAction extends SecurityAction {
 	private static Logger log = Logger.getLogger(PegawaiAction.class);
-	private String MENU_PEG_VIEW = "MST_PEG_view";
+	private String MENU_PEG_VIEW = "MST_PEG_search";
 	private String MENU_PEG_ADD= "MST_PEG_add";
 	private String MENU_PEG_UPD = "MST_PEG_upd";
 	private String MENU_PEG_DEL= "MST_PEG_del";

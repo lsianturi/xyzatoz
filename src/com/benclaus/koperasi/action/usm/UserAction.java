@@ -39,7 +39,7 @@ import com.ibatis.common.util.PaginatedList;
  */
 public final class UserAction extends SecurityAction{
 	private static Logger log = Logger.getLogger(UserAction.class);
-	private String MENU_USER_QUERY = "SET_USR_view";
+	private String MENU_USER_QUERY = "SET_USR_search";
 	private String MENU_USER_UPDATE = "SET_USR_upd";
 	
 	private UserService service = UserService.getInstance();

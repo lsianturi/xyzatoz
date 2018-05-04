@@ -28,7 +28,7 @@ import com.ibatis.common.util.PaginatedList;
 
 public class PerusahaanAction extends SecurityAction {
 	private static Logger log = Logger.getLogger(PerusahaanAction.class);
-	private String MENU_PRSHN_VIEW = "MST_PRSHN_view";
+	private String MENU_PRSHN_VIEW = "MST_PRSHN_search";
 	private String MENU_PRSHN_ADD= "MST_PRSHN_add";
 	private String MENU_PRSHN_UPD = "MST_PRSHN_upd";
 	private String MENU_PRSHN_DEL= "MST_PRSHN_del";

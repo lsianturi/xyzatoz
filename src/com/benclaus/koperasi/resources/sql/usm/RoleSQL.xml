@@ -157,7 +157,7 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 		select 
 			count(*) 
 		from 
-			ms_rolemenu t1, ms_menut2 
+			ms_rolemenu t1, ms_menu t2 
 		where 
 			t1.menucode = t2.menucode and t1.rolecode = #roleCode# and t2.parentmenucode = #menuCode#
     </select>
