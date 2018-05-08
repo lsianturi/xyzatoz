@@ -42,8 +42,8 @@ public class PegawaiAction extends SecurityAction {
 	private void prepareData(HttpServletRequest request) {
 
 		try {
-			request.setAttribute("StatusList", stsService.getStatusPegawai());
-			request.setAttribute("SipilList", stsService.getStatusSipil());
+			request.setAttribute("StatusList", stsService.listStatusPegawai());
+			request.setAttribute("SipilList", stsService.listStatusSipil());
 		} catch (Exception e) {
 		}
 	}

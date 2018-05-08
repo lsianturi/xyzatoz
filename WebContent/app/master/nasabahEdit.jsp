@@ -83,23 +83,16 @@
 				</td>
 			</tr>
 			<tr>
-				<td class="conLabel"><bean:message key="form.nasabah.tglMasuk"></bean:message></td>
-				<td class="conText">
-					<html:text property="tanggalMasuk" maxlength="14" size="20"></html:text>
-					<a href="javascript:cal1.popup();"><img src="icons/cal.gif"  border="0" height="16" width="16"></a>
-				</td>
-			</tr>
-			<tr>
 				<td class="conLabel"><bean:message key="form.nasabah.keterangan"></bean:message></td>
 				<td class="conText">
 					<html:textarea property="keterangan" rows="2" cols="60"></html:textarea>
 				</td>
 			</tr>
 			<tr>
-				<td width="100" class="conLabel"><bean:message key="form.nasabah.statusNasabah"></bean:message></td>
+				<td width="100" class="conLabel"><bean:message key="form.nasabah.statusAnggota"></bean:message></td>
 				<td class="conText">
-					<html:select property="stsNasabah">
-						<html:options collection="StatusList" property="id" labelProperty="status" />
+					<html:select property="stsAnggota">
+						<html:options collection="StsAgtList" property="id" labelProperty="status" />
 					</html:select>
 				</td>
 			</tr>
@@ -117,9 +110,4 @@
 	</table>	
 </html:form>
 </BODY>
-<script language="JavaScript">
-	var cal1 = new calendar2(document.forms['nasabahForm'].elements['tanggalMasuk']);
-	cal1.year_scroll = true;
-	cal1.time_comp = false;
-</script>
 </html:html>

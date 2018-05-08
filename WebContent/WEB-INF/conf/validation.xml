@@ -45,6 +45,20 @@
 			</field>
 		</form>
 		
+		<form name="nasabahForm">
+			<field property="nama" depends="required">
+				<arg0 key="form.nasabah.name" />
+			</field>
+			<field property="alamat" depends="required">
+				<arg0 key="form.nasabah.address" />
+			</field>
+			<field property="domisili" depends="required">
+				<arg0 key="form.nasabah.domisili" />
+			</field>
+			<field property="telepon" depends="required">
+				<arg0 key="form.nasabah.telepon" />
+			</field>
+		</form>
 		
 		
 		

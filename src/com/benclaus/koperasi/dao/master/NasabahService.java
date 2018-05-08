@@ -89,21 +89,5 @@ public class NasabahService {
 		return null;
 	}
 	
-	public List<StatusPK> getStatusNasabah() throws DaoException {
-		try {
-			return dao.getStatusNasabah();
-		} catch (Exception e) {
-			log.debug(e);
-		}
-		return null;
-	}
 	
-	public List<StatusPK> getStatusSipil() throws DaoException {
-		try {
-			return dao.getStatusSipil();
-		} catch (Exception e) {
-			log.debug(e);
-		}
-		return null;
-	}
 }

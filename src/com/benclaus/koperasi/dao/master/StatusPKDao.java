@@ -30,39 +30,44 @@ public class StatusPKDao extends BaseDAO {
 	
 	private StatusPKDao() { super(); }
 	
-	public List<StatusPK> getStatusPegawai() throws DaoException {
-		log.info("StatusPKSQL.getStatusPegawai");
-		return (List<StatusPK>) super.getList("StatusPKSQL.getStatusPegawai", null);
+	public List<StatusPK> listStatusPegawai() throws DaoException {
+		log.info("StatusPKSQL.listStatusPegawai");
+		return (List<StatusPK>) super.getList("StatusPKSQL.listStatusPegawai", null);
 	}
-	public List<StatusPK> getStatusSipil() throws DaoException {
-		log.info("StatusPKSQL.getStatusSipil");
-		return (List<StatusPK>) super.getList("StatusPKSQL.getStatusSipil", null);
-	}
-	
-	public List<StatusPK> getJnsKelamin() throws DaoException {
-		log.info("StatusPKSQL.getJnsKelamin");
-		return (List<StatusPK>) super.getList("StatusPKSQL.getJnsKelamin", null);
-	}
-	public List<StatusPK> getStatusKaryawan() throws DaoException {
-		log.info("StatusPKSQL.getStatusKaryawan");
-		return (List<StatusPK>) super.getList("StatusPKSQL.getStatusKaryawan", null);
-	}
-	public List<StatusPK> getJenisAnggota() throws DaoException {
-		log.info("StatusPKSQL.getJenisAnggota");
-		return (List<StatusPK>) super.getList("StatusPKSQL.getJenisAnggota", null);
+	public List<StatusPK> listStatusSipil() throws DaoException {
+		log.info("StatusPKSQL.listStatusSipil");
+		return (List<StatusPK>) super.getList("StatusPKSQL.listStatusSipil", null);
 	}
 	
-	public List<StatusPK> getStatusAnggota() throws DaoException {
-		log.info("StatusPKSQL.getStatusAnggota");
-		return (List<StatusPK>) super.getList("StatusPKSQL.getStatusAnggota", null);
+	public List<StatusPK> listJnsKelamin() throws DaoException {
+		log.info("StatusPKSQL.listJnsKelamin");
+		return (List<StatusPK>) super.getList("StatusPKSQL.listJnsKelamin", null);
+	}
+	public List<StatusPK> listStatusKaryawan() throws DaoException {
+		log.info("StatusPKSQL.listStatusKaryawan");
+		return (List<StatusPK>) super.getList("StatusPKSQL.listStatusKaryawan", null);
+	}
+	public List<StatusPK> listJenisAnggota() throws DaoException {
+		log.info("StatusPKSQL.listJenisAnggota");
+		return (List<StatusPK>) super.getList("StatusPKSQL.listJenisAnggota", null);
 	}
 	
-	public List<StatusPK> getPerusahaan() throws DaoException {
-		log.info("StatusPKSQL.getPerusahaan");
-		return (List<StatusPK>) super.getList("StatusPKSQL.getPerusahaan", null);
+	public List<StatusPK> listStatusAnggota() throws DaoException {
+		log.info("StatusPKSQL.listStatusAnggota");
+		return (List<StatusPK>) super.getList("StatusPKSQL.listStatusAnggota", null);
 	}
-	public List<StatusPK> getBank() throws DaoException {
-		log.info("StatusPKSQL.getBank");
-		return (List<StatusPK>) super.getList("StatusPKSQL.getBank", null);
+	
+	public List<StatusPK> listPerusahaan() throws DaoException {
+		log.info("StatusPKSQL.listPerusahaan");
+		return (List<StatusPK>) super.getList("StatusPKSQL.listPerusahaan", null);
 	}
+	public List<StatusPK> listBank() throws DaoException {
+		log.info("StatusPKSQL.listBank");
+		return (List<StatusPK>) super.getList("StatusPKSQL.listBank", null);
+	}
+	public List<StatusPK> listAgent() throws DaoException {
+		log.info("StatusPKSQL.listAgent");
+		return (List<StatusPK>) super.getList("StatusPKSQL.listAgent", null);
+	}
+	
 }

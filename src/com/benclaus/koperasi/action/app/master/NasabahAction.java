@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -31,6 +32,7 @@ import com.benclaus.koperasi.dao.app.DataService;
 import com.benclaus.koperasi.dao.master.NasabahService;
 import com.benclaus.koperasi.dao.master.StatusPKService;
 import com.benclaus.koperasi.model.Data;
+import com.benclaus.koperasi.model.master.Nasabah;
 import com.benclaus.koperasi.model.usm.Login;
 import com.benclaus.koperasi.utility.Constant;
 import com.benclaus.koperasi.utility.DAFContainer;
@@ -52,10 +54,24 @@ public class NasabahAction extends SecurityAction {
 	private void prepareSearch(HttpServletRequest request) {
 
 		try {
-			request.setAttribute("PerusahaanList", stService.getPerusahaan());
-			request.setAttribute("BankList", stService.getBank());
-			request.setAttribute("JnsAgtList", stService.getJenisAnggota());
-			request.setAttribute("StsAgtList", stService.getStatusAnggota());
+			request.setAttribute("PerusahaanList", stService.listPerusahaan());
+			request.setAttribute("BankList", stService.listBank());
+			request.setAttribute("JnsAgtList", stService.listJenisAnggota());
+			request.setAttribute("StsAgtList", stService.listStatusAnggota());
+		} catch (Exception e) {
+		}
+	}
+	
+	private void prepareData(HttpServletRequest request) {
+		try {
+			request.setAttribute("SexList", stService.listJnsKelamin());
+			request.setAttribute("SipilList", stService.listStatusSipil());
+			request.setAttribute("PerusahaanList", stService.listPerusahaan());
+			request.setAttribute("BankList", stService.listBank());
+			request.setAttribute("JnsAgtList", stService.listJenisAnggota());
+			request.setAttribute("StsAgtList", stService.listStatusAnggota());
+			request.setAttribute("StsKrywnList", stService.listStatusKaryawan());
+			request.setAttribute("AgentList", stService.listAgent());
 		} catch (Exception e) {
 		}
 	}
@@ -186,7 +202,7 @@ public class NasabahAction extends SecurityAction {
 			return forward;
 
 		try {
-			prepareSearch(request);
+			prepareData(request);
 
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
@@ -220,45 +236,16 @@ public class NasabahAction extends SecurityAction {
 			return forward;
 
 		try {
-			prepareSearch(request);
-			Integer companyId = request.getParameter("companyId").equals("") ? 0
-					: Integer.parseInt(request.getParameter("companyId"));
-			if (companyId == 0) {
-				errors.add(Constant.GLOBALERROR,
-						new ActionError("error.exception", "Please choose only one company only to edit at once."));
-			}
-			Integer bookId = request.getParameter("bookId").equals("") ? 0
-					: Integer.parseInt(request.getParameter("bookId"));
-			Integer bookItemId = request.getParameter("bookItemId").equals("") ? 0
-					: Integer.parseInt(request.getParameter("bookItemId"));
-			Integer fromYear = request.getParameter("fromYear").equals("") ? 0
-					: Integer.parseInt(request.getParameter("fromYear"));
-			Integer toYear = request.getParameter("toYear").equals("") ? 0
-					: Integer.parseInt(request.getParameter("toYear"));
-			if (fromYear.intValue() != toYear.intValue()) {
-				errors.add(Constant.GLOBALERROR,
-						new ActionError("error.exception", "\nPlease choose only one year only to edit at once."));
-			}
+			prepareData(request);
+			Integer nsbhId = request.getParameter("id").equals("") ? 0
+					: Integer.parseInt(request.getParameter("id"));
 			if (errors.size() > 0) {
 				saveErrors(request, errors);
 				return mapping.findForward("continue");
 			}
 
-			Map<String, Object> map = new HashMap<>();
-			map.put("companyId", companyId);
-			map.put("bookId", bookId);
-			map.put("bookItemId", bookItemId);
-			map.put("fromYear", fromYear);
-			map.put("toYear", toYear);
-
-			List<Data> data = service.getActual(map);
-			Integer size = data.size();
-			planForm.set("year", fromYear);
-			planForm.set("companyId", companyId);
-			planForm.set("bookId", bookId);
-			request.setAttribute("DataList", new Page(data, size));
-			// request.setAttribute("plan", dat);
-			// session.setAttribute("DataList", new Page(data, size));
+			Nasabah nsbh = nService.getNasabah(nsbhId);
+			BeanUtils.copyProperties(planForm, nsbh);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			errors.add(Constant.GLOBALERROR, new ActionError("error.exception", e.getMessage()));
@@ -272,7 +259,7 @@ public class NasabahAction extends SecurityAction {
 		saveToken(request);
 
 		planForm.set("dispatch", Constant.UPDATESAVE);
-		return mapping.findForward("success");
+		return mapping.findForward("continue");
 
 	}
 

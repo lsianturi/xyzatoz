@@ -33,72 +33,81 @@ public class StatusPKService {
 	}
 	
 	
-	public List<StatusPK> getStatusPegawai() throws DaoException {
+	public List<StatusPK> listStatusPegawai() throws DaoException {
 		try {
-			return dao.getStatusPegawai();
+			return dao.listStatusPegawai();
 		} catch (Exception e) {
 			log.debug(e);
 		}
 		return null;
 	}
 	
-	public List<StatusPK> getStatusSipil() throws DaoException {
+	public List<StatusPK> listStatusSipil() throws DaoException {
 		try {
-			return dao.getStatusSipil();
+			return dao.listStatusSipil();
 		} catch (Exception e) {
 			log.debug(e);
 		}
 		return null;
 	}
 	
-	public List<StatusPK> getJnsKelamin() throws DaoException {
+	public List<StatusPK> listJnsKelamin() throws DaoException {
 		try {
-			return dao.getJnsKelamin();
+			return dao.listJnsKelamin();
 		} catch (Exception e) {
 			log.debug(e);
 		}
 		return null;
 	}
 	
-	public List<StatusPK> getStatusKaryawan() throws DaoException {
+	public List<StatusPK> listStatusKaryawan() throws DaoException {
 		try {
-			return dao.getStatusKaryawan();
+			return dao.listStatusKaryawan();
 		} catch (Exception e) {
 			log.debug(e);
 		}
 		return null;
 	}
-	public List<StatusPK> getJenisAnggota() throws DaoException {
+	public List<StatusPK> listJenisAnggota() throws DaoException {
 		try {
-			return dao.getJenisAnggota();
+			return dao.listJenisAnggota();
 		} catch (Exception e) {
 			log.debug(e);
 		}
 		return null;
 	}
-	public List<StatusPK> getStatusAnggota() throws DaoException {
+	public List<StatusPK> listStatusAnggota() throws DaoException {
 		try {
-			return dao.getStatusAnggota();
+			return dao.listStatusAnggota();
 		} catch (Exception e) {
 			log.debug(e);
 		}
 		return null;
 	}
-	public List<StatusPK> getPerusahaan() throws DaoException {
+	public List<StatusPK> listPerusahaan() throws DaoException {
 		try {
-			return dao.getPerusahaan();
+			return dao.listPerusahaan();
 		} catch (Exception e) {
 			log.debug(e);
 		}
 		return null;
 	}
-	public List<StatusPK> getBank() throws DaoException {
+	public List<StatusPK> listBank() throws DaoException {
 		try {
-			return dao.getBank();
+			return dao.listBank();
 		} catch (Exception e) {
 			log.debug(e);
 		}
 		return null;
 	}
+	public List<StatusPK> listAgent() throws DaoException {
+		try {
+			return dao.listAgent();
+		} catch (Exception e) {
+			log.debug(e);
+		}
+		return null;
+	}
+	
 	
 }

@@ -21,20 +21,20 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 	<resultMap id="nasabahResult" class="com.benclaus.koperasi.model.master.Nasabah">
 		<result property="id" column="id" />
 		<result property="nama" column="nama" />
-		<result property="jenisKelamin.id" column="jns_klmn_id" />
+		<result property="jenisKelamin.id" column="jns_kelamin_id" />
 		<result property="statusSipil.id" column="sts_sipil_id" />
 		<result property="domisili" column="domisili" />
 		<result property="alamat" column="alamat" />
 		<result property="telepon" column="telepon" />
 		<result property="agent.id" column="agent_id" />
-		<result property="pt.id" column="pt_id" />
+		<result property="pt.id" column="perusahaan_id" />
 		<result property="bank.id" column="bank_id" />
 		<result property="bagian" column="bagian" />
 		<result property="noRekening" column="no_rek" />
-		<result property="tglRekening" column="agent_id" />
+		<result property="tglRekening" column="tgl_rek" />
 		<result property="statusKaryawan.id" column="sts_krywn_id" />
-		<result property="jenisAnggota.id" column="jns_agt_id" />
-		<result property="statusAnggota.id" column="sts_agt_id" />
+		<result property="jenisAnggota.id" column="jns_anggota_id" />
+		<result property="statusAnggota.id" column="sts_anggota_id" />
 		<result property="noRekeningRef" column="no_rek_ref" />
 		<result property="namaRef" column="nama_ref" />
 		<result property="keterangan" column="keterangan" />
@@ -112,15 +112,19 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 				n.is_agent LIKE = #anAgent#
 			</isNotEmpty>
 	</select>
-	<!-- 
+	
 	<insert id="insertNasabah" parameterClass="com.benclaus.koperasi.model.master.Nasabah" >
-		INSERT INTO ms_nasabah (`nama`, `alamat`, `domisili`, `telepon`, `status_nasabah`, `status_sipil`, `tgl_masuk`, `keterangan`) 
-		VALUES (#nama#, #alamat#, #domisili#, #telepon#, #statusNasabah.id#, #statusSipil.id#, #tglMasuk#, #keterangan#)
+		INSERT INTO `ms_nasabah` (`nama`,  `jns_kelamin_id`,  `sts_sipil_id`,  `domisili`,  `alamat`,  `telepon`,  `agent_id`,  `perusahaan_id`,  `bank_id`,
+  			`bagian`, `no_rek`,  `tgl_rek`,  `sts_krywn_id`,  `jns_anggota_id`,  `sts_anggota_id`,  `no_rek_ref`,  `nama_ref`,  `keterangan`,  `is_agent`)
+		VALUES (#nama#, #jenisKelamin.id#, #statusSipil.id#, #domisili#, #alamat#, #telepon#, #agent.id#, #pt.id#, #bank.id#,
+			#bagian#, #noRekening#, #tglRekening#, #statusKaryawan.id#, #jenisAnggota.id#, #statusAnggota.id#, #noRekeningRef#, #namaRef#, #keterangan#, #anAgent#)
 	</insert>
 	
 	<update id="updateNasabah" parameterClass="com.benclaus.koperasi.model.master.Nasabah">
-		UPDATE ms_nasabah SET  `nama` = #nama#, `alamat`=#alamat#, `domisili`=#domisili#, `telepon`=#telepon#, `status_nasabah` = #statusNasabah#,
-			`status_sipil`= #statusSipil.id#, `tgl_masuk` = #tglMasuk#, keterangan = #keterangan#
+		UPDATE ms_nasabah SET  `nama`=#nama#,  `jns_kelamin_id`=#jenisKelamin.id#,  `sts_sipil_id`=#statusSipil.id#,  `domisili`=#domisili#,  `alamat`=#alamat#,  
+			`telepon`=#telepon#,  `agent_id`=#agent.id#,  `perusahaan_id`=#pt.id#,  `bank_id`=#bank.id#,
+  			`bagian`=#bagian#, `no_rek`=#noRekening#,  `tgl_rek`=#tglRekening#,  `sts_krywn_id`=#statusKaryawan.id#,  `jns_anggota_id`=#jenisAnggota.id#,
+  			  `sts_anggota_id`=#statusAnggota.id#,  `no_rek_ref`=#noRekeningRef#,  `nama_ref`=#namaRef#,  `keterangan`=#keterangan#,  `is_agent`=#anAgent#
 		WHERE `id`=#id#
 	</update>
 	
@@ -130,15 +134,13 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 	</update>
 	
 	<select id="getNasabah" resultMap="nasabahResult">
-		SELECT p.id, p.nama, p.alamat, p.domisili, p.telepon, s.id status_id, s.status status_nama, s1.id sipil_id, s1.status sipil_nama, p.tgl_masuk, p.keterangan
-			FROM ms_nasabah p
-			INNER JOIN ms_sts_nasabah s on s.id = p.status_nasabah
-			INNER JOIN ms_sts_sipil s1 on s1.id = p.status_sipil
-			WHERE p.deleted = 0
-			AND p.id = #value#
+		SELECT `id`, `nama`,  `jns_kelamin_id`,  `sts_sipil_id`,  `domisili`,  `alamat`,  `telepon`,  `agent_id`,  `perusahaan_id`,  `bank_id`,
+  			`bagian`, `no_rek`,  `tgl_rek`,  `sts_krywn_id`,  `jns_anggota_id`,  `sts_anggota_id`,  `no_rek_ref`,  `nama_ref`,  `keterangan`,  `is_agent`
+			FROM ms_nasabah n
+			WHERE n.deleted = 0
+			AND n.id = #value#
 	</select>
 	
- -->
 	
 	
 </sqlMap>

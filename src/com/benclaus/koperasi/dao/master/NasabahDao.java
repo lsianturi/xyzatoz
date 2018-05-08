@@ -61,12 +61,4 @@ public class NasabahDao extends BaseDAO {
 		return (Nasabah) super.getObject("NasabahSQL.getNasabah", id);
 	}
 	
-	public List<StatusPK> getStatusNasabah() throws DaoException {
-		log.info("NasabahSQL.getStatusNasabah");
-		return (List<StatusPK>) super.getList("NasabahSQL.getStatusNasabah", null);
-	}
-	public List<StatusPK> getStatusSipil() throws DaoException {
-		log.info("NasabahSQL.getStatusSipil");
-		return (List<StatusPK>) super.getList("NasabahSQL.getStatusSipil", null);
-	}
 }
