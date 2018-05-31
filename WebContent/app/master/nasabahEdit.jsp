@@ -57,6 +57,14 @@
 				</td>
 			</tr>
 			<tr>
+				<td width="100" class="conLabel"><bean:message key="form.nasabah.jenisKelamin"></bean:message></td>
+				<td class="conText">
+					<html:select property="jnsKelamin">
+						<html:options collection="SexList" property="id" labelProperty="status" />
+					</html:select>
+				</td>
+			</tr>
+			<tr>
 				<td class="conLabel"><bean:message key="form.nasabah.address"></bean:message></td>
 				<td class="conText">
 					<html:textarea property="alamat" rows="3" cols="60"></html:textarea>
@@ -83,9 +91,72 @@
 				</td>
 			</tr>
 			<tr>
+				<td width="100" class="conLabel"><bean:message key="form.nasabah.perusahaan"></bean:message></td>
+				<td class="conText">
+					<html:select property="perusahaan">
+						<html:options collection="PerusahaanList" property="id" labelProperty="status" />
+					</html:select>
+				</td>
+			</tr>
+			<tr>
+				<td class="conLabel"><bean:message key="form.nasabah.bagian"></bean:message></td>
+				<td class="conText">
+					<html:text property="bagian" maxlength="14" size="60"></html:text>
+				</td>
+			</tr>
+			<tr>
+				<td width="100" class="conLabel"><bean:message key="form.nasabah.statusKaryawan"></bean:message></td>
+				<td class="conText">
+					<html:select property="stsKrywn">
+						<html:options collection="StsKrywnList" property="id" labelProperty="status" />
+					</html:select>
+				</td>
+			</tr>
+			<tr>
+				<td width="100" class="conLabel"><bean:message key="form.nasabah.bank"></bean:message></td>
+				<td class="conText">
+					<html:select property="bankId">
+						<html:options collection="BankList" property="id" labelProperty="status" />
+					</html:select>
+				</td>
+			</tr>
+			<tr>
+				<td class="conLabel"><bean:message key="form.nasabah.rekening"></bean:message></td>
+				<td class="conText">
+					<html:text property="noRekening" maxlength="14" size="60"></html:text>
+				</td>
+			</tr>
+			<tr>
+				<td class="conLabel"><bean:message key="form.nasabah.noRekeningRef"></bean:message></td>
+				<td class="conText">
+					<html:text property="noRekeningRef" maxlength="14" size="60"></html:text>
+				</td>
+			</tr>
+			<tr>
+				<td class="conLabel"><bean:message key="form.nasabah.namaRef"></bean:message></td>
+				<td class="conText">
+					<html:text property="namaRef" maxlength="14" size="60"></html:text>
+				</td>
+			</tr>
+			<tr>
+				<td class="conLabel"><bean:message key="form.nasabah.tglRekening"></bean:message></td>
+				<td class="conText">
+					<html:text property="tglRek" maxlength="14" size="20"></html:text>
+					<a href="javascript:cal1.popup();"><img src="icons/cal.gif"  border="0" height="16" width="16"></a>
+				</td>
+			</tr>
+			<tr>
 				<td class="conLabel"><bean:message key="form.nasabah.keterangan"></bean:message></td>
 				<td class="conText">
 					<html:textarea property="keterangan" rows="2" cols="60"></html:textarea>
+				</td>
+			</tr>
+			<tr>
+				<td width="100" class="conLabel"><bean:message key="form.nasabah.agent"></bean:message></td>
+				<td class="conText">
+					<html:select property="agentId">
+						<html:options collection="AgentList" property="id" labelProperty="status" />
+					</html:select>
 				</td>
 			</tr>
 			<tr>
@@ -94,6 +165,20 @@
 					<html:select property="stsAnggota">
 						<html:options collection="StsAgtList" property="id" labelProperty="status" />
 					</html:select>
+				</td>
+			</tr>
+			<tr>
+				<td width="100" class="conLabel"><bean:message key="form.nasabah.jenisAnggota"></bean:message></td>
+				<td class="conText">
+					<html:select property="jnsAnggota">
+						<html:options collection="JnsAgtList" property="id" labelProperty="status" />
+					</html:select>
+				</td>
+			</tr>
+			<tr>
+				<td class="conLabel"></td>
+				<td class="conText">
+					<html:checkbox property="anAgent"></html:checkbox><bean:message key="form.nasabah.agent"></bean:message>
 				</td>
 			</tr>
 		</tbody>
@@ -109,5 +194,10 @@
 		</tbody>
 	</table>	
 </html:form>
+<script language="JavaScript">
+	var cal1 = new calendar2(document.forms['nasabahForm'].elements['tglRek']);
+	cal1.year_scroll = true;
+	cal1.time_comp = false;
+</script>
 </BODY>
 </html:html>

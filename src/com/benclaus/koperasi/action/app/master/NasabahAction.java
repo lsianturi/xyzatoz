@@ -1,6 +1,8 @@
 package com.benclaus.koperasi.action.app.master;
 
 import java.io.OutputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -23,6 +25,8 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.DynaActionForm;
 
 import com.benclaus.koperasi.action.SecurityAction;
@@ -32,7 +36,11 @@ import com.benclaus.koperasi.dao.app.DataService;
 import com.benclaus.koperasi.dao.master.NasabahService;
 import com.benclaus.koperasi.dao.master.StatusPKService;
 import com.benclaus.koperasi.model.Data;
+import com.benclaus.koperasi.model.master.Bank;
 import com.benclaus.koperasi.model.master.Nasabah;
+import com.benclaus.koperasi.model.master.Pegawai;
+import com.benclaus.koperasi.model.master.Perusahaan;
+import com.benclaus.koperasi.model.master.StatusPK;
 import com.benclaus.koperasi.model.usm.Login;
 import com.benclaus.koperasi.utility.Constant;
 import com.benclaus.koperasi.utility.DAFContainer;
@@ -50,6 +58,7 @@ public class NasabahAction extends SecurityAction {
 	
 	private DataService service = DataService.getInstance();
 	private ConfigService cfgService = ConfigService.getInstance();
+	private SimpleDateFormat sdf = new SimpleDateFormat("DD/mm/YYYY");
 
 	private void prepareSearch(HttpServletRequest request) {
 
@@ -216,9 +225,65 @@ public class NasabahAction extends SecurityAction {
 
 		saveToken(request);
 
-		planForm.set("dispatch", Constant.ADDFIRSTSTEP);
-		return mapping.findForward("first");
+		planForm.set("dispatch", Constant.ADDSAVE);
+		return mapping.findForward("continue");
 
+	}
+	
+	public ActionForward addSave(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+
+		log.debug("Add Save");
+
+		ActionForward forward = new ActionForward();
+		forward = hasMenuAccess(mapping, request, MENU_NSB_ADD);
+		if (forward != null)
+			return forward;
+		ActionMessages errors = new ActionMessages();
+		HttpSession session = request.getSession();
+		DynaActionForm planForm = (DynaActionForm) form;
+
+		Login userLogin = (Login) session.getAttribute(Constant.SES_USERLOGIN);
+		// check loggedIn
+		if (userLogin == null) {
+			errors.add(Constant.GLOBALERROR, new ActionMessage("error.invalidLogin"));
+		}
+
+		try {
+			prepareData(request);
+			if (isTokenValid(request)) {
+				saveToken(request);
+				Nasabah nsbh = new Nasabah();
+				BeanUtils.copyProperties(nsbh, planForm);
+				nsbh.setJenisKelamin(new StatusPK((Integer)planForm.get("jnsKelamin")));
+				nsbh.setStatusSipil(new StatusPK((Integer)planForm.get("stsSipil")));
+				nsbh.setPt(new Perusahaan((Integer)planForm.get("perusahaan")));
+				nsbh.setStatusKaryawan(new StatusPK((Integer)planForm.get("stsKrywn")));
+				nsbh.setBank(new Bank((Integer)planForm.get("bankId")));
+				nsbh.setTglRekening(sdf.parse(planForm.getString("tglRek")));
+				nsbh.setAgent(new Nasabah((Integer)planForm.get("agentId")));
+				nsbh.setStatusAnggota(new StatusPK((Integer)planForm.get("stsAnggota")));
+				nsbh.setJenisAnggota(new StatusPK((Integer)planForm.get("jnsAnggota")));
+				nsbh.setAnAgent(planForm.get("anAgent") != null ? true : false);
+				nService.insertNasabah(nsbh);
+				
+
+			} else {
+				errors.add(Constant.GLOBALERROR, new ActionMessage("error.invalidToken"));
+				saveErrors(request, errors);
+				return mapping.findForward("invalidPage");
+			}
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			errors.add(Constant.GLOBALERROR, new ActionMessage("error.exception", e.getMessage()));
+		}
+
+		if (errors.size() > 0) {
+			saveErrors(request, errors);
+			return mapping.findForward("fail");
+		}
+
+		return mapping.findForward("success");
 	}
 
 	public ActionForward update(ActionMapping mapping, ActionForm form, HttpServletRequest request,
@@ -305,145 +370,5 @@ public class NasabahAction extends SecurityAction {
 		return mapping.findForward("success");
 	}
 
-	public void export2Excel(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
-
-		HttpSession session = request.getSession();
-
-		Workbook wb = new HSSFWorkbook();
-		Sheet personSheet = wb.createSheet("Actual");
-		Row headerRow = personSheet.createRow(0);
-		headerRow.createCell(0).setCellValue("Company");
-		headerRow.createCell(1).setCellValue("Book");
-		headerRow.createCell(2).setCellValue("Book Item");
-		headerRow.createCell(3).setCellValue("Year");
-		headerRow.createCell(4).setCellValue("Jan");
-		headerRow.createCell(5).setCellValue("Feb");
-		headerRow.createCell(6).setCellValue("Mar");
-		headerRow.createCell(7).setCellValue("Apr");
-		headerRow.createCell(8).setCellValue("May");
-		headerRow.createCell(9).setCellValue("Jun");
-		headerRow.createCell(10).setCellValue("Jul");
-		headerRow.createCell(11).setCellValue("Aug");
-		headerRow.createCell(12).setCellValue("Sep");
-		headerRow.createCell(13).setCellValue("Oct");
-		headerRow.createCell(14).setCellValue("Nov");
-		headerRow.createCell(15).setCellValue("Dec");
-
-		CellStyle cellStyle = wb.createCellStyle();
-		cellStyle.setDataFormat(wb.getCreationHelper().createDataFormat().getFormat("#.###########"));
-
-		PaginatedList list = (PaginatedList) session.getAttribute("Data");
-
-		int row = 1;
-		Row dataRow = null;
-		list.gotoPage(0);
-		String comp = "";
-		Integer year = 0;
-		do {
-			for (int i = 0; i < list.size(); i++) {
-				Data data = (Data) list.get(i);
-
-				dataRow = personSheet.createRow(row);
-
-				Cell compCell = dataRow.createCell(0);
-				compCell.setCellValue(data.getCompany().getName());
-				if (comp.equals(""))
-					comp = data.getCompany().getPrefix();
-
-				Cell bookCell = dataRow.createCell(1);
-				bookCell.setCellValue(data.getBookItem().getBook().getName());
-
-				Cell bookItemCell = dataRow.createCell(2);
-				bookItemCell.setCellValue(data.getBookItem().getName());
-
-				Cell yearCell = dataRow.createCell(3);
-				yearCell.setCellValue(data.getYear());
-				if (year.intValue() == 0)
-					year = data.getYear();
-
-				Cell janCell = dataRow.createCell(4);
-				if (data.getActual1() != null) {
-					janCell.setCellValue(data.getActual1());
-					janCell.setCellStyle(cellStyle);
-				}
-
-				Cell febCell = dataRow.createCell(5);
-				if (data.getActual2() != null) {
-					febCell.setCellValue(data.getActual2());
-					febCell.setCellStyle(cellStyle);
-				}
-
-				Cell marCell = dataRow.createCell(6);
-				if (data.getActual3() != null) {
-					marCell.setCellValue(data.getActual3());
-					marCell.setCellStyle(cellStyle);
-				}
-
-				Cell aprCell = dataRow.createCell(7);
-				if (data.getActual4() != null) {
-					aprCell.setCellValue(data.getActual4());
-					aprCell.setCellStyle(cellStyle);
-				}
-
-				Cell mayCell = dataRow.createCell(8);
-				if (data.getActual5() != null) {
-					mayCell.setCellValue(data.getActual5());
-					mayCell.setCellStyle(cellStyle);
-				}
-
-				Cell junCell = dataRow.createCell(9);
-				if (data.getActual6() != null) {
-					junCell.setCellValue(data.getActual6());
-					junCell.setCellStyle(cellStyle);
-				}
-
-				Cell julCell = dataRow.createCell(10);
-				if (data.getActual7() != null) {
-					julCell.setCellValue(data.getActual7());
-					julCell.setCellStyle(cellStyle);
-				}
-
-				Cell augCell = dataRow.createCell(11);
-				if (data.getActual8() != null) {
-					augCell.setCellValue(data.getActual8());
-					augCell.setCellStyle(cellStyle);
-				}
-
-				Cell sepCell = dataRow.createCell(12);
-				if (data.getActual9() != null) {
-					sepCell.setCellValue(data.getActual9());
-					sepCell.setCellStyle(cellStyle);
-				}
-
-				Cell octCell = dataRow.createCell(13);
-				if (data.getActual10() != null) {
-					octCell.setCellValue(data.getActual10());
-					octCell.setCellStyle(cellStyle);
-				}
-
-				Cell novCell = dataRow.createCell(14);
-				if (data.getActual11() != null) {
-					novCell.setCellValue(data.getActual11());
-					novCell.setCellStyle(cellStyle);
-				}
-
-				Cell decCell = dataRow.createCell(15);
-				if (data.getActual12() != null) {
-					decCell.setCellValue(data.getActual12());
-					decCell.setCellStyle(cellStyle);
-				}
-
-				row = row + 1;
-			}
-		} while (list.nextPage());
-		session.removeAttribute("Data");
-		response.setContentType("application/vnd.ms-excel");
-		response.setHeader("Content-Disposition", "attachment; filename=Actual-" + comp + "-" + year + ".xls");
-		OutputStream fileOut = response.getOutputStream();
-		wb.write(fileOut);
-		fileOut.close();
-
-	}
 
 }
