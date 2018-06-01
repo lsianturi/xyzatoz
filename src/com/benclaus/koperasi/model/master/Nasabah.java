@@ -35,6 +35,11 @@ public class Nasabah extends Audit{
 		super.fields = "id";
 	}
 	
+	public Nasabah(Integer id) {
+		super();
+		this.id = id;
+	}
+
 	public Integer getId() {
 		return id;
 	}

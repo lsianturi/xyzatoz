@@ -283,7 +283,10 @@ public class NasabahAction extends SecurityAction {
 		}
 
 		try {
-			prepareSearch(request);
+			Nasabah nas = new Nasabah();
+			BeanUtils.copyProperties(nas, planForm);
+			nas.setAgent(new Nasabah((Integer)planForm.get("agentId")));
+			
 			if (isTokenValid(request)) {
 				saveToken(request);
 
