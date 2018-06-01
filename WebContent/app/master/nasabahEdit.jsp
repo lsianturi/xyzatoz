@@ -15,7 +15,6 @@
 	function cancel() {
 		doGoToUrl('<c:url value="/nasabah.do?dispatch=returned"/>');
 	}
-
 </script>
 <script src="scripts/view.js"></script>
 <script src="scripts/staticJS.jsp"></script>
@@ -65,14 +64,6 @@
 				</td>
 			</tr>
 			<tr>
-				<td width="100" class="conLabel"><bean:message key="form.nasabah.statusSipil"></bean:message></td>
-				<td class="conText">
-					<html:select property="stsSipil">
-						<html:options collection="SipilList" property="id" labelProperty="status" />
-					</html:select>
-				</td>
-			</tr>
-			<tr>
 				<td class="conLabel"><bean:message key="form.nasabah.address"></bean:message></td>
 				<td class="conText">
 					<html:textarea property="alamat" rows="3" cols="60"></html:textarea>
@@ -84,35 +75,18 @@
 					<html:textarea property="domisili" rows="3" cols="60"></html:textarea>
 				</td>
 			</tr>
-			
+			<tr>
+				<td width="100" class="conLabel"><bean:message key="form.nasabah.statusSipil"></bean:message></td>
+				<td class="conText">
+					<html:select property="stsSipil">
+						<html:options collection="SipilList" property="id" labelProperty="status" />
+					</html:select>
+				</td>
+			</tr>
 			<tr>
 				<td class="conLabel"><bean:message key="form.nasabah.telepon"></bean:message></td>
 				<td class="conText">
 					<html:text property="telepon" maxlength="14" size="60"></html:text>
-				</td>
-			</tr>
-			<tr>
-				<td width="100" class="conLabel"><bean:message key="form.nasabah.agent"></bean:message></td>
-				<td class="conText">
-					<html:select property="agentId">
-						<html:options collection="AgentList" property="id" labelProperty="status" />
-					</html:select>
-				</td>
-			</tr>
-			<tr>
-				<td width="100" class="conLabel"><bean:message key="form.nasabah.jenisAnggota"></bean:message></td>
-				<td class="conText">
-					<html:select property="jnsAnggota">
-						<html:options collection="JnsAgtList" property="id" labelProperty="status" />
-					</html:select>
-				</td>
-			</tr>
-			<tr>
-				<td width="100" class="conLabel"><bean:message key="form.nasabah.statusAnggota"></bean:message></td>
-				<td class="conText">
-					<html:select property="stsAnggota">
-						<html:options collection="StsAgtList" property="id" labelProperty="status" />
-					</html:select>
 				</td>
 			</tr>
 			<tr>
@@ -126,7 +100,15 @@
 			<tr>
 				<td class="conLabel"><bean:message key="form.nasabah.bagian"></bean:message></td>
 				<td class="conText">
-					<html:text property="bagian" maxlength="60" size="30"></html:text>
+					<html:text property="bagian" maxlength="14" size="60"></html:text>
+				</td>
+			</tr>
+			<tr>
+				<td width="100" class="conLabel"><bean:message key="form.nasabah.statusKaryawan"></bean:message></td>
+				<td class="conText">
+					<html:select property="stsKrywn">
+						<html:options collection="StsKrywnList" property="id" labelProperty="status" />
+					</html:select>
 				</td>
 			</tr>
 			<tr>
@@ -140,25 +122,26 @@
 			<tr>
 				<td class="conLabel"><bean:message key="form.nasabah.rekening"></bean:message></td>
 				<td class="conText">
-					<html:text property="noRek" maxlength="30" size="30"></html:text>
+					<html:text property="noRekening" maxlength="14" size="60"></html:text>
 				</td>
 			</tr>
 			<tr>
 				<td class="conLabel"><bean:message key="form.nasabah.noRekeningRef"></bean:message></td>
 				<td class="conText">
-					<html:text property="noRekeningRef" maxlength="30" size="30"></html:text>
+					<html:text property="noRekeningRef" maxlength="14" size="60"></html:text>
 				</td>
 			</tr>
 			<tr>
 				<td class="conLabel"><bean:message key="form.nasabah.namaRef"></bean:message></td>
 				<td class="conText">
-					<html:text property="namaRef" maxlength="30" size="30"></html:text>
+					<html:text property="namaRef" maxlength="14" size="60"></html:text>
 				</td>
 			</tr>
 			<tr>
-				<td class="conLabel"><bean:message key="form.nasabah.anAgent"></bean:message></td>
+				<td class="conLabel"><bean:message key="form.nasabah.tglRekening"></bean:message></td>
 				<td class="conText">
-					<html:checkbox property="anAgent"></html:checkbox>
+					<html:text property="tglRek" maxlength="14" size="20"></html:text>
+					<a href="javascript:cal1.popup();"><img src="icons/cal.gif"  border="0" height="16" width="16"></a>
 				</td>
 			</tr>
 			<tr>
@@ -167,7 +150,36 @@
 					<html:textarea property="keterangan" rows="2" cols="60"></html:textarea>
 				</td>
 			</tr>
-			
+			<tr>
+				<td width="100" class="conLabel"><bean:message key="form.nasabah.agent"></bean:message></td>
+				<td class="conText">
+					<html:select property="agentId">
+						<html:options collection="AgentList" property="id" labelProperty="status" />
+					</html:select>
+				</td>
+			</tr>
+			<tr>
+				<td width="100" class="conLabel"><bean:message key="form.nasabah.statusAnggota"></bean:message></td>
+				<td class="conText">
+					<html:select property="stsAnggota">
+						<html:options collection="StsAgtList" property="id" labelProperty="status" />
+					</html:select>
+				</td>
+			</tr>
+			<tr>
+				<td width="100" class="conLabel"><bean:message key="form.nasabah.jenisAnggota"></bean:message></td>
+				<td class="conText">
+					<html:select property="jnsAnggota">
+						<html:options collection="JnsAgtList" property="id" labelProperty="status" />
+					</html:select>
+				</td>
+			</tr>
+			<tr>
+				<td class="conLabel"></td>
+				<td class="conText">
+					<html:checkbox property="anAgent"></html:checkbox><bean:message key="form.nasabah.agent"></bean:message>
+				</td>
+			</tr>
 		</tbody>
 	</table>
 	<table width="100%" border="0">
@@ -181,5 +193,10 @@
 		</tbody>
 	</table>	
 </html:form>
+<script language="JavaScript">
+	var cal1 = new calendar2(document.forms['nasabahForm'].elements['tglRek']);
+	cal1.year_scroll = true;
+	cal1.time_comp = false;
+</script>
 </BODY>
 </html:html>

@@ -4,6 +4,14 @@ public class Bank {
 	private Integer id;
 	private String nama;
 	private String areaAtm;
+	
+	public Bank() {
+		super();
+	}
+	public Bank(Integer id) {
+		super();
+		this.id = id;
+	}
 	public Integer getId() {
 		return id;
 	}

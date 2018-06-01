@@ -18,6 +18,11 @@ public class Perusahaan extends Audit {
 		super.fields = "id";
 	}
 	
+	public Perusahaan(Integer id) {
+		super();
+		this.id = id;
+	}
+
 	public Integer getId() {
 		return id;
 	}
