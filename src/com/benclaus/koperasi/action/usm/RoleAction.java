@@ -168,6 +168,11 @@ public final class RoleAction extends SecurityAction{
 				BeanUtils.copyProperties(role, dynaForm);
 				result = service.insertRole(role, userLogin.getUser(), "insert");
 				if (result > 0) {
+					RoleMenu roleMenu = new RoleMenu();
+					roleMenu.setRoleCode(role.getRoleCode());
+					roleMenu.setMenuCode(Constant.FIRST_MENU);
+					roleMenu.setCreatedBy(userLogin.getUser().getUserCode());
+					service.insertRoleMenu(roleMenu, userLogin.getUser(), "insert");
 					forward = search(mapping, form, request, response);
 				}else{				
 					errors.add(Constant.GLOBALERROR, new ActionMessage("error.insertFail", getMessage(request, "error.noRowUpdated")));

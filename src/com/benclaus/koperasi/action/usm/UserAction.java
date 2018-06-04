@@ -45,6 +45,9 @@ public final class UserAction extends SecurityAction{
 	private UserService service = UserService.getInstance();
 	private RoleService roleService = RoleService.getInstance();
 
+	private void prepareData(HttpServletRequest request) {
+		request.setAttribute("RoleList", roleService.getRoles());
+	}
 	public ActionForward prepare(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		log.debug("prepare");
 		
@@ -139,7 +142,8 @@ public final class UserAction extends SecurityAction{
 		if (forward != null) { return forward; }
 		
 		saveToken(request);
-		
+		prepareData(request);
+		dynaForm.set("dispatch", Constant.ADDSAVE);
 		return mapping.findForward("add");
 	}
 	
@@ -166,20 +170,20 @@ public final class UserAction extends SecurityAction{
 				if (result < 0) {
 					errors.add(Constant.GLOBALERROR ,new ActionError("error.insertFail", getMessage(request, "error.noRowUpdated")));
 					saveErrors(request, errors);
-					forward = add(mapping, form, request, response);
+					return mapping.findForward("add");
 				}		
 			}else{
 				errors.add(Constant.GLOBALERROR, new ActionError("error.invalidToken"));
 				saveErrors(request, errors);
-				forward = mapping.findForward("invalidPage");					
+				return mapping.findForward("invalidPage");					
 			}
 		}catch(DaoException e) { 						
 			log.error(e.getMessage(), e);			
 			errors.add(Constant.GLOBALERROR, new ActionError("error.exception", e.getMessage()));
 			saveErrors(request, errors);
-			forward = add(mapping, form, request, response);						
+			return mapping.findForward("add");
 		}		
-		return forward;
+		return mapping.findForward("success");
 	} 
 	
 	public ActionForward delete(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -224,10 +228,10 @@ public final class UserAction extends SecurityAction{
 		User user = service.getUser(code);
 		
 		BeanUtils.copyProperties(dynaForm, user);
-		request.setAttribute("RoleList", roleService.getRoles());
+		prepareData(request);
 
 		saveToken(request);
-		
+		dynaForm.set("dispatch", Constant.UPDATESAVE);
 		return mapping.findForward("update");
 	}
 	
@@ -258,9 +262,9 @@ public final class UserAction extends SecurityAction{
 			if (result < 0) {
 				errors.add(Constant.GLOBALERROR, new ActionError("error.updateFail", getMessage(request, "error.noRowUpdated")));
 				saveErrors(request, errors);
-				forward = mapping.findForward("success");
+				forward = mapping.findForward("update");
 			} else {
-				forward = mapping.findForward("main");
+				forward = mapping.findForward("success");
 			}
 		}else{
 			errors.add(Constant.GLOBALERROR, new ActionError("err.invalidToken"));
@@ -276,6 +280,7 @@ public final class UserAction extends SecurityAction{
 		log.debug("Returned");
 
 		HttpSession session = request.getSession();
+		prepareData(request);
 		// Replace new form with old form
 		if (session.getAttribute(MENU_USER_QUERY) != null) {
 			DAFContainer dafProxy = (DAFContainer) session

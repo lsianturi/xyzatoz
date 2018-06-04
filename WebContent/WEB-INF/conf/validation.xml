@@ -64,9 +64,6 @@
 		
 		
 		
-		
-		
-		
 		<form name="pillarForm">
 			<field property="name" depends="required">
 				<arg0 key="form.pilar.name" />

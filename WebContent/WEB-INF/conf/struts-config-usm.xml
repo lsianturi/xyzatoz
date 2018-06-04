@@ -102,9 +102,9 @@
 		
 		<action path="/usm/UserAction" name="userForm" type="com.benclaus.koperasi.action.usm.UserAction" scope="request" parameter="dispatch" validate="false">
 			<forward name="main" path="/usm/User.jsp" />
-			<forward name="add" path="/usm/UserAdd.jsp" />
+			<forward name="add" path="/usm/UserEdit.jsp" />
 			<forward name="update" path="/usm/UserEdit.jsp" />
-			<forward name="success" path="/plan.do?dispatch=returned" />
+			<forward name="success" path="/usm/UserAction.do?dispatch=returned" />
 		</action>		
 
 		<action path="/usm/loginTrail" name="searchLoginTrailForm" type="com.benclaus.koperasi.action.usm.LoginTrailDispatchAction"  scope="request" parameter="dispatch" validate="false">

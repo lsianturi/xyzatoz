@@ -100,9 +100,9 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 	
 	<insert id="insertUser" parameterClass="com.benclaus.koperasi.model.usm.User">
     	INSERT INTO 
-    		ms_user (USERCODE, PASSWORD, FIRSTNAME, LASTNAME, EMAILADDRESS, MOBILE, COMPANYCODE, ROLECODE, ACTIVESTATUS, CREATEDBY) 
+    		ms_user (USERCODE, PASSWORD, FIRSTNAME, LASTNAME, EMAILADDRESS, MOBILE, ROLECODE, SESSIONTIMEOUT, ACTIVESTATUS, CREATEDBY) 
     	VALUES
-    		(#userCode#, 'X03MO1qnZdYdgyfeuILPmQ==', #firstName#, #lastName#, #emailAddress#, #mobile#, #companyCode#, #roleCode#, #activeStatus#, #createdBy#)
+    		(#userCode#, '5f4dcc3b5aa765d61d8327deb882cf99', #firstName#, #lastName#, #emailAddress#, #mobile#, #roleCode#, #sessionTimeOut#, #activeStatus#, #createdBy#)
     </insert>
 
 	<update id="updateUser" parameterClass="com.benclaus.koperasi.model.usm.User">

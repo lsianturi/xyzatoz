@@ -37,7 +37,7 @@ public class PegawaiAction extends SecurityAction {
 
 	private PegawaiService service = PegawaiService.getInstance();
 	private StatusPKService stsService = StatusPKService.getInstance();
-	private SimpleDateFormat sdf = new SimpleDateFormat("DD/mm/YYYY");
+	private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
 	private void prepareData(HttpServletRequest request) {
 

@@ -50,7 +50,7 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 			INNER JOIN ms_bank b on b.id = n.bank_id
 			INNER JOIN ms_jns_anggota j on j.id = n.jns_anggota_id
 			INNER JOIN ms_sts_anggota s on s.id = n.sts_anggota_id
-			INNER JOIN ms_nasabah a on a.id = n.agent_id
+			LEFT JOIN ms_nasabah a on a.id = n.agent_id
 			where n.deleted = 0
 			<isNotEmpty property="nama" prepend="AND">
 				n.nama LIKE concat('%',#nama#,'%')
@@ -68,13 +68,13 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 				n.jns_anggota_id = #jnsAnggota#
 			</isNotEmpty>
 			<isNotEmpty property="stsAnggota" prepend="AND">
-				n.sts_anggota_id LIKE = #stsAnggota#
+				n.sts_anggota_id = #stsAnggota#
 			</isNotEmpty>
 			<isNotEmpty property="agentId" prepend="AND">
-				n.agent_id LIKE = #agentId#
+				n.agent_id = #agentId#
 			</isNotEmpty>
 			<isNotEmpty property="anAgent" prepend="AND">
-				n.is_agent LIKE = #anAgent#
+				n.is_agent = 1
 			</isNotEmpty>
 	</select>
 	
@@ -85,7 +85,7 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 			INNER JOIN ms_bank b on b.id = n.bank_id
 			INNER JOIN ms_jns_anggota j on j.id = n.jns_anggota_id
 			INNER JOIN ms_sts_anggota s on s.id = n.sts_anggota_id
-			INNER JOIN ms_nasabah a on a.id = n.agent_id
+			LEFT JOIN ms_nasabah a on a.id = n.agent_id
 			where n.deleted = 0
 			<isNotEmpty property="nama" prepend="AND">
 				n.nama LIKE concat('%',#nama#,'%')
@@ -103,13 +103,13 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 				n.jns_anggota_id = #jnsAnggota#
 			</isNotEmpty>
 			<isNotEmpty property="stsAnggota" prepend="AND">
-				n.sts_anggota_id LIKE = #stsAnggota#
+				n.sts_anggota_id = #stsAnggota#
 			</isNotEmpty>
 			<isNotEmpty property="agentId" prepend="AND">
-				n.agent_id LIKE = #agentId#
+				n.agent_id = #agentId#
 			</isNotEmpty>
 			<isNotEmpty property="anAgent" prepend="AND">
-				n.is_agent LIKE = #anAgent#
+				n.is_agent = 1
 			</isNotEmpty>
 	</select>
 	

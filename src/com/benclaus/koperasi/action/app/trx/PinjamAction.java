@@ -1,4 +1,4 @@
-package com.benclaus.koperasi.action.app.master;
+package com.benclaus.koperasi.action.app.trx;
 
 import java.text.SimpleDateFormat;
 
@@ -28,8 +28,8 @@ import com.benclaus.koperasi.utility.Constant;
 import com.benclaus.koperasi.utility.DAFContainer;
 import com.ibatis.common.util.PaginatedList;
 
-public class NasabahAction extends SecurityAction {
-	private static Logger log = Logger.getLogger(NasabahAction.class);
+public class PinjamAction extends SecurityAction {
+	private static Logger log = Logger.getLogger(PinjamAction.class);
 	private String MENU_NSB_QUERY = "MST_NSB_search";
 	private String MENU_NSB_ADD= "MST_NSB_add";
 	private String MENU_NSB_UPD = "MST_NSB_upd";

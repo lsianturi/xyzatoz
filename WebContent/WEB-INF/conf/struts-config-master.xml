@@ -61,7 +61,7 @@
 			<form-property name="jnsAnggota" type="java.lang.String" />	
 			<form-property name="stsAnggota" type="java.lang.String" />
 			<form-property name="agentId" type="java.lang.String" />
-			<form-property name="anAgent" type="java.lang.String" />
+			<form-property name="anAgent" type="java.lang.Boolean" />
 			<form-property name="pageIndex" type="java.lang.String" initial="1" />	
 			<form-property name="totalPage" type="java.lang.String" />
 			<form-property name="totalSize" type="java.lang.String" />
@@ -88,7 +88,7 @@
 			<form-property name="noRekeningRef" type="java.lang.String" />
 			<form-property name="namaRef" type="java.lang.String" />
 			<form-property name="keterangan" type="java.lang.String" />
-			<form-property name="anAgent" type="java.lang.Integer" />
+			<form-property name="anAgent" type="java.lang.Boolean" />
 		</form-bean>
 		
 	</form-beans>

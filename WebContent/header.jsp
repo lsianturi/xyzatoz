@@ -78,6 +78,8 @@ function doMenu() {
 		<td nowrap="nowrap" valign="middle" class="heaText" align="left"><font
 			color="#000000"><strong>&nbsp;<%=userCode%>&nbsp;</strong>logged in as <strong><%=userLogin.getUser().getRoleName() %></strong></font></td>
 		<td nowrap="nowrap" valign="middle" class="heaText" align="right">&nbsp;
+		<a href="usm/changePassword.do?dispatch=update"
+			target="content">Change password</a>&nbsp;|&nbsp;
 		<a href="home.do?dispatch=firstPage"
 			target="content"><bean:message key="header.home"></bean:message></a>&nbsp;|&nbsp;
 		<a href="javascript:doTopGoToUrl('<%=request.getContextPath()%>/loggedout.jsp')"><bean:message key="header.logout"></bean:message></a>&nbsp; </font></td>

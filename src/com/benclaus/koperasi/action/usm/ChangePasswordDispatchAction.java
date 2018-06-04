@@ -28,7 +28,6 @@ import com.benclaus.koperasi.utility.Constant;
 public class ChangePasswordDispatchAction extends SecurityAction {
 	private static Logger log =
 		Logger.getLogger(ChangePasswordDispatchAction.class);
-	private static final String MENU_CHANGEPASSWORD_UPDATE = "changepassword";
 	private UsmService usmService = UsmService.getInstance();
 	private UserService userService = UserService.getInstance();
 

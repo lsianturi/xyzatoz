@@ -13,28 +13,25 @@
 <TITLE></TITLE>
 <script language="JavaScript">
 	function confirmPassword(form) {
-		result = validatePasswordForm(form);
-		if (result) {
 			if (form.jsNewPassword.value==form.jsNewPasswordConfirm.value) {
 				// md5the old and new password;
-				form.password.value = b64_md5(form.jsOldPassword.value);
-				form.newPassword.value = b64_md5(form.jsNewPassword.value);
+				form.password.value = hex_md5(form.jsOldPassword.value);
+				form.newPassword.value = hex_md5(form.jsNewPassword.value);
 				form.jsOldPassword.value="";				
 				form.jsNewPassword.value="";
 				form.jsNewPasswordConfirm.value="";
 				result=true;
 			} else {
-				alert('<bean:message key="error.passwordConfirm"></bean:message>');
+				alert('Password baru dan password confirmation tidak sama.');
 				result=false;
 			}
-		}
 		return result;
 	}
 </script>
 <script src="../scripts/view.js"></script>
 <script src="../scripts/md5.js"></script>
 <script src="../scripts/staticJS.jsp"></script>
-<html:javascript formName="passwordForm" dynamicJavascript="true" staticJavascript="false" />
+<%-- <html:javascript formName="passwordForm" dynamicJavascript="true" staticJavascript="false" /> --%>
 </HEAD>
 <BODY>
 <jsp:include page="../includes/message.jsp" flush="false"></jsp:include>

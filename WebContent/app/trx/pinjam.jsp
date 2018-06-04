@@ -168,8 +168,7 @@
 							href="javascript:del('<c:out value="${comp.id}"/>')"><bean:message
 								key="button.delete"></bean:message></a>&nbsp;|&nbsp;<a
 							href="javascript:edit('<c:out value="${comp.id}"/>')"><bean:message
-								key="button.edit"></bean:message></a>&nbsp;|&nbsp;
-								<a href="#">History</a>
+								key="button.edit"></bean:message></a>
 				</td>
 				</tr>	
 			</c:forEach>

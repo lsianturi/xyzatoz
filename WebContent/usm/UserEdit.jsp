@@ -35,7 +35,12 @@ pageEncoding="utf-8"
 	<table width="100%">
 		<tr>
 			<td class="conTitle">
-				<bean:message key="form.userUpdate.title"></bean:message>
+				<logic:equal name="userForm" property="dispatch" value="updateSave" >
+					<bean:message key="form.userUpdate.title"></bean:message>
+				</logic:equal>
+				<logic:equal name="userForm" property="dispatch" value="addSave">
+					<bean:message key="form.userAdd.title"></bean:message>
+				</logic:equal>
 			</td>
 			<td class="conText" align="right">
 				<a href="javascript:openHelp('../help/<bean:message key="form.language.name"></bean:message>/master/peran.html');"><img src="../icons/help.gif" width="21" height="21" border="0" alt=""></a>
@@ -45,13 +50,19 @@ pageEncoding="utf-8"
 	<!-- Help Page Finish -->
 
 <html:form action="/usm/UserAction.do"	onsubmit="return validateUserForm(this);">
-	<html:hidden property="dispatch" value=""></html:hidden>
+	<html:hidden property="dispatch"></html:hidden>
 	<html:hidden property="pageIndex"></html:hidden>
 	<table width="100%" border="0">
 		<tbody>
 			<tr>
 				<td class="conLabel" width="180"><bean:message key="form.userCode"/></td>
-				<td class="conText" colspan="3"><html:text property='userCode' maxlength="16" size="16" readonly="true" styleClass="frmReadOnly"/><font color="red">&nbsp;<html:errors property="userCode" /></font></td>
+				<logic:equal name="userForm" property="dispatch" value="updateSave" >
+					<td class="conText" colspan="3"><html:text property='userCode' maxlength="16" size="16" readonly="true" styleClass="frmReadOnly"/><font color="red">&nbsp;<html:errors property="userCode" /></font></td>
+				</logic:equal>
+				<logic:equal name="userForm" property="dispatch" value="addSave">
+					<td class="conText" colspan="3"><html:text property='userCode' maxlength="16" size="16"/><font color="red">&nbsp;<html:errors property="userCode" /></font></td>
+				</logic:equal>
+				
 			</tr>
 			<tr>
 				<td class="conLabel"><bean:message key="form.user.firstName"></bean:message></td>
@@ -73,10 +84,15 @@ pageEncoding="utf-8"
 					</html:select>
 				</td>
 			</tr>
+			<logic:equal name="userForm" property="dispatch" value="updateSave" >
 			<tr>
 				<td class="conLabel"><bean:message key="form.user.timeout"></bean:message></td>
 				<td class="conText" colspan="3"><html:text property='sessionTimeOut' maxlength="30" size="30" ></html:text><font color="red">&nbsp;<html:errors property="sessionTimeOut" /></font></td>
 			</tr>
+			</logic:equal>
+			<logic:equal name="userForm" property="dispatch" value="addSave">
+			<html:hidden property="sessionTimeOut" value="30"></html:hidden>
+			</logic:equal>
 			<tr>
 				<td class="conLabel"><bean:message key="form.user.status"></bean:message></td>
 				<td class="conText" colspan="3">
@@ -93,7 +109,7 @@ pageEncoding="utf-8"
 			<tr>
 				<td width="180">
 				<td>
-					<html:submit property="btnSubmit" styleClass="frmButton" onclick="changeDispatch(this.form,'updateSave');"><bean:message key="button.save"></bean:message></html:submit>
+					<html:submit property="btnSubmit" styleClass="frmButton"><bean:message key="button.save"></bean:message></html:submit>
 					<html:button property="btnCancel" styleClass="frmButton" onclick="cancel(this.form, 'returned');"><bean:message key="button.cancel"></bean:message></html:button>
 				</td>
 			</tr>

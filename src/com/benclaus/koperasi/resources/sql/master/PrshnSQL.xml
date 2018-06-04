@@ -51,7 +51,7 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 	</select>
 	
 	<insert id="insertPerusahaan" parameterClass="com.benclaus.koperasi.model.master.Perusahaan" >
-		INSERT INTO ms_perusahaan (`id`, `nama`, `alamat`, `industri`, `area`) 
+		INSERT INTO ms_perusahaan (`nama`, `alamat`, `industri`, `area`) 
 		VALUES (#nama#, #alamat#, #industri.id#, #area.id#)
 	</insert>
 	
