@@ -33,6 +33,9 @@
 	function edit(id) {
 		doGoToUrl('<c:url value="/updateNasabah.do?dispatch=update"/>'+'&id='+id);
 	}
+	function history(id) {
+		doGoToUrl('<c:url value="/nasabah.do?dispatch=history"/>'+'&id='+id);
+	}
 </script>
 </HEAD>
 <BODY>
@@ -151,11 +154,6 @@
 						<tr class="evenRow">
 					</c:otherwise>
 				</c:choose>
-				<c:choose>
-				<c:when test="${abs.isManual==1}">
-						<tr class="manualRow">
-					</c:when>
-				</c:choose>
 					<%-- <td class="celBorder"><c:out value="${comp.pillar.name}"/>&nbsp;</td> --%>
 					<td class="celBorder"><c:out value="${comp.nama}"/>&nbsp;</td>
 					<td class="celBorder"><c:out value="${comp.telepon}"/>&nbsp;</td>
@@ -169,7 +167,7 @@
 								key="button.delete"></bean:message></a>&nbsp;|&nbsp;<a
 							href="javascript:edit('<c:out value="${comp.id}"/>')"><bean:message
 								key="button.edit"></bean:message></a>&nbsp;|&nbsp;
-								<a href="#">History</a>
+								<a href="javascript:history('<c:out value="${comp.id}"/>')">History</a>
 				</td>
 				</tr>	
 			</c:forEach>

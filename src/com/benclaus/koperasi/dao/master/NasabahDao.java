@@ -1,5 +1,6 @@
 package com.benclaus.koperasi.dao.master;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -44,13 +45,19 @@ public class NasabahDao extends BaseDAO {
 	
 	public Integer insertNasabah(Nasabah nasabah) throws DaoException {
 		log.info("NasabahSQL.insertNasabah");
-		return (Integer) super.update("NasabahSQL.insertNasabah", nasabah);
+		return super.insert("NasabahSQL.insertNasabah", nasabah);
 	}
 	
 	public Integer updateNasabah(Nasabah nasabah) throws DaoException {
 		log.info("NasabahSQL.updateNasabah");
 		return (Integer) super.update("NasabahSQL.updateNasabah", nasabah);
 	}
+	
+	public Integer insertNasabahVersion(Nasabah nasabah) throws DaoException {
+		log.info("NasabahSQL.insertNasabahVersion");
+		return (Integer) super.update("NasabahSQL.insertNasabahVersion", nasabah);
+	}
+	
 	public Integer deleteNasabah(Integer id) throws DaoException {
 		log.info("NasabahSQL.deleteNasabah");
 		return (Integer) super.update("NasabahSQL.deleteNasabah", id);
@@ -59,6 +66,11 @@ public class NasabahDao extends BaseDAO {
 	public Nasabah getNasabah(Integer id) throws DaoException {
 		log.info("NasabahSQL.getNasabah");
 		return (Nasabah) super.getObject("NasabahSQL.getNasabah", id);
+	}
+	
+	public List<Nasabah> getNasabahVersion(Integer id) throws DaoException {
+		log.info("NasabahSQL.getNasabahVersion");
+		return (List<Nasabah>) super.getList("NasabahSQL.getNasabahVersion", id);
 	}
 	
 }

@@ -71,6 +71,15 @@ public class NasabahService {
 		return 0;
 	}
 	
+	public Integer insertNasabahVersion(Nasabah nasabah) {
+		try {
+			return dao.insertNasabahVersion(nasabah);
+		} catch (Exception e) {
+			log.debug(e);
+		}
+		return 0;
+	}
+	
 	public Integer deleteNasabah(Integer id) {
 		try {
 			return dao.deleteNasabah(id);
@@ -82,12 +91,19 @@ public class NasabahService {
 	
 	public Nasabah getNasabah(Integer id) {
 		try {
-			return dao.getNasabah( id);
+			return dao.getNasabah(id);
 		} catch (Exception e) {
 			log.debug(e);
 		}
 		return null;
 	}
 	
-	
+	public List<Nasabah> getNasabahVersion(Integer id) {
+		try {
+			return dao.getNasabahVersion(id);
+		} catch (Exception e) {
+			log.debug(e);
+		}
+		return null;
+	}
 }

@@ -84,10 +84,21 @@ public class BaseDAO {
 		try {
 			//debugSqlMap(statementName, parameterObject);
 			result = sqlMap.update(statementName, parameterObject);
-			if (result > 0 && parameterObject instanceof Audit) { 
+			/*if (result > 0 && parameterObject instanceof Audit) { 
 				//debugSqlMap("insertAuditTrail", parameterObject);
 				sqlMap.update("AuditTrailSQL.insertAuditTrail", parameterObject);
-			}
+			}*/
+		} catch (SQLException e) {
+			throw new DaoException(e.getMessage(), e.fillInStackTrace());
+		}
+		return result;
+	}
+	
+	public Integer insert(String statementName, Object parameterObject) throws DaoException {
+		Integer result = 0;
+		try {
+			//debugSqlMap(statementName, parameterObject);
+			result = (Integer) sqlMap.insert(statementName, parameterObject);
 		} catch (SQLException e) {
 			throw new DaoException(e.getMessage(), e.fillInStackTrace());
 		}

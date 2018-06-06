@@ -1,6 +1,7 @@
 package com.benclaus.koperasi.action.app.master;
 
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -238,13 +239,17 @@ public class NasabahAction extends SecurityAction {
 				nsbh.setPt(new Perusahaan((Integer)planForm.get("perusahaan")));
 				nsbh.setStatusKaryawan(new StatusPK((Integer)planForm.get("stsKrywn")));
 				nsbh.setBank(new Bank((Integer)planForm.get("bankId")));
-				nsbh.setTglRekening(sdf.parse(planForm.getString("tglRek")));
+				nsbh.setTglMasuk(sdf.parse(planForm.getString("strTglMasuk")));
+				nsbh.setTglPayroll(sdf.parse(planForm.getString("strTglPayroll")));
 				nsbh.setAgent(new Nasabah((Integer)planForm.get("agentId")));
 				nsbh.setStatusAnggota(new StatusPK((Integer)planForm.get("stsAnggota")));
 				nsbh.setJenisAnggota(new StatusPK((Integer)planForm.get("jnsAnggota")));
 				nsbh.setAnAgent(planForm.get("anAgent") != null ? true : false);
-				nService.insertNasabah(nsbh);
-				
+				Integer nsbhId = nService.insertNasabah(nsbh);
+				nsbh.setId(nsbhId);
+				nsbh.setCreatedBy(userLogin.getUser().getUserCode());
+				nsbh.setDeleted(0);
+				nService.insertNasabahVersion(nsbh);
 
 			} else {
 				errors.add(Constant.GLOBALERROR, new ActionMessage("error.invalidToken"));
@@ -289,7 +294,8 @@ public class NasabahAction extends SecurityAction {
 
 			Nasabah nsbh = nService.getNasabah(nsbhId);
 			BeanUtils.copyProperties(planForm, nsbh);
-			planForm.set("tglRek", sdf.format(nsbh.getTglRekening()));
+			planForm.set("strTglMasuk", sdf.format(nsbh.getTglMasuk()));
+			planForm.set("strTglPayroll", sdf.format(nsbh.getTglPayroll()));
 			planForm.set("agentId", nsbh.getAgent().getId());
 			planForm.set("jnsKelamin", nsbh.getJenisKelamin().getId());
 			planForm.set("stsSipil", nsbh.getStatusSipil().getId());
@@ -345,13 +351,18 @@ public class NasabahAction extends SecurityAction {
 				nsbh.setPt(new Perusahaan((Integer)planForm.get("perusahaan")));
 				nsbh.setStatusKaryawan(new StatusPK((Integer)planForm.get("stsKrywn")));
 				nsbh.setBank(new Bank((Integer)planForm.get("bankId")));
-				nsbh.setTglRekening(sdf.parse(planForm.getString("tglRek")));
+				nsbh.setTglMasuk(sdf.parse(planForm.getString("strTglMasuk")));
+				nsbh.setTglPayroll(sdf.parse(planForm.getString("strTglPayroll")));
 				nsbh.setAgent(new Nasabah((Integer)planForm.get("agentId")));
 				nsbh.setStatusAnggota(new StatusPK((Integer)planForm.get("stsAnggota")));
 				nsbh.setJenisAnggota(new StatusPK((Integer)planForm.get("jnsAnggota")));
 				nsbh.setAnAgent(planForm.get("anAgent") != null ? true : false);
 				
 				nService.updateNasabah(nsbh);
+				
+				nsbh.setCreatedBy(userLogin.getUser().getUserCode());
+				nsbh.setDeleted(0);
+				nService.insertNasabahVersion(nsbh);
 
 			} else {
 				errors.add(Constant.GLOBALERROR, new ActionMessage("error.invalidToken"));
@@ -370,6 +381,46 @@ public class NasabahAction extends SecurityAction {
 
 		return mapping.findForward("success");
 	}
+	
+	public ActionForward history(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
 
+		log.debug("Update");
+
+		ActionMessages errors = new ActionMessages();
+		// Check Menu Access
+//		HttpSession session = request.getSession();
+		ActionForward forward = new ActionForward();
+		DynaActionForm planForm = (DynaActionForm) form;
+		forward = hasMenuAccess(mapping, request, MENU_NSB_UPD);
+		if (forward != null)
+			return forward;
+
+		try {
+			prepareData(request);
+			Integer nsbhId = request.getParameter("id").equals("") ? 0
+					: Integer.parseInt(request.getParameter("id"));
+			if (errors.size() > 0) {
+				saveErrors(request, errors);
+				return mapping.findForward("continue");
+			}
+
+			List<Nasabah> nsbh = nService.getNasabahVersion(nsbhId);
+			request.setAttribute("DataList", nsbh);
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			errors.add(Constant.GLOBALERROR, new ActionMessage("error.exception", e.getMessage()));
+		}
+
+		if (errors.size() > 0) {
+			saveErrors(request, errors);
+			return mapping.findForward("fail");
+		}
+
+		saveToken(request);
+
+		return mapping.findForward("history");
+
+	}
 
 }

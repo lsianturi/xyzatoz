@@ -81,7 +81,8 @@
 			<form-property name="bankId" type="java.lang.Integer" />
 			<form-property name="bagian" type="java.lang.String" />
 			<form-property name="noRekening" type="java.lang.String" />
-			<form-property name="tglRek" type="java.lang.String" />
+			<form-property name="strTglMasuk" type="java.lang.String" />
+			<form-property name="strTglPayroll" type="java.lang.String" />
 			<form-property name="stsKrywn" type="java.lang.Integer" />
 			<form-property name="jnsAnggota" type="java.lang.Integer" />
 			<form-property name="stsAnggota" type="java.lang.Integer" />
@@ -115,7 +116,8 @@
 		</action>
 		
 		<action path="/nasabah" name="nasabahSearch" type="com.benclaus.koperasi.action.app.master.NasabahAction" scope="request" validate="false" parameter="dispatch">
-    		<forward name="continue" path="/app/master/nasabah.jsp" />	
+    		<forward name="continue" path="/app/master/nasabah.jsp" />
+    		<forward name="history" path="/app/master/nasabahHistory.jsp"></forward>	
     		<forward name="fail" path="/main.jsp" />
     	</action>
     	<action path="/updateNasabah" name="nasabahForm" type="com.benclaus.koperasi.action.app.master.NasabahAction" scope="request" parameter="dispatch" validate="false">

@@ -50,6 +50,13 @@
 	<table width="100%" border="0">
 		<tbody>
 			<tr>
+				<td class="conLabel"><bean:message key="form.nasabah.tglMasuk"></bean:message></td>
+				<td class="conText">
+					<html:text property="strTglMasuk" maxlength="14" size="20"></html:text>
+					<a href="javascript:cal1.popup();"><img src="icons/cal.gif"  border="0" height="16" width="16"></a>
+				</td>
+			</tr>
+			<tr>
 				<td class="conLabel"><bean:message key="form.nasabah.name"></bean:message></td>
 				<td class="conText">
 					<html:text property="nama" maxlength="60" size="60"></html:text>
@@ -76,17 +83,17 @@
 				</td>
 			</tr>
 			<tr>
+				<td class="conLabel"><bean:message key="form.nasabah.telepon"></bean:message></td>
+				<td class="conText">
+					<html:text property="telepon" maxlength="14" size="60"></html:text>
+				</td>
+			</tr>
+			<tr>
 				<td width="100" class="conLabel"><bean:message key="form.nasabah.statusSipil"></bean:message></td>
 				<td class="conText">
 					<html:select property="stsSipil">
 						<html:options collection="SipilList" property="id" labelProperty="status" />
 					</html:select>
-				</td>
-			</tr>
-			<tr>
-				<td class="conLabel"><bean:message key="form.nasabah.telepon"></bean:message></td>
-				<td class="conText">
-					<html:text property="telepon" maxlength="14" size="60"></html:text>
 				</td>
 			</tr>
 			<tr>
@@ -100,7 +107,14 @@
 			<tr>
 				<td class="conLabel"><bean:message key="form.nasabah.bagian"></bean:message></td>
 				<td class="conText">
-					<html:text property="bagian" maxlength="14" size="60"></html:text>
+					<html:text property="bagian" maxlength="60" size="60"></html:text>
+				</td>
+			</tr>
+			<tr>
+				<td class="conLabel"><bean:message key="form.nasabah.tglPayroll"></bean:message></td>
+				<td class="conText">
+					<html:text property="strTglPayroll" maxlength="14" size="20"></html:text>
+					<a href="javascript:cal2.popup();"><img src="icons/cal.gif"  border="0" height="16" width="16"></a>
 				</td>
 			</tr>
 			<tr>
@@ -122,26 +136,35 @@
 			<tr>
 				<td class="conLabel"><bean:message key="form.nasabah.rekening"></bean:message></td>
 				<td class="conText">
-					<html:text property="noRekening" maxlength="14" size="60"></html:text>
+					<html:text property="noRekening" maxlength="60" size="60"></html:text>
 				</td>
 			</tr>
 			<tr>
 				<td class="conLabel"><bean:message key="form.nasabah.noRekeningRef"></bean:message></td>
 				<td class="conText">
-					<html:text property="noRekeningRef" maxlength="14" size="60"></html:text>
+					<html:text property="noRekeningRef" maxlength="60" size="60"></html:text>
 				</td>
 			</tr>
 			<tr>
 				<td class="conLabel"><bean:message key="form.nasabah.namaRef"></bean:message></td>
 				<td class="conText">
-					<html:text property="namaRef" maxlength="14" size="60"></html:text>
+					<html:text property="namaRef" maxlength="60" size="60"></html:text>
 				</td>
 			</tr>
 			<tr>
-				<td class="conLabel"><bean:message key="form.nasabah.tglRekening"></bean:message></td>
+				<td width="100" class="conLabel"><bean:message key="form.nasabah.jenisAnggota"></bean:message></td>
 				<td class="conText">
-					<html:text property="tglRek" maxlength="14" size="20"></html:text>
-					<a href="javascript:cal1.popup();"><img src="icons/cal.gif"  border="0" height="16" width="16"></a>
+					<html:select property="jnsAnggota">
+						<html:options collection="JnsAgtList" property="id" labelProperty="status" />
+					</html:select>
+				</td>
+			</tr>
+			<tr>
+				<td width="100" class="conLabel"><bean:message key="form.nasabah.statusAnggota"></bean:message></td>
+				<td class="conText">
+					<html:select property="stsAnggota">
+						<html:options collection="StsAgtList" property="id" labelProperty="status" />
+					</html:select>
 				</td>
 			</tr>
 			<tr>
@@ -156,22 +179,6 @@
 					<html:select property="agentId">
 						<html:option value="0">&nbsp;</html:option>
 						<html:options collection="AgentList" property="id" labelProperty="status" />
-					</html:select>
-				</td>
-			</tr>
-			<tr>
-				<td width="100" class="conLabel"><bean:message key="form.nasabah.statusAnggota"></bean:message></td>
-				<td class="conText">
-					<html:select property="stsAnggota">
-						<html:options collection="StsAgtList" property="id" labelProperty="status" />
-					</html:select>
-				</td>
-			</tr>
-			<tr>
-				<td width="100" class="conLabel"><bean:message key="form.nasabah.jenisAnggota"></bean:message></td>
-				<td class="conText">
-					<html:select property="jnsAnggota">
-						<html:options collection="JnsAgtList" property="id" labelProperty="status" />
 					</html:select>
 				</td>
 			</tr>
@@ -195,9 +202,13 @@
 	</table>	
 </html:form>
 <script language="JavaScript">
-	var cal1 = new calendar2(document.forms['nasabahForm'].elements['tglRek']);
+	var cal1 = new calendar2(document.forms['nasabahForm'].elements['strTglMasuk']);
 	cal1.year_scroll = true;
 	cal1.time_comp = false;
+	
+	var cal2 = new calendar2(document.forms['nasabahForm'].elements['strTglPayroll']);
+	cal2.year_scroll = true;
+	cal2.time_comp = false;
 </script>
 </BODY>
 </html:html>

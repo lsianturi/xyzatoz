@@ -20,7 +20,8 @@ public class Nasabah extends Audit{
 	private Bank bank;
 	private String bagian;
 	private String noRekening;
-	private Date tglRekening;
+	private Date tglMasuk;
+	private Date tglPayroll;
 	private StatusPK statusKaryawan;
 	private StatusPK jenisAnggota;
 	private StatusPK statusAnggota;
@@ -128,12 +129,20 @@ public class Nasabah extends Audit{
 		this.noRekening = noRekening;
 	}
 
-	public Date getTglRekening() {
-		return tglRekening;
+	public Date getTglMasuk() {
+		return tglMasuk;
 	}
 
-	public void setTglRekening(Date tglRekening) {
-		this.tglRekening = tglRekening;
+	public void setTglMasuk(Date tglMasuk) {
+		this.tglMasuk = tglMasuk;
+	}
+
+	public Date getTglPayroll() {
+		return tglPayroll;
+	}
+
+	public void setTglPayroll(Date tglPayroll) {
+		this.tglPayroll = tglPayroll;
 	}
 
 	public StatusPK getStatusKaryawan() {
