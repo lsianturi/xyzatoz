@@ -80,9 +80,9 @@ public class NasabahService {
 		return 0;
 	}
 	
-	public Integer deleteNasabah(Integer id) {
+	public Integer deleteNasabah(Nasabah nasabah) {
 		try {
-			return dao.deleteNasabah(id);
+			return dao.deleteNasabah(nasabah);
 		} catch (Exception e) {
 			log.debug(e);
 		}
@@ -106,4 +106,5 @@ public class NasabahService {
 		}
 		return null;
 	}
+	
 }

@@ -51,31 +51,28 @@
 <!-- Help Page Finish -->
 <html:form action="/nasabah.do" method="post" >	
 	<html:hidden property="dispatch" value="search"/>
-	<table border="0">
+	<table border="0" width="100%">
 		<tbody>
 			<tr>
 				<td class="conLabel"><bean:message key="form.nasabah.name"></bean:message></td>
 				<td class="conText" colspan="3">
 					<html:text property="nama" maxlength="60" size="20"></html:text>
 				</td>
-			</tr>
-			<tr>
+				
 				<td class="conLabel"><bean:message key="form.nasabah.telepon"></bean:message></td>
 				<td class="conText" colspan="3">
 					<html:text property="telepon" maxlength="60" size="20"></html:text>
 				</td>
 			</tr>
 			<tr>
-				<td width="100" class="conLabel"><bean:message key="form.nasabah.perusahaan"></bean:message></td>
+				<td  class="conLabel"><bean:message key="form.nasabah.perusahaan"></bean:message></td>
 				<td class="conText" colspan="3">
 					<html:select property="perusahaan">
 						<html:option value=""><bean:message key="form.all"></bean:message></html:option>
 						<html:options collection="PerusahaanList" property="id" labelProperty="status" />
 					</html:select>
 				</td>
-			</tr>
-			<tr>
-				<td width="100" class="conLabel"><bean:message key="form.nasabah.bank"></bean:message></td>
+				<td  class="conLabel"><bean:message key="form.nasabah.bank"></bean:message></td>
 				<td class="conText" colspan="3">
 					<html:select property="bank">
 						<html:option value=""><bean:message key="form.all"></bean:message></html:option>
@@ -84,17 +81,15 @@
 				</td>
 			</tr>
 			<tr>
-				<td width="100" class="conLabel"><bean:message key="form.nasabah.statusAnggota"></bean:message></td>
-				<td class="conText">
+				<td  class="conLabel"><bean:message key="form.nasabah.statusAnggota"></bean:message></td>
+				<td class="conText" colspan="3">
 					<html:select property="stsAnggota">
 						<html:option value=""><bean:message key="form.all"></bean:message></html:option>
 						<html:options collection="StsAgtList" property="id" labelProperty="status" />
 					</html:select>
 				</td>
-			</tr>
-			<tr>
-				<td width="100" class="conLabel"><bean:message key="form.nasabah.jenisAnggota"></bean:message></td>
-				<td class="conText">
+				<td  class="conLabel"><bean:message key="form.nasabah.jenisAnggota"></bean:message></td>
+				<td class="conText" colspan="3">
 					<html:select property="jnsAnggota">
 						<html:option value=""><bean:message key="form.all"></bean:message></html:option>
 						<html:options collection="JnsAgtList" property="id" labelProperty="status" />
@@ -102,22 +97,20 @@
 				</td>
 			</tr>
 			<tr>
-				<td width="100" class="conLabel"><bean:message key="form.nasabah.agent"></bean:message></td>
-				<td class="conText">
+				<td  class="conLabel"><bean:message key="form.nasabah.agent"></bean:message></td>
+				<td class="conText" colspan="3">
 					<html:select property="agentId">
 						<html:option value=""><bean:message key="form.all"></bean:message></html:option>
 						<html:options collection="AgentList" property="id" labelProperty="status" />
 					</html:select>
 				</td>
-			</tr>
-			<tr>
 				<td class="conLabel"></td>
-				<td class="conText">
-					<html:checkbox property="anAgent"></html:checkbox><bean:message key="form.nasabah.agent"></bean:message>
+				<td class="conText" colspan="3">
+					<html:checkbox property="anAgent"><bean:message key="form.nasabah.agent"></bean:message>&nbsp;only</html:checkbox>
 				</td>
 			</tr>
 			<tr>
-				<td width="100" class="conLabel"></td>
+				<td  class="conLabel"></td>
 				<td><html:submit property="btnSubmit" styleClass="frmButton">
 					<bean:message key="button.search"></bean:message>
 				</html:submit></td>
@@ -162,13 +155,13 @@
 					<td class="celBorder"><c:out value="${comp.bank.nama}"/>&nbsp;</td>
 					<td class="celBorder"><c:out value="${comp.agent.nama}"/>&nbsp;</td>
 					<td class="celBorder" align="center">
-						<a
-							href="javascript:del('<c:out value="${comp.id}"/>')"><bean:message
-								key="button.delete"></bean:message></a>&nbsp;|&nbsp;<a
-							href="javascript:edit('<c:out value="${comp.id}"/>')"><bean:message
-								key="button.edit"></bean:message></a>&nbsp;|&nbsp;
-								<a href="javascript:history('<c:out value="${comp.id}"/>')">History</a>
-				</td>
+						<a href="javascript:del('<c:out value="${comp.id}"/>')">
+							<bean:message key="button.delete"></bean:message></a>&nbsp;|&nbsp;
+						<a href="javascript:edit('<c:out value="${comp.id}"/>')">
+							<bean:message key="button.edit"></bean:message></a>&nbsp;|&nbsp;
+						<a href="javascript:history('<c:out value="${comp.id}"/>')">
+							<bean:message key="button.history"></bean:message></a>
+					</td>
 				</tr>	
 			</c:forEach>
 		</table>

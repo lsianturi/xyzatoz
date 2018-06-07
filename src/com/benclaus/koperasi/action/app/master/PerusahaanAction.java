@@ -363,9 +363,10 @@ public class PerusahaanAction extends SecurityAction {
 		if (errors.size() > 0) {
 			saveErrors(request, errors);
 		}
+		prepareData(request);
 
 		// Return to Search
-		return mapping.findForward("continue");
+		return mapping.findForward("success");
 	}
 
 }

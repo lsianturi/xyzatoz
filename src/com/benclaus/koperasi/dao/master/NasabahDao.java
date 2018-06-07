@@ -58,11 +58,6 @@ public class NasabahDao extends BaseDAO {
 		return (Integer) super.update("NasabahSQL.insertNasabahVersion", nasabah);
 	}
 	
-	public Integer deleteNasabah(Integer id) throws DaoException {
-		log.info("NasabahSQL.deleteNasabah");
-		return (Integer) super.update("NasabahSQL.deleteNasabah", id);
-	}
-	
 	public Nasabah getNasabah(Integer id) throws DaoException {
 		log.info("NasabahSQL.getNasabah");
 		return (Nasabah) super.getObject("NasabahSQL.getNasabah", id);
@@ -73,4 +68,8 @@ public class NasabahDao extends BaseDAO {
 		return (List<Nasabah>) super.getList("NasabahSQL.getNasabahVersion", id);
 	}
 	
+	public Integer deleteNasabah(Nasabah nasabah) throws DaoException {
+		log.info("NasabahSQL.deleteNasabah");
+		return (Integer) super.update("NasabahSQL.deleteNasabah", nasabah);
+	}
 }

@@ -9,6 +9,8 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.log4j.Logger;
+import org.apache.struts.action.ActionError;
+import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -423,4 +425,63 @@ public class NasabahAction extends SecurityAction {
 
 	}
 
+	public ActionForward delete(
+			ActionMapping mapping,
+			ActionForm form,
+			HttpServletRequest request,
+			HttpServletResponse response)
+			throws Exception {
+
+		log.debug("Delete");
+		
+		// Check Menu Access
+
+		ActionForward forward = new ActionForward();
+		forward = hasMenuAccess(mapping, request, MENU_NSB_DEL);
+		if (forward != null)
+			return forward;
+
+		ActionErrors errors = new ActionErrors();
+		HttpSession session = request.getSession();
+		DynaActionForm compForm = (DynaActionForm) form;
+
+		Login userLogin = (Login) session.getAttribute(Constant.SES_USERLOGIN);
+		if (userLogin == null) {
+			errors.add(
+				Constant.GLOBALERROR,
+				new ActionError("error.invalidLogin"));
+		}
+
+		try {
+			// do delete
+			//int affectedRow = companyService.deleteCompany(companyForm.getMap(), userLogin.getUser(), "delete");
+			Integer id = Integer.parseInt(request.getParameter("id"));
+			Nasabah nsbh = nService.getNasabah(id);
+			nsbh.setDeleted(1);
+			nsbh.setLastUpdBy(userLogin.getUser().getUserCode());
+			nsbh.setLastUpdProcess("delete");
+			nsbh.setCreatedBy(userLogin.getUser().getUserCode());
+			int affectedRow = nService.deleteNasabah(nsbh);
+			if (affectedRow == 0) {
+				errors.add(Constant.GLOBALERROR,
+					new ActionError("error.deleteFail", getMessage(request, "error.noRowUpdated")));
+			} else {
+				nService.insertNasabahVersion(nsbh);
+			}
+
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			errors.add(
+				Constant.GLOBALERROR,
+				new ActionError("error.exception", e.getMessage()));
+		}
+
+		if (errors.size() > 0) {
+			saveErrors(request, errors);
+		}
+		prepareData(request);
+
+		// Return to Search
+		return mapping.findForward("success");
+	}
 }
