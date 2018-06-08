@@ -1,4 +1,4 @@
-package com.benclaus.koperasi.dao.app;
+package com.benclaus.koperasi.dao.trx;
 
 import java.util.List;
 import java.util.Map;
@@ -11,24 +11,24 @@ import com.benclaus.koperasi.model.Book;
 import com.benclaus.koperasi.model.BookItem;
 import com.benclaus.koperasi.model.Company;
 import com.benclaus.koperasi.model.CompanyBook;
+import com.benclaus.koperasi.model.Config;
 import com.benclaus.koperasi.model.Data;
-import com.benclaus.koperasi.model.Forecast;
 import com.benclaus.koperasi.model.Mapping;
 import com.benclaus.koperasi.model.Pillar;
 import com.benclaus.koperasi.utility.LabelValueBean;
 import com.ibatis.common.util.PaginatedList;
 
 
-public class DataDao extends BaseDAO {
-	private static Logger log = Logger.getLogger(DataDao.class);
-	private static volatile DataDao instance;
+public class ConfigDao extends BaseDAO {
+	private static Logger log = Logger.getLogger(ConfigDao.class);
+	private static volatile ConfigDao instance;
 
-	public static DataDao getInstance() {
-        final DataDao currentInstance;
+	public static ConfigDao getInstance() {
+        final ConfigDao currentInstance;
         if (instance == null) {
-            synchronized (DataDao.class) {
+            synchronized (ConfigDao.class) {
                 if (instance == null) {
-                    instance = new DataDao();
+                    instance = new ConfigDao();
                 }
                 currentInstance = instance;
             }
@@ -38,99 +38,195 @@ public class DataDao extends BaseDAO {
         return currentInstance;
     }
 	
-	private DataDao() { super(); }
+	private ConfigDao() { super(); }
 	
-	public List<LabelValueBean> getDataYearList()  throws DaoException {
-		log.info("DataSQL.getDataYearList");
-		return (List<LabelValueBean>)super.getList("DataSQL.getDataYearList", null);
-	}
 	
-	public PaginatedList searchPlan(Map map) throws DaoException {
-		log.info("DataSQL.searchPlan");
-		return (PaginatedList) super.getPaginatedList("DataSQL.searchPlan", map);
-	}
-	public Integer searchPlanSize(Map map) throws DaoException {
-		log.info("DataSQL.searchPlanSize");
-		return (Integer)super.getObject("DataSQL.searchPlanSize", map);
+	public Config getRorConfig() throws DaoException {
+		log.info("ConfigSQL.getSsoUrl");
+		return (Config)super.getObject("ConfigSQL.getRorConfig", null);
 	}
 	
-	public List<Data> getPlan(Map map) throws DaoException {
-		log.info("DataSQL.searchPlan");
-		return (List<Data>) super.getList("DataSQL.searchPlan", map);
-	}
-	public Data getPlan(Integer id) throws DaoException {
-		log.info("DataSQL.getPlan");
-		return (Data)super.getObject("DataSQL.getPlan", id);
-	}
-	public Integer updatePlan(Data data)  throws DaoException {
-		log.info("DataSQL.updatePlan");
-		return super.update("DataSQL.updatePlan", data);
-	}
-	public Integer insertPlan(Map data)  throws DaoException {
-		log.info("DataSQL.insertPlan");
-		return super.update("DataSQL.insertPlan", data);
-	}
-	public List<Data> getNewInsertedPlan(Map map) throws DaoException {
-		log.info("DataSQL.getNewInsertedPlan");
-		return (List<Data>)super.getList("DataSQL.getNewInsertedPlan", map);
+	public List<String> getSsoUrl() throws DaoException {
+		log.info("ConfigSQL.getSsoUrl");
+		return (List<String>)super.getList("ConfigSQL.getSsoUrl", null);
 	}
 	
 	
-	
-	public List<Integer> getForecastYearList()  throws DaoException {
-		log.info("DataSQL.getForecastYearList");
-		return (List<Integer>)super.getList("DataSQL.getForecastYearList", null);
+	public List<Pillar> getPillars() throws DaoException {
+		log.info("ConfigSQL.getPillars");
+		return (List<Pillar>) super.getList("ConfigSQL.getPillars", null);
 	}
-	
-	public PaginatedList searchForecast(Map map) throws DaoException {
-		log.info("DataSQL.searchForecast");
-		return (PaginatedList) super.getPaginatedList("DataSQL.searchForecast", map);
+	public int deletePillar(Integer id) throws DaoException {
+		log.info("ConfigSQL.deletePillar");
+		return super.update("ConfigSQL.deletePillar",id);
 	}
-	public Integer searchForecastSize(Map map) throws DaoException {
-		log.info("DataSQL.searchForecastSize");
-		return (Integer)super.getObject("DataSQL.searchForecastSize", map);
+	public int insertPillar(Pillar pilar) throws DaoException {
+		log.info("ConfigSQL.insertPillar");
+		return super.update("ConfigSQL.insertPillar", pilar);
 	}
-	
-	public List<Forecast> getForecast(Map map) throws DaoException {
-		log.info("DataSQL.searchForecast");
-		return (List<Forecast>) super.getList("DataSQL.searchForecast", map);
+	public int updatePillar(Pillar pilar) throws DaoException {
+		log.info("ConfigSQL.updatePillar");
+		return super.update("ConfigSQL.updatePillar", pilar);
 	}
-	public Forecast getForecast(Integer id) throws DaoException {
-		log.info("DataSQL.getForecast");
-		return (Forecast)super.getObject("DataSQL.getForecast", id);
-	}
-	public Integer updateForecast(Forecast data)  throws DaoException {
-		log.info("DataSQL.updateForecast");
-		return super.update("DataSQL.updateForecast", data);
-	}
-	public Integer insertForecast(Map data)  throws DaoException {
-		log.info("DataSQL.insertForecast");
-		return super.update("DataSQL.insertForecast", data);
-	}
-	public List<Forecast> getNewInsertedForecast(Map map) throws DaoException {
-		log.info("DataSQL.getNewInsertedForecast");
-		return (List<Forecast>)super.getList("DataSQL.getNewInsertedForecast", map);
-	}
-	
-	
-	public PaginatedList searchActual(Map map) {
-		log.info("DataSQL.searchActual");
-		return (PaginatedList) super.getPaginatedList("DataSQL.searchActual", map);
+	public Pillar getPillar(Integer id) throws DaoException {
+		log.info("ConfigSQL.getPillar");
+		return (Pillar) super.getObject("ConfigSQL.getPillar", id);
 	}
 
-	public Integer searchActualSize(Map map) {
-		log.info("DataSQL.searchPlanSize");
-		return (Integer)super.getObject("DataSQL.searchActualSize", map);
+	
+	public PaginatedList searchCompany(Map map) throws DaoException {
+		log.info("ConfigSQL.searchCompany");
+		return (PaginatedList) super.getPaginatedList("ConfigSQL.searchCompany", map);
+	}
+	public Integer searchCompanySize(Map map) throws DaoException {
+		log.info("ConfigSQL.searchCompanySize");
+		return (Integer)super.getObject("ConfigSQL.searchCompanySize", map);
+	}
+	public List<LabelValueBean> getSPMList() throws DaoException {
+		log.info("ConfigSQL.getSPMList");
+		return (List<LabelValueBean>) super.getList("ConfigSQL.getSPMList", null);
+	}
+	public int insertCompany(Company comp)  throws DaoException {
+		log.info("ConfigSQL.insertCompany");
+		return super.update("ConfigSQL.insertCompany", comp);
+	}
+	public int updateCompany(Company comp)  throws DaoException {
+		log.info("ConfigSQL.updateCompany");
+		return super.update("ConfigSQL.updateCompany", comp);
+	}
+	public Company getCompany(Map map) throws DaoException {
+		log.info("ConfigSQL.searchCompany");
+		return (Company)super.getObject("ConfigSQL.searchCompany", map);
+	}
+	public Company getCompanyByName(Map map) throws DaoException {
+		log.info("ConfigSQL.getCompanyByName");
+		return (Company)super.getObject("ConfigSQL.getCompanyByName", map);
+	}
+	public Company getCompanyByPrefix(String prefix) throws DaoException {
+		log.info("ConfigSQL.getCompanyByPrefix");
+		return (Company)super.getObject("ConfigSQL.getCompanyByPrefix", prefix);
 	}
 	
-	public List<Data> getActual(Map map) throws DaoException {
-		log.info("DataSQL.searchActual");
-		return (List<Data>) super.getList("DataSQL.searchActual", map);
+	public int deleteCompany(Integer id)  throws DaoException {
+		log.info("ConfigSQL.deleteCompany");
+		return super.update("ConfigSQL.deleteCompany", id);
 	}
+	
+	
+	public PaginatedList searchBook(Map map) throws DaoException {
+		log.info("ConfigSQL.searchBook");
+		return (PaginatedList) super.getPaginatedList("ConfigSQL.searchBook", map);
+	}
+	public Integer searchBookSize(Map map) throws DaoException {
+		log.info("ConfigSQL.searchBookSize");
+		return (Integer)super.getObject("ConfigSQL.searchBookSize", map);
+	}
+	public List<LabelValueBean> getBookList() throws DaoException {
+		log.info("ConfigSQL.getBookList");
+		return (List<LabelValueBean>) super.getList("ConfigSQL.getBookList", null);
+	}
+	public List<LabelValueBean> getCompanyList() throws DaoException {
+		log.info("ConfigSQL.getCompanyList");
+		return (List<LabelValueBean>) super.getList("ConfigSQL.getCompanyList", null);
+	}
+	public int insertBook(CompanyBook book)  throws DaoException {
+		log.info("ConfigSQL.insertBook");
+		return super.update("ConfigSQL.insertBook", book);
+	}
+	public int updateBook(CompanyBook book)  throws DaoException {
+		log.info("ConfigSQL.updateBook");
+		return super.update("ConfigSQL.updateBook", book);
+	}
+	public CompanyBook getBook(Map map) throws DaoException {
+		log.info("ConfigSQL.searchBook");
+		return (CompanyBook)super.getObject("ConfigSQL.searchBook", map);
+	}
+	public int deleteBook(Integer id)  throws DaoException {
+		log.info("ConfigSQL.deleteBook");
+		return super.update("ConfigSQL.deleteBook", id);
+	}
+	public List<Book> getUnavailableBook(Integer company) throws DaoException {
+		log.info("ConfigSQL.getUnavailableBook");
+		return (List<Book>) super.getList("ConfigSQL.getUnavailableBook", company);
+	}
+	
+	public PaginatedList searchBookItem(Map map) throws DaoException {
+		log.info("ConfigSQL.searchBookItem");
+		return (PaginatedList) super.getPaginatedList("ConfigSQL.searchBookItem", map);
+	}
+	public Integer searchBookItemSize(Map map) throws DaoException {
+		log.info("ConfigSQL.searchBookItemSize");
+		return (Integer)super.getObject("ConfigSQL.searchBookItemSize", map);
+	}
+	public Integer insertBookItem(BookItem book)  throws DaoException {
+		log.info("ConfigSQL.insertBookItem");
+		return super.update("ConfigSQL.insertBookItem", book);
+	}
+	public Integer updateBookItem(BookItem book)  throws DaoException {
+		log.info("ConfigSQL.updateBookItem");
+		return super.update("ConfigSQL.updateBookItem", book);
+	}
+	public BookItem getBookItem(Integer id) throws DaoException {
+		log.info("ConfigSQL.getBookItem");
+		return (BookItem)super.getObject("ConfigSQL.getBookItem", id);
+	}
+	public Integer deleteBookItem(Integer bookItemId)  throws DaoException {
+		log.info("ConfigSQL.deleteBookItem");
+		return super.update("ConfigSQL.deleteBookItem", bookItemId);
+	}
+	public List<LabelValueBean> getBookItemList() throws DaoException {
+		log.info("ConfigSQL.getBookItemList");
+		return (List<LabelValueBean>) super.getList("ConfigSQL.getBookItemList", null);
+	}
+	
+	
+	
+	
+	public List<Mapping> getUnavailableMappingByCompany(Integer company) throws DaoException {
+		log.info("ConfigSQL.getUnavailableMappingByCompany");
+		return (List<Mapping>) super.getList("ConfigSQL.getUnavailableMappingByCompany", company);
+	}
+	public List<Mapping> getUnavailableMapping() throws DaoException {
+		log.info("ConfigSQL.getUnavailableMapping");
+		return (List<Mapping>) super.getList("ConfigSQL.getUnavailableMapping", null);
+	}
+	
+	public Integer insertMapping(Mapping map)  throws DaoException {
+		log.info("ConfigSQL.insertMapping");
+		return super.update("ConfigSQL.insertMapping", map);
+	}
+	
+	public PaginatedList searchMapping(Map map) throws DaoException {
+		log.info("ConfigSQL.searchMapping");
+		return (PaginatedList) super.getPaginatedList("ConfigSQL.searchMapping", map);
+	}
+	public Integer searchMappingSize(Map map) throws DaoException {
+		log.info("ConfigSQL.searchMappingSize");
+		return (Integer)super.getObject("ConfigSQL.searchMappingSize", map);
+	}
+	public List<Mapping> getMapping(Map map) throws DaoException {
+		log.info("ConfigSQL.searchMapping");
+		return (List<Mapping>) super.getList("ConfigSQL.searchMapping", map);
+	}
+	public Mapping getMapping(Integer id) throws DaoException {
+		log.info("ConfigSQL.getMapping");
+		return (Mapping)super.getObject("ConfigSQL.getMapping", id);
+	}
+	public Integer updateMapping(Mapping mapp)  throws DaoException {
+		log.info("ConfigSQL.updateMapping");
+		return super.update("ConfigSQL.updateMapping", mapp);
+	}
+	
+	public Integer deleteMapping(Integer bookItemId)  throws DaoException {
+		log.info("ConfigSQL.deleteMapping");
+		return super.update("ConfigSQL.deleteMapping", bookItemId);
+	}
+	
+	
 	/*
 	//Insert Employee Start
 	public void insertEmployee(Employee emp) throws DaoException {
-		log.info("DataSQL.getPillars");
+		log.info("ConfigSQL.getPillars");
 		super.update("AbsensiSQL.insertEmployee", emp);
 	}
 	public void insertQuestSync(Employee emp) throws DaoException {

@@ -98,6 +98,9 @@ function openHelp(path) {
 	window.open(path,null,"height=400,width=600,dependent=yes,toolbar=no,location=no,resizable=yes,scrollbars=yes");
 }
 
+function back() {
+	window.history.go(-1);
+}
 // Uncomment all code below to disable right click
 //if (document.layers) {
 //	document.captureEvents(Event.MOUSEDOWN);

@@ -95,32 +95,34 @@
 	</form-beans>
 	
 	<action-mappings>
-		<action path="/perusahaan" name="perusahaanSearch" type="com.benclaus.koperasi.action.app.master.PerusahaanAction" scope="request" validate="false" parameter="dispatch">
-    		<forward name="continue" path="/app/master/perusahaan.jsp" />	
+		<action path="/perusahaan" name="perusahaanSearch" type="com.benclaus.koperasi.action.master.PerusahaanAction" scope="request" validate="false" parameter="dispatch">
+    		<forward name="continue" path="/app/master/perusahaan.jsp" />
+    		<forward name="history" path="/app/master/perusahaanHistory.jsp"></forward>		
     		<forward name="fail" path="/main.jsp" />
     	</action>
-    	<action path="/updatePerusahaan" name="perusahaanForm" type="com.benclaus.koperasi.action.app.master.PerusahaanAction" scope="request" parameter="dispatch" validate="false">
+    	<action path="/updatePerusahaan" name="perusahaanForm" type="com.benclaus.koperasi.action.master.PerusahaanAction" scope="request" parameter="dispatch" validate="false">
 			<forward name="success" path="/perusahaan.do?dispatch=returned" />
 			<forward name="continue" path="/app/master/perusahaanEdit.jsp" />
 			<forward name="fail" path="/app/master/perusahaanEdit.jsp" />
 		</action>
 		
-		<action path="/pegawai" name="pegawaiSearch" type="com.benclaus.koperasi.action.app.master.PegawaiAction" scope="request" validate="false" parameter="dispatch">
+		<action path="/pegawai" name="pegawaiSearch" type="com.benclaus.koperasi.action.master.PegawaiAction" scope="request" validate="false" parameter="dispatch">
     		<forward name="continue" path="/app/master/pegawai.jsp" />	
     		<forward name="fail" path="/main.jsp" />
     	</action>
-    	<action path="/updatePegawai" name="pegawaiForm" type="com.benclaus.koperasi.action.app.master.PegawaiAction" scope="request" parameter="dispatch" validate="false">
+    	<action path="/updatePegawai" name="pegawaiForm" type="com.benclaus.koperasi.action.master.PegawaiAction" scope="request" parameter="dispatch" validate="false">
 			<forward name="success" path="/pegawai.do?dispatch=returned" />
 			<forward name="continue" path="/app/master/pegawaiEdit.jsp" />
 			<forward name="fail" path="/app/master/pegawaiEdit.jsp" />
 		</action>
 		
-		<action path="/nasabah" name="nasabahSearch" type="com.benclaus.koperasi.action.app.master.NasabahAction" scope="request" validate="false" parameter="dispatch">
+		<action path="/nasabah" name="nasabahSearch" type="com.benclaus.koperasi.action.master.NasabahAction" scope="request" validate="false" parameter="dispatch">
     		<forward name="continue" path="/app/master/nasabah.jsp" />
+    		<forward name="view" path="/app/master/nasabahView.jsp" />
     		<forward name="history" path="/app/master/nasabahHistory.jsp"></forward>	
     		<forward name="fail" path="/main.jsp" />
     	</action>
-    	<action path="/updateNasabah" name="nasabahForm" type="com.benclaus.koperasi.action.app.master.NasabahAction" scope="request" parameter="dispatch" validate="false">
+    	<action path="/updateNasabah" name="nasabahForm" type="com.benclaus.koperasi.action.master.NasabahAction" scope="request" parameter="dispatch" validate="false">
 			<forward name="success" path="/nasabah.do?dispatch=returned" />
 			<forward name="continue" path="/app/master/nasabahEdit.jsp" />
 			<forward name="fail" path="/app/master/nasabahEdit.jsp" />

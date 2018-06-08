@@ -53,7 +53,8 @@ public final class MenuAction extends SecurityAction{
 		forward = hasMenuAccess(mapping, request, MENU_USER_MENU_QUERY);
 		if (forward != null) { return forward; }
 
-
+		DynaActionForm dynaForm = (DynaActionForm) form;
+		dynaForm.set("searchValue", "KOP");
 		if (session.getAttribute(MENU_USER_MENU_QUERY) != null) {
 			forward = search(mapping, form, request, response);
 		}else{

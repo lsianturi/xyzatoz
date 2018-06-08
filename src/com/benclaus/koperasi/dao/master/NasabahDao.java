@@ -53,9 +53,9 @@ public class NasabahDao extends BaseDAO {
 		return (Integer) super.update("NasabahSQL.updateNasabah", nasabah);
 	}
 	
-	public Integer insertNasabahVersion(Nasabah nasabah) throws DaoException {
-		log.info("NasabahSQL.insertNasabahVersion");
-		return (Integer) super.update("NasabahSQL.insertNasabahVersion", nasabah);
+	public Integer insertNasabahHistory(Nasabah nasabah) throws DaoException {
+		log.info("NasabahSQL.insertNasabahHistory");
+		return (Integer) super.update("NasabahSQL.insertNasabahHistory", nasabah);
 	}
 	
 	public Nasabah getNasabah(Integer id) throws DaoException {

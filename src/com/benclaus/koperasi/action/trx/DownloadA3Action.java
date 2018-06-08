@@ -1,4 +1,4 @@
-package com.benclaus.koperasi.action.app;
+package com.benclaus.koperasi.action.trx;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -31,9 +31,9 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.DynaActionForm;
 
 import com.benclaus.koperasi.action.SecurityAction;
-import com.benclaus.koperasi.dao.app.A3Service;
-import com.benclaus.koperasi.dao.app.ConfigService;
-import com.benclaus.koperasi.dao.app.DataService;
+import com.benclaus.koperasi.dao.trx.A3Service;
+import com.benclaus.koperasi.dao.trx.ConfigService;
+import com.benclaus.koperasi.dao.trx.DataService;
 import com.benclaus.koperasi.model.A3;
 import com.benclaus.koperasi.model.BookEnum;
 import com.benclaus.koperasi.model.Config;

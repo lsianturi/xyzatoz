@@ -47,11 +47,11 @@
 	</form-beans>
 	
 	<action-mappings>
-		<action path="/trx/pinjam" name="pinjamSearch" type="com.benclaus.koperasi.action.app.trx.PinjamAction" scope="request" validate="false" parameter="dispatch">
+		<action path="/trx/pinjam" name="pinjamSearch" type="com.benclaus.koperasi.action.trx.trx.PinjamAction" scope="request" validate="false" parameter="dispatch">
     		<forward name="continue" path="/app/trx/pinjam.jsp" />	
     		<forward name="fail" path="/main.jsp" />
     	</action>
-		<action path="/trx/pinjam/edit" name="pinjamForm" type="com.benclaus.koperasi.action.app.trx.PinjamAction" scope="request" validate="false" parameter="dispatch">
+		<action path="/trx/pinjam/edit" name="pinjamForm" type="com.benclaus.koperasi.action.trx.trx.PinjamAction" scope="request" validate="false" parameter="dispatch">
     		<forward name="success" path="/trx/pinjam.do?dispatch=returned" />
 			<forward name="continue" path="/app/trx/pinjamEdit.jsp" />
 			<forward name="fail" path="/app/trx/pinjamEdit.jsp" />

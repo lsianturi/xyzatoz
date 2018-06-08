@@ -1,4 +1,4 @@
-package com.benclaus.koperasi.dao.app;
+package com.benclaus.koperasi.dao.trx;
 
 import java.util.List;
 import java.util.Map;

@@ -20,7 +20,7 @@ import org.quartz.SchedulerFactory;
 import org.quartz.Trigger;
 import org.quartz.impl.StdSchedulerFactory;
 
-import com.benclaus.koperasi.dao.app.ConfigService;
+import com.benclaus.koperasi.dao.trx.ConfigService;
 import com.benclaus.koperasi.job.ReadExcelJob;
 import com.benclaus.koperasi.model.Config;
 

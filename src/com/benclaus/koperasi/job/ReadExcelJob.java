@@ -5,7 +5,7 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
-import com.benclaus.koperasi.action.app.utils.ReadExcelUtil;
+import com.benclaus.koperasi.action.trx.utils.ReadExcelUtil;
 
 public class ReadExcelJob implements Job{
 	private static Logger log = Logger.getLogger(ReadExcelJob.class);

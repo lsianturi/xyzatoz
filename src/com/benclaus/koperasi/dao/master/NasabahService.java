@@ -71,9 +71,9 @@ public class NasabahService {
 		return 0;
 	}
 	
-	public Integer insertNasabahVersion(Nasabah nasabah) {
+	public Integer insertNasabahHistory(Nasabah nasabah) {
 		try {
-			return dao.insertNasabahVersion(nasabah);
+			return dao.insertNasabahHistory(nasabah);
 		} catch (Exception e) {
 			log.debug(e);
 		}

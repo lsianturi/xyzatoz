@@ -9,6 +9,7 @@ import com.benclaus.koperasi.dao.BaseDAO;
 import com.benclaus.koperasi.exception.DaoException;
 import com.benclaus.koperasi.model.master.Area;
 import com.benclaus.koperasi.model.master.Industri;
+import com.benclaus.koperasi.model.master.Nasabah;
 import com.benclaus.koperasi.model.master.Perusahaan;
 import com.ibatis.common.util.PaginatedList;
 
@@ -45,7 +46,7 @@ public class PerusahaanDao extends BaseDAO {
 	
 	public Integer insertPerusahaan(Perusahaan perusahaan) throws DaoException {
 		log.info("PrshnSQL.insertPerusahaan");
-		return (Integer) super.update("PrshnSQL.insertPerusahaan", perusahaan);
+		return (Integer) super.insert("PrshnSQL.insertPerusahaan", perusahaan);
 	}
 	
 	public Integer updatePerusahaan(Perusahaan perusahaan) throws DaoException {
@@ -69,5 +70,14 @@ public class PerusahaanDao extends BaseDAO {
 	public List<Area> getAreas() throws DaoException {
 		log.info("PrshnSQL.getAreas");
 		return (List<Area>) super.getList("PrshnSQL.getAreas", null);
+	}
+	public Integer insertPerusahaanHistory(Perusahaan prshn) throws DaoException {
+		log.info("NasabahSQL.insertPerusahaanHistory");
+		return (Integer) super.update("PrshnSQL.insertPerusahaanHistory", prshn);
+	}
+	
+	public List<Perusahaan> getPerusahaanVersion(Integer id) throws DaoException {
+		log.info("PrshnSQL.getPerusahaanVersion");
+		return (List<Perusahaan>) super.getList("PrshnSQL.getPerusahaanHistory", id);
 	}
 }

@@ -96,71 +96,71 @@
 	</form-beans>
 	
 	<action-mappings>
-		<action path="/pillar" name="nullForm" type="com.benclaus.koperasi.action.app.master.PillarAction" scope="request" parameter="dispatch" validate="false">
+		<action path="/pillar" name="nullForm" type="com.benclaus.koperasi.action.master.PillarAction" scope="request" parameter="dispatch" validate="false">
 			<forward name="main" path="/app/pilar.jsp" />
 			<forward name="success" path="/app/pilarEdit.jsp" />
 		</action>
-		<action path="/updatePillar" name="pillarForm" type="com.benclaus.koperasi.action.app.master.PillarAction" scope="request" parameter="dispatch" validate="false">
+		<action path="/updatePillar" name="pillarForm" type="com.benclaus.koperasi.action.master.PillarAction" scope="request" parameter="dispatch" validate="false">
 			<forward name="main" path="/app/pilar.jsp" />
 			<forward name="success" path="/app/pilarEdit.jsp" />
 		</action>
-		<action path="/savePillar" name="pillarForm" type="com.benclaus.koperasi.action.app.master.PillarAction" scope="request" parameter="dispatch" validate="false">
+		<action path="/savePillar" name="pillarForm" type="com.benclaus.koperasi.action.master.PillarAction" scope="request" parameter="dispatch" validate="false">
 			<forward name="success" path="/pillar.do?dispatch=returned" />
 			<forward name="fail" path="/app/pilarEdit.jsp" />
 		</action>
 		
-		<action path="/company" name="companySearch" type="com.benclaus.koperasi.action.app.master.CompanyAction" scope="request" validate="false" parameter="dispatch">
+		<action path="/company" name="companySearch" type="com.benclaus.koperasi.action.master.CompanyAction" scope="request" validate="false" parameter="dispatch">
     		<forward name="continue" path="/app/company.jsp" />	
     		<forward name="fail" path="/main.jsp" />
     	</action>
-    	<action path="/updateCompany" name="companyForm" type="com.benclaus.koperasi.action.app.master.CompanyAction" scope="request" parameter="dispatch" validate="false">
+    	<action path="/updateCompany" name="companyForm" type="com.benclaus.koperasi.action.master.CompanyAction" scope="request" parameter="dispatch" validate="false">
 			<forward name="continue" path="/company.do?dispatch=returned" />
 			<forward name="success" path="/app/companyEdit.jsp" />
 			<forward name="fail" path="/company.do?dispatch=returned" />
 		</action>
-    	<action path="/saveCompany" name="companyForm" type="com.benclaus.koperasi.action.app.master.CompanyAction" scope="request" parameter="dispatch" validate="false">
+    	<action path="/saveCompany" name="companyForm" type="com.benclaus.koperasi.action.master.CompanyAction" scope="request" parameter="dispatch" validate="false">
 			<forward name="success" path="/company.do?dispatch=returned" />
 			<forward name="fail" path="/app/companyEdit.jsp" />
 		</action>
 		
-		<action path="/book" name="bookSearch" type="com.benclaus.koperasi.action.app.master.CompanyBookAction" scope="request" validate="false" parameter="dispatch">
+		<action path="/book" name="bookSearch" type="com.benclaus.koperasi.action.master.CompanyBookAction" scope="request" validate="false" parameter="dispatch">
     		<forward name="continue" path="/app/book.jsp" />	
     		<forward name="fail" path="/main.jsp" />
     	</action>
-    	<action path="/updateBook" name="bookForm" type="com.benclaus.koperasi.action.app.master.CompanyBookAction" scope="request" parameter="dispatch" validate="false">
+    	<action path="/updateBook" name="bookForm" type="com.benclaus.koperasi.action.master.CompanyBookAction" scope="request" parameter="dispatch" validate="false">
 			<forward name="continue" path="/book.do?dispatch=returned" />
 			<forward name="success" path="/app/bookEdit.jsp" />
 			<forward name="fail" path="/book.do?dispatch=returned" />
 		</action>
-    	<action path="/saveBook" name="bookForm" type="com.benclaus.koperasi.action.app.master.CompanyBookAction" scope="request" parameter="dispatch" validate="false">
+    	<action path="/saveBook" name="bookForm" type="com.benclaus.koperasi.action.master.CompanyBookAction" scope="request" parameter="dispatch" validate="false">
 			<forward name="success" path="/book.do?dispatch=returned" />
 			<forward name="fail" path="/app/bookEdit.jsp" />
 		</action>
 		
-		<action path="/bookItem" name="bookItemSearch" type="com.benclaus.koperasi.action.app.master.BookItemAction" scope="request" validate="false" parameter="dispatch">
+		<action path="/bookItem" name="bookItemSearch" type="com.benclaus.koperasi.action.master.BookItemAction" scope="request" validate="false" parameter="dispatch">
     		<forward name="continue" path="/app/bookItem.jsp" />	
     		<forward name="fail" path="/main.jsp" />
     	</action>
-    	<action path="/updateBookItem" name="bookItemForm" type="com.benclaus.koperasi.action.app.master.BookItemAction" scope="request" parameter="dispatch" validate="false">
+    	<action path="/updateBookItem" name="bookItemForm" type="com.benclaus.koperasi.action.master.BookItemAction" scope="request" parameter="dispatch" validate="false">
 			<forward name="continue" path="/bookItem.do?dispatch=returned" />
 			<forward name="success" path="/app/bookItemEdit.jsp" />
 			<forward name="fail" path="/bookItem.do?dispatch=returned" />
 		</action>
-    	<action path="/saveBookItem" name="bookItemForm" type="com.benclaus.koperasi.action.app.master.BookItemAction" scope="request" parameter="dispatch" validate="false">
+    	<action path="/saveBookItem" name="bookItemForm" type="com.benclaus.koperasi.action.master.BookItemAction" scope="request" parameter="dispatch" validate="false">
 			<forward name="success" path="/bookItem.do?dispatch=returned" />
 			<forward name="fail" path="/app/bookItemEdit.jsp" />
 		</action>
 		
-		<action path="/mapping" name="mapSearch" type="com.benclaus.koperasi.action.app.master.MappingAction" scope="request" validate="false" parameter="dispatch">
+		<action path="/mapping" name="mapSearch" type="com.benclaus.koperasi.action.master.MappingAction" scope="request" validate="false" parameter="dispatch">
     		<forward name="continue" path="/app/mapping.jsp" />	
     		<forward name="fail" path="/main.jsp" />
     	</action>
-    	<action path="/updateMapping" name="mapForm" type="com.benclaus.koperasi.action.app.master.MappingAction" scope="request" parameter="dispatch" validate="false">
+    	<action path="/updateMapping" name="mapForm" type="com.benclaus.koperasi.action.master.MappingAction" scope="request" parameter="dispatch" validate="false">
 			<forward name="continue" path="/mapping.do?dispatch=returned" />
 			<forward name="success" path="/app/mappingEdit.jsp" />
 			<forward name="fail" path="/mapping.do?dispatch=returned" />
 		</action>
-    	<action path="/saveMapping" name="mapForm" type="com.benclaus.koperasi.action.app.master.MappingAction" scope="request" parameter="dispatch" validate="false">
+    	<action path="/saveMapping" name="mapForm" type="com.benclaus.koperasi.action.master.MappingAction" scope="request" parameter="dispatch" validate="false">
 			<forward name="success" path="/mapping.do?dispatch=returned" />
 			<forward name="fail" path="/app/mappingEdit.jsp" />
 		</action>

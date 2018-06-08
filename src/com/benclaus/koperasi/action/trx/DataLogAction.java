@@ -1,4 +1,4 @@
-package com.benclaus.koperasi.action.app;
+package com.benclaus.koperasi.action.trx;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -20,9 +20,9 @@ import org.apache.struts.action.DynaActionForm;
 
 import com.benclaus.koperasi.action.SecurityAction;
 import com.benclaus.koperasi.dao.Page;
-import com.benclaus.koperasi.dao.app.A3Service;
-import com.benclaus.koperasi.dao.app.ConfigService;
-import com.benclaus.koperasi.dao.app.DataService;
+import com.benclaus.koperasi.dao.trx.A3Service;
+import com.benclaus.koperasi.dao.trx.ConfigService;
+import com.benclaus.koperasi.dao.trx.DataService;
 import com.benclaus.koperasi.model.FormulaArg;
 import com.benclaus.koperasi.model.usm.Login;
 import com.benclaus.koperasi.utility.Constant;

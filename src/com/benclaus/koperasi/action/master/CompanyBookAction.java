@@ -1,4 +1,4 @@
-package com.benclaus.koperasi.action.app.master;
+package com.benclaus.koperasi.action.master;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,7 +17,7 @@ import org.apache.struts.action.DynaActionForm;
 
 import com.benclaus.koperasi.action.SecurityAction;
 import com.benclaus.koperasi.dao.Page;
-import com.benclaus.koperasi.dao.app.ConfigService;
+import com.benclaus.koperasi.dao.trx.ConfigService;
 import com.benclaus.koperasi.model.Book;
 import com.benclaus.koperasi.model.Company;
 import com.benclaus.koperasi.model.CompanyBook;

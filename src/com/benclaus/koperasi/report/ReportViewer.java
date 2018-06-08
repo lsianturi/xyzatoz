@@ -19,7 +19,7 @@ import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionError;
 import org.apache.struts.action.ActionErrors;
 
-import com.benclaus.koperasi.dao.app.ConfigService;
+import com.benclaus.koperasi.dao.trx.ConfigService;
 import com.benclaus.koperasi.utility.Constant;
 
 /**

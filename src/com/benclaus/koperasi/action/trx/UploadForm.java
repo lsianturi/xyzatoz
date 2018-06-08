@@ -1,4 +1,4 @@
-package com.benclaus.koperasi.action.app;
+package com.benclaus.koperasi.action.trx;
 
 import javax.servlet.http.HttpServletRequest;
 

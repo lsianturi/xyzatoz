@@ -33,6 +33,9 @@
 	function edit(id) {
 		doGoToUrl('<c:url value="/updateNasabah.do?dispatch=update"/>'+'&id='+id);
 	}
+	function view(id) {
+		doGoToUrl('<c:url value="/nasabah.do?dispatch=view"/>'+'&id='+id);
+	}
 	function history(id) {
 		doGoToUrl('<c:url value="/nasabah.do?dispatch=history"/>'+'&id='+id);
 	}
@@ -148,7 +151,7 @@
 					</c:otherwise>
 				</c:choose>
 					<%-- <td class="celBorder"><c:out value="${comp.pillar.name}"/>&nbsp;</td> --%>
-					<td class="celBorder"><c:out value="${comp.nama}"/>&nbsp;</td>
+					<td class="celBorder"><a href="javascript:view('<c:out value="${comp.id}"/>')"><c:out value="${comp.nama}"/></a></td>
 					<td class="celBorder"><c:out value="${comp.telepon}"/>&nbsp;</td>
 					<td class="celBorder"><c:out value="${comp.noRekening}"/>&nbsp;</td>
 					<td class="celBorder"><c:out value="${comp.pt.nama}"/>&nbsp;</td>

@@ -1,4 +1,4 @@
-package com.benclaus.koperasi.action.app;
+package com.benclaus.koperasi.action.trx;
 
 import java.io.OutputStream;
 import java.util.Calendar;
@@ -26,8 +26,8 @@ import org.apache.struts.action.DynaActionForm;
 
 import com.benclaus.koperasi.action.SecurityAction;
 import com.benclaus.koperasi.dao.Page;
-import com.benclaus.koperasi.dao.app.ConfigService;
-import com.benclaus.koperasi.dao.app.DataService;
+import com.benclaus.koperasi.dao.trx.ConfigService;
+import com.benclaus.koperasi.dao.trx.DataService;
 import com.benclaus.koperasi.model.Data;
 import com.benclaus.koperasi.model.usm.Login;
 import com.benclaus.koperasi.utility.Constant;

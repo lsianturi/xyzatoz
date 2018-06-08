@@ -1,4 +1,4 @@
-package com.benclaus.koperasi.action.app;
+package com.benclaus.koperasi.action.trx;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -21,11 +21,11 @@ import org.apache.struts.action.DynaActionForm;
 import org.apache.struts.upload.FormFile;
 
 import com.benclaus.koperasi.action.SecurityAction;
-import com.benclaus.koperasi.action.app.utils.ReadExcelUtil;
+import com.benclaus.koperasi.action.trx.utils.ReadExcelUtil;
 import com.benclaus.koperasi.dao.Page;
-import com.benclaus.koperasi.dao.app.A3Service;
-import com.benclaus.koperasi.dao.app.ConfigService;
-import com.benclaus.koperasi.dao.app.DataService;
+import com.benclaus.koperasi.dao.trx.A3Service;
+import com.benclaus.koperasi.dao.trx.ConfigService;
+import com.benclaus.koperasi.dao.trx.DataService;
 import com.benclaus.koperasi.model.Company;
 import com.benclaus.koperasi.model.FormulaArg;
 import com.benclaus.koperasi.utility.Constant;

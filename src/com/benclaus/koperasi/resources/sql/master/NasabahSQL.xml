@@ -158,8 +158,8 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 		WHERE `id`=#id#
 	</update>
 	
-	<insert id="insertNasabahVersion" parameterClass="com.benclaus.koperasi.model.master.Nasabah" >
-		INSERT INTO `ms_nasabah_ver` (`id`, `nama`,  `jns_kelamin_id`,  `sts_sipil_id`,  `domisili`,  `alamat`,  `telepon`,  `agent_id`,  `perusahaan_id`,  `bank_id`,
+	<insert id="insertNasabahHistory" parameterClass="com.benclaus.koperasi.model.master.Nasabah" >
+		INSERT INTO `ms_nasabah_hist` (`id`, `nama`,  `jns_kelamin_id`,  `sts_sipil_id`,  `domisili`,  `alamat`,  `telepon`,  `agent_id`,  `perusahaan_id`,  `bank_id`,
   			`bagian`, `no_rek`,  `tgl_masuk`, `tgl_payroll`, `sts_krywn_id`,  `jns_anggota_id`,  `sts_anggota_id`,  `no_rek_ref`,  `nama_ref`,  `keterangan`,  `is_agent`, `deleted`, `created_by`)
 		VALUES (#id#, #nama#, #jenisKelamin.id#, #statusSipil.id#, #domisili#, #alamat#, #telepon#, #agent.id#, #pt.id#, #bank.id#,
 			#bagian#, #noRekening#, #tglMasuk#, #tglPayroll#, #statusKaryawan.id#, #jenisAnggota.id#, #statusAnggota.id#, #noRekeningRef#, #namaRef#, #keterangan#, #anAgent#, #deleted#, #createdBy#)
@@ -181,7 +181,7 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 		SELECT n.`id`, n.`nama`,  k.`nama` jns_kelamin,  s.`status` sts_sipil,  n.`domisili`,  n.`alamat`,  n.`telepon`,  a.`nama` agent,  p.`nama` perusahaan,  b.nama `bank`,
   			n.`bagian`, n.`no_rek`,  n.`tgl_masuk`, n.`tgl_payroll`, w.`status` `sts_krywn`,  g.jenis `jns_anggota`, t.`status` `sts_anggota`,  n.`no_rek_ref`,  n.`nama_ref`,  n.`keterangan`,  
 			n.`is_agent`, n.`deleted`, n.`created_by`, n.`created_time`
-			FROM ms_nasabah_ver n
+			FROM ms_nasabah_hist n
 			INNER JOIN ms_jns_kelamin k ON k.id = n.jns_kelamin_id
 			INNER JOIN ms_sts_sipil s ON s.id = n.sts_sipil_id
 			INNER JOIN ms_nasabah a ON a.id = n.agent_id

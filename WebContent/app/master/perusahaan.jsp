@@ -33,6 +33,9 @@
 	function edit(id) {
 		doGoToUrl('<c:url value="/updatePerusahaan.do?dispatch=update"/>'+'&id='+id);
 	}
+	function history(id) {
+		doGoToUrl('<c:url value="/perusahaan.do?dispatch=history"/>'+'&id='+id);
+	}
 </script>
 </HEAD>
 <BODY>
@@ -124,7 +127,9 @@
 							href="javascript:del('<c:out value="${comp.id}"/>')"><bean:message
 								key="button.delete"></bean:message></a>&nbsp;|&nbsp;<a
 							href="javascript:edit('<c:out value="${comp.id}"/>')"><bean:message
-								key="button.edit"></bean:message></a>
+								key="button.edit"></bean:message></a>&nbsp;|&nbsp;
+						<a href="javascript:history('<c:out value="${comp.id}"/>')">
+							<bean:message key="button.history"></bean:message></a>
 				</td>
 				</tr>	
 			</c:forEach>

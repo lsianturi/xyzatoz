@@ -19,9 +19,6 @@
 <script src="scripts/md5.js"></script>
 <script src="scripts/staticJS.jsp"></script>
 <script type="text/javascript">
-	function back() {
-		window.history.go(-1);
-	}
 </script>
 </HEAD>
 <BODY>
@@ -33,8 +30,6 @@
 		<td class="conText" align="right"><a href="javascript:openHelp('help/<bean:message key="form.language.name"></bean:message>/blank.html');"><img src="<%=request.getContextPath()%>/icons/help.gif" width="21" height="21" border="0" alt=""></a></td>
 	</tr>
 </table>
-<%Login login = (Login) session.getAttribute(Constant.SES_USERLOGIN);%>
-<!-- Help Page Finish -->
 	<c:if test="${DataList!=null}">
 		<table width="100%" border="0" cellpadding="3" cellspacing="0" class="tblBorder">
 			<tr class="conLabel"> 
@@ -116,7 +111,7 @@
 	<table width="100%" border="0">
 		<tbody>
 			<tr>
-				<td align="right"><html:button property="btnAdd" styleClass="frmButton" onclick="back()">
+				<td align="right"><html:button property="btnAdd" styleClass="frmButton" onclick="javascript:back()">
 					<bean:message key="button.close"></bean:message>
 				</html:button></td>
 			</tr>
