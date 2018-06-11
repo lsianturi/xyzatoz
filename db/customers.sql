@@ -1,7 +1,7 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : customer
+Source Server         : koperasi
 Source Server Version : 50722
 Source Host           : 10.15.2.115:3306
 Source Database       : customers
@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50722
 File Encoding         : 65001
 
-Date: 2018-06-07 16:50:54
+Date: 2018-06-11 08:47:25
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -60,6 +60,18 @@ CREATE TABLE `log_logintrail` (
 -- ----------------------------
 -- Records of log_logintrail
 -- ----------------------------
+INSERT INTO log_logintrail VALUES ('lambok.sianturi', '3772245C3CCBA9A912A7D158AB0BC9BF', '08:37:06', 'Login');
+INSERT INTO log_logintrail VALUES ('lambok.sianturi', '3772245C3CCBA9A912A7D158AB0BC9BF', '08:39:41', 'Login');
+INSERT INTO log_logintrail VALUES ('lambok.sianturi', '65934255EE8E654FB265CBACAC85707F', '11:15:55', 'Login');
+INSERT INTO log_logintrail VALUES ('lambok.sianturi', '5F3615AD161DB9D5CAB6A69E22F2F81E', '11:52:25', 'Login');
+INSERT INTO log_logintrail VALUES ('lambok.sianturi', '433A2FD0AEB449374DC5150CD5A32755', '13:20:56', 'Login');
+INSERT INTO log_logintrail VALUES ('lambok.sianturi', '433A2FD0AEB449374DC5150CD5A32755', '13:22:53', 'Login');
+INSERT INTO log_logintrail VALUES ('lambok.sianturi', '433A2FD0AEB449374DC5150CD5A32755', '13:24:10', 'Login');
+INSERT INTO log_logintrail VALUES ('lambok.sianturi', '433A2FD0AEB449374DC5150CD5A32755', '13:25:48', 'Login');
+INSERT INTO log_logintrail VALUES ('lambok.sianturi', '433A2FD0AEB449374DC5150CD5A32755', '13:26:54', 'Login');
+INSERT INTO log_logintrail VALUES ('lambok.sianturi', 'D7296A566DD6FFE910E12FE14C16CA04', '13:36:54', 'Login');
+INSERT INTO log_logintrail VALUES ('lambok.sianturi', 'AB779AF46C26CAB12EC93B0FC3CF4F30', '13:49:46', 'Login');
+INSERT INTO log_logintrail VALUES ('lambok.sianturi', 'AB779AF46C26CAB12EC93B0FC3CF4F30', '14:30:27', 'Login');
 
 -- ----------------------------
 -- Table structure for `ms_area`
@@ -260,20 +272,20 @@ CREATE TABLE `ms_nasabah` (
 -- ----------------------------
 -- Records of ms_nasabah
 -- ----------------------------
-INSERT INTO ms_nasabah VALUES ('1', 'Lambok', '1', '1', 'Serpong tangsel apa sih', 'Sukabumi jawa barat', '08135345343', '1', '2', '1', 'Sewing', '5352', '2018-04-30', '2018-03-26', '1', '1', '1', '12323423', 'KOk baru 2', 'ini adalah contoh perubahan field', '1', '0', null, null, null);
+INSERT INTO ms_nasabah VALUES ('1', 'Lambok', '1', '2', 'Serpong tangsel apa sih', 'Sukabumi jawa barat', '08135345343', '1', '2', '1', 'Sewing', '5352', '2018-04-30', '2018-03-26', '1', '1', '1', '12323423', 'KOk baru 2', 'ini adalah contoh perubahan field', '1', '0', null, null, null);
 INSERT INTO ms_nasabah VALUES ('2', 'gdfg', '2', '1', 'Bandung', 'Jakarta', '23423', '1', '2', '1', 'Ini bagian perwakilan rakyat', '234234', '2017-12-31', '2017-12-31', '1', '1', '1', 'Jack De la Rocha', '4234', 'Ini contoh perubahan', '0', '1', '2018-06-07 15:25:38', 'lambok.sianturi', 'delete');
 INSERT INTO ms_nasabah VALUES ('3', 'Arsene wenger test edit', '1', '1', 'Chase Plaza edy', 'Chase Plaza test', '5435632', '1', '1', '1', 'Ini bagian perwakilan rakyat', '657867854', '2018-04-30', '2018-04-30', '1', '1', '1', '345346', '89768566', 'ok', '0', '0', null, null, null);
 INSERT INTO ms_nasabah VALUES ('4', 'tyujtyu', '1', '1', 'Chase Plaza', 'tiutyu', '5435632', '1', '1', '1', 'Cutting', 'gdgfg', '2018-05-28', '2018-05-28', '1', '1', '1', 'dgsdfg', 'gdfsg', 'dfghh', '0', '1', '2018-06-07 15:25:06', 'lambok.sianturi', 'delete');
 INSERT INTO ms_nasabah VALUES ('5', 'tretet', '1', '1', 'Chase Plaza', 'Chase Plaza', '5435632', '1', '2', '1', '', '56756', '2018-04-30', '2018-04-30', '1', '1', '1', '876678', 'gjgjgf', 'jtuiu', '0', '0', null, null, null);
-INSERT INTO ms_nasabah VALUES ('6', 'Lambok Sianturin sdhgdfhfh', '1', '1', 'Chase Plaza', 'Chase Plaza', '5435632', '1', '1', '1', 'fdghh', '6578', '2018-05-28', '2018-05-28', '1', '1', '1', '56865', 'jgjgfj', 'jghkjhgk', '0', '0', null, null, null);
+INSERT INTO ms_nasabah VALUES ('6', 'Lambok Sianturin sdhgdfhfh', '2', '1', 'Chase Plaza', 'Chase Plaza', '5435632', '1', '1', '1', 'fdghh', '6578', '2018-05-28', '2018-05-28', '1', '1', '1', '56865', 'jgjgfj', 'jghkjhgk', '0', '0', null, null, null);
 INSERT INTO ms_nasabah VALUES ('7', 'Lambok Sianturi dghdhfdh', '1', '1', 'Chase Plaza', 'Chase Plaza', '5435632', '1', '3', '1', '', '54', '2018-05-28', '2018-05-25', '1', '1', '1', '8586', '333yry', 'fdhfdhh', '0', '0', null, null, null);
-INSERT INTO ms_nasabah VALUES ('8', 'Lambok Sianturi', '1', '1', 'Chase Plaza', 'Chase Plaza', '5435632', '1', '1', '1', 'yrtyhrthfd', '3535', '2018-05-28', '2018-06-13', '1', '1', '1', '534535', 'fghgdh', 'fdhdfh', '0', '0', null, null, null);
+INSERT INTO ms_nasabah VALUES ('8', 'Lambok Sianturi', '1', '1', 'Chase Plaza', 'Chase Plaza', '5435632', '1', '1', '1', 'yrtyhrthfd', '3535', '2018-05-28', '2018-06-13', '2', '1', '1', '534535', 'fghgdh', 'fdhdfh', '0', '0', null, null, null);
 
 -- ----------------------------
--- Table structure for `ms_nasabah_ver`
+-- Table structure for `ms_nasabah_hist`
 -- ----------------------------
-DROP TABLE IF EXISTS `ms_nasabah_ver`;
-CREATE TABLE `ms_nasabah_ver` (
+DROP TABLE IF EXISTS `ms_nasabah_hist`;
+CREATE TABLE `ms_nasabah_hist` (
   `id` int(11) NOT NULL,
   `nama` varchar(50) NOT NULL,
   `jns_kelamin_id` int(11) NOT NULL,
@@ -302,25 +314,28 @@ CREATE TABLE `ms_nasabah_ver` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- ----------------------------
--- Records of ms_nasabah_ver
+-- Records of ms_nasabah_hist
 -- ----------------------------
-INSERT INTO ms_nasabah_ver VALUES ('1', 'Lambok', '1', '1', 'Serpong', 'Sukabumi', '08135345343', '1', '2', '1', 'Sew', '5352', '2018-04-30', null, '1', '1', '1', '12323423', 'gdefgdfg', 'gesgsdfg', '1', '0', '2018-06-05 17:40:38', 'lambok.sianturi');
-INSERT INTO ms_nasabah_ver VALUES ('2', 'gdfg', '1', '1', 'Bandung', 'Jakarta', '23423', '1', '2', '1', 'gdfgdfg', '234234', '2017-12-31', null, '1', '1', '1', 'gdfgdf', '4234', 'Ini contoh perubahan', '0', '0', '2018-06-05 17:54:20', 'lambok.sianturi');
-INSERT INTO ms_nasabah_ver VALUES ('2', 'gdfg', '1', '1', 'Bandung', 'Jakarta', '23423', '1', '2', '1', 'Ini bagian perwakilan rakyat', '234234', '2017-12-31', null, '1', '1', '1', 'Jack De la Rocha', '4234', 'Ini contoh perubahan', '0', '0', '2018-06-05 17:56:23', 'lambok.sianturi');
-INSERT INTO ms_nasabah_ver VALUES ('1', 'Lambok', '1', '1', 'Serpong tangsel apa sih', 'Sukabumi jawa barat', '08135345343', '1', '2', '1', 'Sewing', '5352', '2018-04-30', null, '1', '1', '1', '12323423', 'gdefgdfg', 'ini adalah contoh perubahan field', '1', '0', '2018-06-06 10:51:01', 'lambok.sianturi');
-INSERT INTO ms_nasabah_ver VALUES ('1', 'Lambok', '1', '1', 'Serpong tangsel apa sih', 'Sukabumi jawa barat', '08135345343', '1', '2', '1', 'Sewing', '5352', '2018-04-30', null, '1', '1', '1', '12323423', 'KOk baru 2', 'ini adalah contoh perubahan field', '1', '0', '2018-06-06 10:51:19', 'lambok.sianturi');
-INSERT INTO ms_nasabah_ver VALUES ('2', 'gdfg', '2', '1', 'Bandung', 'Jakarta', '23423', '1', '2', '1', 'Ini bagian perwakilan rakyat', '234234', '2017-12-31', null, '1', '1', '1', 'Jack De la Rocha', '4234', 'Ini contoh perubahan', '0', '0', '2018-06-06 12:43:00', 'lambok.sianturi');
-INSERT INTO ms_nasabah_ver VALUES ('3', 'Arsene wenger test edit', '1', '1', 'Chase Plaza edy', 'Chase Plaza test', '5435632', '1', '1', '1', 'Ini bagian perwakilan rakyat', '657867854', '2018-04-30', null, '1', '1', '1', '345346', '89768566', 'ok', '0', '0', '2018-06-06 15:10:15', 'lambok.sianturi');
-INSERT INTO ms_nasabah_ver VALUES ('1', 'tyujtyu', '1', '1', 'Chase Plaza', 'tiutyu', '5435632', '1', '1', '1', 'Cutting', 'gdgfg', '2018-05-28', null, '1', '1', '1', 'dgsdfg', 'gdfsg', 'dfghh', '0', '0', '2018-06-06 16:41:08', 'lambok.sianturi');
-INSERT INTO ms_nasabah_ver VALUES ('1', 'tretet', '1', '1', 'Chase Plaza', 'Chase Plaza', '5435632', '1', '2', '1', '', '56756', '2018-04-30', null, '1', '1', '1', '876678', 'gjgjgf', 'jtuiu', '0', '0', '2018-06-06 16:46:25', 'lambok.sianturi');
-INSERT INTO ms_nasabah_ver VALUES ('1', 'Lambok Sianturin sdhgdfhfh', '1', '1', 'Chase Plaza', 'Chase Plaza', '5435632', '1', '1', '1', 'fdghh', '6578', '2018-05-28', null, '1', '1', '1', '56865', 'jgjgfj', 'jghkjhgk', '0', '0', '2018-06-06 16:52:50', 'lambok.sianturi');
-INSERT INTO ms_nasabah_ver VALUES ('7', 'Lambok Sianturi dghdhfdh', '1', '1', 'Chase Plaza', 'Chase Plaza', '5435632', '1', '1', '1', '', '54', '2018-05-28', null, '1', '1', '1', '8586', '333yry', 'fdhfdhh', '0', '0', '2018-06-06 17:10:07', 'lambok.sianturi');
-INSERT INTO ms_nasabah_ver VALUES ('1', 'Lambok', '1', '1', 'Serpong tangsel apa sih', 'Sukabumi jawa barat', '08135345343', '1', '2', '1', 'Sewing', '5352', '2018-04-30', '2018-03-26', '1', '1', '1', '12323423', 'KOk baru 2', 'ini adalah contoh perubahan field', '1', '0', '2018-06-06 17:35:43', 'lambok.sianturi');
-INSERT INTO ms_nasabah_ver VALUES ('7', 'Lambok Sianturi dghdhfdh', '1', '1', 'Chase Plaza', 'Chase Plaza', '5435632', '1', '1', '1', '', '54', '2018-05-28', '2018-05-25', '1', '1', '1', '8586', '333yry', 'fdhfdhh', '0', '0', '2018-06-06 17:48:53', 'lambok.sianturi');
-INSERT INTO ms_nasabah_ver VALUES ('8', 'Lambok Sianturi', '1', '1', 'Chase Plaza', 'Chase Plaza', '5435632', '1', '1', '1', 'yrtyhrthfd', '3535', '2018-05-28', '2018-06-13', '1', '1', '1', '534535', 'fghgdh', 'fdhdfh', '0', '0', '2018-06-06 17:49:27', 'lambok.sianturi');
-INSERT INTO ms_nasabah_ver VALUES ('7', 'Lambok Sianturi dghdhfdh', '1', '1', 'Chase Plaza', 'Chase Plaza', '5435632', '1', '3', '1', '', '54', '2018-05-28', '2018-05-25', '1', '1', '1', '8586', '333yry', 'fdhfdhh', '0', '0', '2018-06-07 14:58:19', 'lambok.sianturi');
-INSERT INTO ms_nasabah_ver VALUES ('4', 'tyujtyu', '1', '1', 'Chase Plaza', 'tiutyu', '5435632', '1', '1', '1', 'Cutting', 'gdgfg', '2018-05-28', '2018-05-28', '1', '1', '1', 'dgsdfg', 'gdfsg', 'dfghh', '0', '1', '2018-06-07 15:25:06', null);
-INSERT INTO ms_nasabah_ver VALUES ('2', 'gdfg', '2', '1', 'Bandung', 'Jakarta', '23423', '1', '2', '1', 'Ini bagian perwakilan rakyat', '234234', '2017-12-31', '2017-12-31', '1', '1', '1', 'Jack De la Rocha', '4234', 'Ini contoh perubahan', '0', '1', '2018-06-07 15:25:38', null);
+INSERT INTO ms_nasabah_hist VALUES ('1', 'Lambok', '1', '1', 'Serpong', 'Sukabumi', '08135345343', '1', '2', '1', 'Sew', '5352', '2018-04-30', null, '1', '1', '1', '12323423', 'gdefgdfg', 'gesgsdfg', '1', '0', '2018-06-05 17:40:38', 'lambok.sianturi');
+INSERT INTO ms_nasabah_hist VALUES ('2', 'gdfg', '1', '1', 'Bandung', 'Jakarta', '23423', '1', '2', '1', 'gdfgdfg', '234234', '2017-12-31', null, '1', '1', '1', 'gdfgdf', '4234', 'Ini contoh perubahan', '0', '0', '2018-06-05 17:54:20', 'lambok.sianturi');
+INSERT INTO ms_nasabah_hist VALUES ('2', 'gdfg', '1', '1', 'Bandung', 'Jakarta', '23423', '1', '2', '1', 'Ini bagian perwakilan rakyat', '234234', '2017-12-31', null, '1', '1', '1', 'Jack De la Rocha', '4234', 'Ini contoh perubahan', '0', '0', '2018-06-05 17:56:23', 'lambok.sianturi');
+INSERT INTO ms_nasabah_hist VALUES ('1', 'Lambok', '1', '1', 'Serpong tangsel apa sih', 'Sukabumi jawa barat', '08135345343', '1', '2', '1', 'Sewing', '5352', '2018-04-30', null, '1', '1', '1', '12323423', 'gdefgdfg', 'ini adalah contoh perubahan field', '1', '0', '2018-06-06 10:51:01', 'lambok.sianturi');
+INSERT INTO ms_nasabah_hist VALUES ('1', 'Lambok', '1', '1', 'Serpong tangsel apa sih', 'Sukabumi jawa barat', '08135345343', '1', '2', '1', 'Sewing', '5352', '2018-04-30', null, '1', '1', '1', '12323423', 'KOk baru 2', 'ini adalah contoh perubahan field', '1', '0', '2018-06-06 10:51:19', 'lambok.sianturi');
+INSERT INTO ms_nasabah_hist VALUES ('2', 'gdfg', '2', '1', 'Bandung', 'Jakarta', '23423', '1', '2', '1', 'Ini bagian perwakilan rakyat', '234234', '2017-12-31', null, '1', '1', '1', 'Jack De la Rocha', '4234', 'Ini contoh perubahan', '0', '0', '2018-06-06 12:43:00', 'lambok.sianturi');
+INSERT INTO ms_nasabah_hist VALUES ('3', 'Arsene wenger test edit', '1', '1', 'Chase Plaza edy', 'Chase Plaza test', '5435632', '1', '1', '1', 'Ini bagian perwakilan rakyat', '657867854', '2018-04-30', null, '1', '1', '1', '345346', '89768566', 'ok', '0', '0', '2018-06-06 15:10:15', 'lambok.sianturi');
+INSERT INTO ms_nasabah_hist VALUES ('1', 'tyujtyu', '1', '1', 'Chase Plaza', 'tiutyu', '5435632', '1', '1', '1', 'Cutting', 'gdgfg', '2018-05-28', null, '1', '1', '1', 'dgsdfg', 'gdfsg', 'dfghh', '0', '0', '2018-06-06 16:41:08', 'lambok.sianturi');
+INSERT INTO ms_nasabah_hist VALUES ('1', 'tretet', '1', '1', 'Chase Plaza', 'Chase Plaza', '5435632', '1', '2', '1', '', '56756', '2018-04-30', null, '1', '1', '1', '876678', 'gjgjgf', 'jtuiu', '0', '0', '2018-06-06 16:46:25', 'lambok.sianturi');
+INSERT INTO ms_nasabah_hist VALUES ('1', 'Lambok Sianturin sdhgdfhfh', '1', '1', 'Chase Plaza', 'Chase Plaza', '5435632', '1', '1', '1', 'fdghh', '6578', '2018-05-28', null, '1', '1', '1', '56865', 'jgjgfj', 'jghkjhgk', '0', '0', '2018-06-06 16:52:50', 'lambok.sianturi');
+INSERT INTO ms_nasabah_hist VALUES ('7', 'Lambok Sianturi dghdhfdh', '1', '1', 'Chase Plaza', 'Chase Plaza', '5435632', '1', '1', '1', '', '54', '2018-05-28', null, '1', '1', '1', '8586', '333yry', 'fdhfdhh', '0', '0', '2018-06-06 17:10:07', 'lambok.sianturi');
+INSERT INTO ms_nasabah_hist VALUES ('1', 'Lambok', '1', '1', 'Serpong tangsel apa sih', 'Sukabumi jawa barat', '08135345343', '1', '2', '1', 'Sewing', '5352', '2018-04-30', '2018-03-26', '1', '1', '1', '12323423', 'KOk baru 2', 'ini adalah contoh perubahan field', '1', '0', '2018-06-06 17:35:43', 'lambok.sianturi');
+INSERT INTO ms_nasabah_hist VALUES ('7', 'Lambok Sianturi dghdhfdh', '1', '1', 'Chase Plaza', 'Chase Plaza', '5435632', '1', '1', '1', '', '54', '2018-05-28', '2018-05-25', '1', '1', '1', '8586', '333yry', 'fdhfdhh', '0', '0', '2018-06-06 17:48:53', 'lambok.sianturi');
+INSERT INTO ms_nasabah_hist VALUES ('8', 'Lambok Sianturi', '1', '1', 'Chase Plaza', 'Chase Plaza', '5435632', '1', '1', '1', 'yrtyhrthfd', '3535', '2018-05-28', '2018-06-13', '1', '1', '1', '534535', 'fghgdh', 'fdhdfh', '0', '0', '2018-06-06 17:49:27', 'lambok.sianturi');
+INSERT INTO ms_nasabah_hist VALUES ('7', 'Lambok Sianturi dghdhfdh', '1', '1', 'Chase Plaza', 'Chase Plaza', '5435632', '1', '3', '1', '', '54', '2018-05-28', '2018-05-25', '1', '1', '1', '8586', '333yry', 'fdhfdhh', '0', '0', '2018-06-07 14:58:19', 'lambok.sianturi');
+INSERT INTO ms_nasabah_hist VALUES ('4', 'tyujtyu', '1', '1', 'Chase Plaza', 'tiutyu', '5435632', '1', '1', '1', 'Cutting', 'gdgfg', '2018-05-28', '2018-05-28', '1', '1', '1', 'dgsdfg', 'gdfsg', 'dfghh', '0', '1', '2018-06-07 15:25:06', null);
+INSERT INTO ms_nasabah_hist VALUES ('2', 'gdfg', '2', '1', 'Bandung', 'Jakarta', '23423', '1', '2', '1', 'Ini bagian perwakilan rakyat', '234234', '2017-12-31', '2017-12-31', '1', '1', '1', 'Jack De la Rocha', '4234', 'Ini contoh perubahan', '0', '1', '2018-06-07 15:25:38', null);
+INSERT INTO ms_nasabah_hist VALUES ('6', 'Lambok Sianturin sdhgdfhfh', '2', '1', 'Chase Plaza', 'Chase Plaza', '5435632', '1', '1', '1', 'fdghh', '6578', '2018-05-28', '2018-05-28', '1', '1', '1', '56865', 'jgjgfj', 'jghkjhgk', '0', '0', '2018-06-08 14:42:20', 'lambok.sianturi');
+INSERT INTO ms_nasabah_hist VALUES ('1', 'Lambok', '1', '2', 'Serpong tangsel apa sih', 'Sukabumi jawa barat', '08135345343', '1', '2', '1', 'Sewing', '5352', '2018-04-30', '2018-03-26', '1', '1', '1', '12323423', 'KOk baru 2', 'ini adalah contoh perubahan field', '1', '0', '2018-06-08 14:44:17', 'lambok.sianturi');
+INSERT INTO ms_nasabah_hist VALUES ('8', 'Lambok Sianturi', '1', '1', 'Chase Plaza', 'Chase Plaza', '5435632', '1', '1', '1', 'yrtyhrthfd', '3535', '2018-05-28', '2018-06-13', '2', '1', '1', '534535', 'fghgdh', 'fdhdfh', '0', '0', '2018-06-08 14:51:16', 'lambok.sianturi');
 
 -- ----------------------------
 -- Table structure for `ms_pegawai`
@@ -363,14 +378,38 @@ CREATE TABLE `ms_perusahaan` (
   `area` int(11) NOT NULL,
   `deleted` int(1) DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Records of ms_perusahaan
 -- ----------------------------
 INSERT INTO ms_perusahaan VALUES ('1', 'PT Aqua Golden Mississippi', 'Jl. Raya Sukabumi No 12. Cicurug', '2', '1', '1');
-INSERT INTO ms_perusahaan VALUES ('2', 'PT. Pocari Sewot', 'Jl Cidahu permai no 1234', '1', '5', '0');
+INSERT INTO ms_perusahaan VALUES ('2', 'PT. Pocari Sewot', 'Jl Cidahu no 1234', '1', '5', '0');
 INSERT INTO ms_perusahaan VALUES ('3', 'PT. Mayora Indah', 'Jl. Parungkuda agak kesini', '4', '4', '0');
+INSERT INTO ms_perusahaan VALUES ('4', 'PT Dongfeng Mobilindo', 'Jl. Testing 10', '4', '6', '0');
+
+-- ----------------------------
+-- Table structure for `ms_perusahaan_hist`
+-- ----------------------------
+DROP TABLE IF EXISTS `ms_perusahaan_hist`;
+CREATE TABLE `ms_perusahaan_hist` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `nama` varchar(60) NOT NULL,
+  `alamat` text,
+  `industri` int(11) NOT NULL,
+  `area` int(11) NOT NULL,
+  `deleted` int(1) DEFAULT '0',
+  `created_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `created_by` varchar(30) DEFAULT NULL,
+  KEY `idx1` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+
+-- ----------------------------
+-- Records of ms_perusahaan_hist
+-- ----------------------------
+INSERT INTO ms_perusahaan_hist VALUES ('2', 'PT. Pocari Sewot', 'Jl Cidahu permai no 1234', '1', '5', '0', null, 'lambok.sianturi');
+INSERT INTO ms_perusahaan_hist VALUES ('2', 'PT. Pocari Sewot', 'Jl Cidahu no 1234', '1', '5', '0', '2018-06-08 13:29:57', 'lambok.sianturi');
+INSERT INTO ms_perusahaan_hist VALUES ('4', 'PT Dongfeng Mobilindo', 'Jl. Testing 10', '4', '6', '0', '2018-06-08 13:31:42', 'lambok.sianturi');
 
 -- ----------------------------
 -- Table structure for `ms_role`
@@ -609,4 +648,4 @@ CREATE TABLE `ms_user` (
 -- ----------------------------
 -- Records of ms_user
 -- ----------------------------
-INSERT INTO ms_user VALUES ('lambok.sianturi', '900150983cd24fb0d6963f7d28e17f72', 'MANAGER', 'Lambok', 'Sianturi', '0812345678924', null, '1', '30', 'lambok.sianturi', '0', '2018-06-07 16:48:43', null, null, null);
+INSERT INTO ms_user VALUES ('lambok.sianturi', '900150983cd24fb0d6963f7d28e17f72', 'MANAGER', 'Lambok', 'Sianturi', '0812345678924', null, '1', '30', 'lambok.sianturi', '0', '2018-06-08 14:30:27', null, null, null);
