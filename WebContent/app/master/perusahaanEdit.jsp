@@ -15,10 +15,12 @@
 	function cancel() {
 		doGoToUrl('<c:url value="/perusahaan.do?dispatch=returned"/>');
 	}
-
 </script>
+
 <script src="scripts/view.js"></script>
 <script src="scripts/staticJS.jsp"></script>
+<script src="scripts/jquery.min.js"></script>
+
 <html:javascript formName="perusahaanForm" dynamicJavascript="true" staticJavascript="false"/>
 </HEAD>
 <BODY>
@@ -51,42 +53,70 @@
 		<tbody>
 			<tr>
 				<td class="conLabel"><bean:message key="form.company.name"></bean:message></td>
-				<td class="conText">
+				<td class="conText" colspan="3">
 					<html:text property="nama" maxlength="60" size="60"></html:text>
 				</td>
 			</tr>
 			<tr>
 				<td class="conLabel"><bean:message key="form.company.address"></bean:message></td>
-				<td class="conText">
+				<td class="conText" colspan="3">
 					<html:textarea property="alamat" rows="3" cols="60"></html:textarea>
 				</td>
 			</tr>
 			<tr>
-				<td width="100" class="conLabel"><bean:message key="form.company.area"></bean:message></td>
-				<td class="conText">
-					<html:select property="area">
-						<html:options collection="AreaList" property="id" labelProperty="nama" />
+				<td width="100" class="conLabel"><bean:message key="form.company.cabang"></bean:message></td>
+				<td class="conText" colspan="3">
+					<html:select property="cabang" >
+						<html:options collection="CabangList" property="id" labelProperty="nama" />
+					</html:select>
+				</td>
+			</tr>
+			<tr>
+				<td width="100" class="conLabel"><bean:message key="form.company.unit"></bean:message></td>
+				<td class="conText" colspan="3">
+					<html:select property="unit">
+						<html:options collection="UnitList" property="id" labelProperty="nama" />
 					</html:select>
 				</td>
 			</tr>
 			<tr>
 				<td width="100" class="conLabel"><bean:message key="form.company.industri"></bean:message></td>
-				<td class="conText">
+				<td class="conText" colspan="3">
 					<html:select property="industri">
 						<html:options collection="IndustriList" property="id" labelProperty="nama" />
 					</html:select>
 				</td>
 			</tr>
-		</tbody>
-	</table>
-	<table width="100%" border="0">
-		<tbody>
 			<tr>
+				<td class="conLabel">&nbsp;</td>
+				<td class="conText"></td>
+			</tr>
+			<tr>
+				<td class="conLabel"></td>
 				<td>
 					<html:submit property="btnSubmit" styleClass="frmButton" ><bean:message key="button.save"></bean:message></html:submit>
 					<html:button property="btnCancel" styleClass="frmButton" onclick="cancel()"><bean:message key="button.cancel"></bean:message></html:button>
 				</td>
 			</tr>
+		</tbody>
+		<script type="text/javascript">	
+			$('select[name="cabang"]').on('change', function(){    
+			    cabId = $(this).val();
+			    $('select[name="unit"]').html('');
+			    $.post("perusahaan.do",
+		            {
+			    	  dispatch:"getUnitHtml",
+		              cabangId: cabId
+		            },
+		            function(data,status){
+		                $('select[name="unit"]').html(data);
+		            });
+			});
+	</script>
+	</table>
+	<table width="100%" border="0">
+		<tbody>
+			
 		</tbody>
 	</table>	
 </html:form>

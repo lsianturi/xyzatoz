@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 import com.benclaus.koperasi.dao.BaseDAO;
 import com.benclaus.koperasi.exception.DaoException;
 import com.benclaus.koperasi.model.master.Pegawai;
+import com.benclaus.koperasi.model.master.Perusahaan;
 import com.benclaus.koperasi.model.master.StatusPK;
 import com.ibatis.common.util.PaginatedList;
 
@@ -44,9 +45,12 @@ public class PegawaiDao extends BaseDAO {
 	
 	public Integer insertPegawai(Pegawai pegawai) throws DaoException {
 		log.info("PegawaiSQL.insertPegawai");
-		return (Integer) super.update("PegawaiSQL.insertPegawai", pegawai);
+		return (Integer) super.insert("PegawaiSQL.insertPegawai", pegawai);
 	}
-	
+	public Integer insertPegawaiHistory(Pegawai pegawai) throws DaoException {
+		log.info("PegawaiSQL.insertPegawaiHistory");
+		return (Integer) super.update("PegawaiSQL.insertPegawaiHistory", pegawai);
+	}
 	public Integer updatePegawai(Pegawai pegawai) throws DaoException {
 		log.info("PegawaiSQL.updatePegawai");
 		return (Integer) super.update("PegawaiSQL.updatePegawai", pegawai);
@@ -61,5 +65,8 @@ public class PegawaiDao extends BaseDAO {
 		return (Pegawai) super.getObject("PegawaiSQL.getPegawai", id);
 	}
 	
-	
+	public List<Pegawai> getPegawaiHistory(Integer id) throws DaoException {
+		log.info("PegawaiSQL.getPegawaiHistory");
+		return (List<Pegawai>) super.getList("PegawaiSQL.getPegawaiHistory", id);
+	}
 }

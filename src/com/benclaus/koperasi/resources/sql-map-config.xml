@@ -54,4 +54,9 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map Config 2.0//EN"
 	<sqlMap resource="com/benclaus/koperasi/resources/sql/master/PegawaiSQL.xml" />
 	<sqlMap resource="com/benclaus/koperasi/resources/sql/master/NasabahSQL.xml" />
 	<sqlMap resource="com/benclaus/koperasi/resources/sql/master/StatusPKSQL.xml" />
+	<sqlMap resource="com/benclaus/koperasi/resources/sql/master/KantorSQL.xml" />
+	
+	<!-- Transaksi module -->
+	<sqlMap resource="com/benclaus/koperasi/resources/sql/trx/AjuSQL.xml" />
+	<sqlMap resource="com/benclaus/koperasi/resources/sql/trx/RealSQL.xml" />
 </sqlMapConfig>

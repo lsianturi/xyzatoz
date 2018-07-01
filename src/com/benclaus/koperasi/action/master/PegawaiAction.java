@@ -1,7 +1,9 @@
 package com.benclaus.koperasi.action.master;
 
+import java.io.PrintWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,9 +21,13 @@ import org.apache.struts.action.DynaActionForm;
 
 import com.benclaus.koperasi.action.SecurityAction;
 import com.benclaus.koperasi.dao.Page;
+import com.benclaus.koperasi.dao.kantor.KantorService;
 import com.benclaus.koperasi.dao.master.PegawaiService;
 import com.benclaus.koperasi.dao.master.StatusPKService;
+import com.benclaus.koperasi.model.kantor.Cabang;
+import com.benclaus.koperasi.model.kantor.Unit;
 import com.benclaus.koperasi.model.master.Pegawai;
+import com.benclaus.koperasi.model.master.Perusahaan;
 import com.benclaus.koperasi.model.master.StatusPK;
 import com.benclaus.koperasi.model.usm.Login;
 import com.benclaus.koperasi.utility.Constant;
@@ -37,6 +43,8 @@ public class PegawaiAction extends SecurityAction {
 
 	private PegawaiService service = PegawaiService.getInstance();
 	private StatusPKService stsService = StatusPKService.getInstance();
+	private KantorService kService = KantorService.getInstance();
+	
 	private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
 	private void prepareData(HttpServletRequest request) {
@@ -44,6 +52,23 @@ public class PegawaiAction extends SecurityAction {
 		try {
 			request.setAttribute("StatusList", stsService.listStatusPegawai());
 			request.setAttribute("SipilList", stsService.listStatusSipil());
+			request.setAttribute("CabangList", kService.getCabang());
+			request.setAttribute("UnitList", kService.getUnit());
+		} catch (Exception e) {
+		}
+	}
+	
+	private void prepareData(HttpServletRequest request, Integer cabangId) {
+
+		try {
+			request.setAttribute("StatusList", stsService.listStatusPegawai());
+			request.setAttribute("SipilList", stsService.listStatusSipil());
+			request.setAttribute("CabangList", kService.getCabang());
+			if (cabangId != null) {
+				request.setAttribute("UnitList", kService.getUnit(cabangId));
+			} else {
+				request.setAttribute("UnitList", kService.getUnit());
+			}
 		} catch (Exception e) {
 		}
 	}
@@ -66,6 +91,23 @@ public class PegawaiAction extends SecurityAction {
 
 		forward = mapping.findForward("continue");
 		return forward;
+	}
+	public ActionForward getUnitHtml(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		
+		Integer cabId = Integer.parseInt(request.getParameter("cabangId"));
+		List<Unit> units = kService.getUnit(cabId);
+		StringBuilder sb = new StringBuilder("<select name=\"unit\"><option value=\"\">All</option></select>");
+		if (units != null) {
+			for (Unit unit: units) {
+				sb.append("<option value=\""+unit.getId() +"\">"+ unit.getNama()+"</option>");
+			}
+		}
+		PrintWriter pw = response.getWriter();
+		pw.write(sb.toString());
+		pw.flush();
+		
+		return null;
 	}
 
 	public ActionForward returned(ActionMapping mapping, ActionForm form, HttpServletRequest request,
@@ -211,7 +253,13 @@ public class PegawaiAction extends SecurityAction {
 				prshn.setStatusPegawai(new StatusPK((Integer)planForm.get("stsPegawai")));
 				prshn.setStatusSipil(new StatusPK((Integer)planForm.get("stsSipil")));
 				prshn.setTglMasuk(sdf.parse(planForm.getString("tanggalMasuk")));
+				prshn.setCabang(new Cabang((Integer)planForm.get("cabangId")));
+				prshn.setUnit(new Unit((Integer)planForm.get("unitId")));
 				service.insertPegawai(prshn);
+				
+				prshn.setCreatedBy(userLogin.getUser().getUserCode());
+				prshn.setDeleted(0);
+				service.insertPegawaiHistory(prshn);
 
 			} else {
 				errors.add(Constant.GLOBALERROR, new ActionMessage("error.invalidToken"));
@@ -254,7 +302,10 @@ public class PegawaiAction extends SecurityAction {
 			Pegawai prshn = service.getPegawai(id);
 			BeanUtils.copyProperties(planForm, prshn);
 			planForm.set("stsPegawai", prshn.getStatusPegawai().getId());
+			planForm.set("stsSipil", prshn.getStatusSipil().getId());
 			planForm.set("tanggalMasuk", sdf.format(prshn.getTglMasuk()));
+			planForm.set("cabangId", prshn.getCabang().getId());
+			planForm.set("unitId", prshn.getUnit().getId());
 
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
@@ -299,8 +350,15 @@ public class PegawaiAction extends SecurityAction {
 				Pegawai prshn = new Pegawai();
 				BeanUtils.copyProperties(prshn, planForm);
 				prshn.setStatusPegawai(new StatusPK((Integer)planForm.get("stsPegawai")));
+				prshn.setStatusSipil(new StatusPK((Integer)planForm.get("stsSipil")));
 				prshn.setTglMasuk(sdf.parse(planForm.getString("tanggalMasuk")));
+				prshn.setCabang(new Cabang((Integer)planForm.get("cabangId")));
+				prshn.setUnit(new Unit((Integer)planForm.get("unitId")));
 				service.updatePegawai(prshn);
+				
+				prshn.setCreatedBy(userLogin.getUser().getUserCode());
+				prshn.setDeleted(0);
+				service.insertPegawaiHistory(prshn);
 
 			} else {
 				errors.add(Constant.GLOBALERROR, new ActionMessage("error.invalidToken"));
@@ -317,7 +375,7 @@ public class PegawaiAction extends SecurityAction {
 			return mapping.findForward("fail");
 		}
 
-		return mapping.findForward("continue");
+		return mapping.findForward("success");
 	}
 	
 	public ActionForward delete(
@@ -371,5 +429,44 @@ public class PegawaiAction extends SecurityAction {
 		// Return to Search
 		return mapping.findForward("continue");
 	}
+	public ActionForward history(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
 
+		log.debug("History");
+
+		ActionMessages errors = new ActionMessages();
+		// Check Menu Access
+//		HttpSession session = request.getSession();
+		ActionForward forward = new ActionForward();
+		DynaActionForm planForm = (DynaActionForm) form;
+		forward = hasMenuAccess(mapping, request, MENU_PEG_VIEW);
+		if (forward != null)
+			return forward;
+
+		try {
+			prepareData(request);
+			Integer nsbhId = request.getParameter("id").equals("") ? 0
+					: Integer.parseInt(request.getParameter("id"));
+			if (errors.size() > 0) {
+				saveErrors(request, errors);
+				return mapping.findForward("continue");
+			}
+
+			List<Pegawai> nsbh = service.getPegawaiHistory(nsbhId);
+			request.setAttribute("DataList", nsbh);
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			errors.add(Constant.GLOBALERROR, new ActionMessage("error.exception", e.getMessage()));
+		}
+
+		if (errors.size() > 0) {
+			saveErrors(request, errors);
+			return mapping.findForward("fail");
+		}
+
+		saveToken(request);
+
+		return mapping.findForward("history");
+
+	}
 }

@@ -2,6 +2,8 @@ package com.benclaus.koperasi.model.master;
 
 import java.lang.reflect.Field;
 
+import com.benclaus.koperasi.model.kantor.Cabang;
+import com.benclaus.koperasi.model.kantor.Unit;
 import com.benclaus.koperasi.model.system.Audit;
 import com.benclaus.koperasi.model.usm.Menu;
 
@@ -10,7 +12,8 @@ public class Perusahaan extends Audit {
 	private String nama;
 	private String alamat;
 	private Industri industri;
-	private Area area;
+	private Cabang cabang;
+	private Unit unit;
 
 	public Perusahaan() {
 		super();
@@ -54,13 +57,20 @@ public class Perusahaan extends Audit {
 	public void setIndustri(Industri industri) {
 		this.industri = industri;
 	}
-
-	public Area getArea() {
-		return area;
+	public Cabang getCabang() {
+		return cabang;
 	}
 
-	public void setArea(Area area) {
-		this.area = area;
+	public void setCabang(Cabang cabang) {
+		this.cabang = cabang;
+	}
+
+	public Unit getUnit() {
+		return unit;
+	}
+
+	public void setUnit(Unit unit) {
+		this.unit = unit;
 	}
 
 	public String toString() {

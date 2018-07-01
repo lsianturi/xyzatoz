@@ -31,9 +31,9 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 			FROM ms_jns_anggota
 	</select>
 	
-	<select id="listStatusAnggota" resultClass="com.benclaus.koperasi.model.master.StatusPK">
+	<select id="listStatusKerja" resultClass="com.benclaus.koperasi.model.master.StatusPK">
 		SELECT id, `status`
-			FROM ms_sts_anggota
+			FROM ms_sts_kerja
 	</select>
 	
 	<select id="listPerusahaan" resultClass="com.benclaus.koperasi.model.master.StatusPK">
@@ -52,5 +52,19 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 		WHERE is_agent = 1 
 		ORDER BY nama ASC
 	</select>
+	
+	<select id="listPegawai" resultClass="com.benclaus.koperasi.model.master.StatusPK">
+		SELECT id, nama as `status`
+			FROM ms_pegawai 
+		WHERE deleted = 0 
+		ORDER BY nama ASC
+	</select>
+	
+	<select id="listSukuBunga" resultClass="com.benclaus.koperasi.utility.LabelValueBean">
+		SELECT suku as `value`, nama as `label`
+			FROM ms_suku_bunga
+		ORDER BY nama ASC
+	</select>
+	
 </sqlMap>
 

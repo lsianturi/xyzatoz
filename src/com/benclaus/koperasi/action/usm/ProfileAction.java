@@ -29,7 +29,7 @@ import com.benclaus.koperasi.utility.Constant;
  */
 public class ProfileAction extends SecurityAction {
 	private static Logger log =
-		Logger.getLogger(ChangePasswordDispatchAction.class);
+		Logger.getLogger(ProfileAction.class);
 	private UserService userService = UserService.getInstance();
 
 	public ActionForward update(

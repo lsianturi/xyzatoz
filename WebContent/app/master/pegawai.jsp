@@ -5,6 +5,7 @@
 <%@ taglib uri="/WEB-INF/tld/struts-bean.tld" prefix="bean" %>
 <%@taglib uri="/WEB-INF/tld/struts-logic.tld" prefix="logic"%>
 <%@taglib uri="http://java.sun.com/jstl/core" prefix="c"%>
+<%@taglib uri="http://java.sun.com/jstl/fmt" prefix="fmt"%>
 <html:html>
 <HEAD>
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8" %>
@@ -17,6 +18,8 @@
 <script src="scripts/view.js"></script>
 <script src="scripts/md5.js"></script>
 <script src="scripts/staticJS.jsp"></script>
+<script src="scripts/jquery.min.js"></script>
+
 <script type="text/javascript">
 	<c:if test="${DataList!=null}">
 	lastPage = <c:out value="${DataList.pageIndex}"></c:out>;
@@ -33,6 +36,9 @@
 	function edit(id) {
 		doGoToUrl('<c:url value="/updatePegawai.do?dispatch=update"/>'+'&id='+id);
 	}
+	function history(id) {
+		doGoToUrl('<c:url value="/pegawai.do?dispatch=history"/>'+'&id='+id);
+	}
 </script>
 </HEAD>
 <BODY>
@@ -48,18 +54,34 @@
 <!-- Help Page Finish -->
 <html:form action="/pegawai.do" method="post" >	
 	<html:hidden property="dispatch" value="search"/>
-	<table border="0">
+	<table border="0" width="50%">
 		<tbody>
 			<tr>
 				<td class="conLabel"><bean:message key="form.pegawai.name"></bean:message></td>
 				<td class="conText" colspan="3">
 					<html:text property="nama" maxlength="60" size="20"></html:text>
 				</td>
+				
+				<td width="100" class="conLabel"><bean:message key="form.pegawai.statusPegawai"></bean:message></td>
+				<td class="conText" colspan="3">
+					<html:select property="statusPegawai">
+						<html:option value=""><bean:message key="form.all"></bean:message></html:option>
+						<html:options collection="StatusList" property="id" labelProperty="status" />
+					</html:select>
+				</td>
 			</tr>
 			<tr>
 				<td class="conLabel"><bean:message key="form.pegawai.domisili"></bean:message></td>
 				<td class="conText" colspan="3">
 					<html:text property="domisili" maxlength="60" size="20"></html:text>
+				</td>
+				
+				<td width="100" class="conLabel"><bean:message key="form.company.cabang"></bean:message></td>
+				<td class="conText" colspan="3">
+					<html:select property="cabang">
+						<html:option value=""><bean:message key="form.all"></bean:message></html:option>
+						<html:options collection="CabangList" property="id" labelProperty="nama" />
+					</html:select>
 				</td>
 			</tr>
 			<tr>
@@ -70,13 +92,12 @@
 						<html:options collection="SipilList" property="id" labelProperty="status" />
 					</html:select>
 				</td>
-			</tr>
-			<tr>
-				<td width="100" class="conLabel"><bean:message key="form.pegawai.statusPegawai"></bean:message></td>
+				
+				<td width="100" class="conLabel"><bean:message key="form.company.unit"></bean:message></td>
 				<td class="conText" colspan="3">
-					<html:select property="statusPegawai">
+					<html:select property="unit">
 						<html:option value=""><bean:message key="form.all"></bean:message></html:option>
-						<html:options collection="StatusList" property="id" labelProperty="status" />
+						<html:options collection="UnitList" property="id" labelProperty="nama" />
 					</html:select>
 				</td>
 			</tr>
@@ -87,6 +108,20 @@
 				</html:submit></td>
 			</tr>
 		</tbody>
+		<script type="text/javascript">	
+			$('select[name="cabang"]').on('change', function(){    
+			    cabId = $(this).val();
+			    $('select[name="unit"]').html('');
+			    $.post("pegawai.do",
+		            {
+			    	  dispatch:"getUnitHtml",
+		              cabangId: cabId
+		            },
+		            function(data,status){
+		                $('select[name="unit"]').html(data);
+		            });
+			});
+		</script>
 	</table>
 	<c:if test="${DataList!=null}">
 		<table width="100%" border="0" cellpadding="3" cellspacing="0" class="tblBorder">
@@ -129,14 +164,16 @@
 					<td class="celBorder"><c:out value="${comp.domisili}"/>&nbsp;</td>
 					<td class="celBorder"><c:out value="${comp.telepon}"/>&nbsp;</td>
 					<td class="celBorder"><c:out value="${comp.statusPegawai.status}"/>&nbsp;</td>
-					<td class="celBorder"><c:out value="${comp.tglMasuk}"/>&nbsp;</td>
+					<td class="celBorder"><fmt:formatDate value="${comp.tglMasuk}" pattern="dd/MM/yyyy"/></td>
 					<td class="celBorder"><c:out value="${comp.keterangan}"/>&nbsp;</td>
 					<td class="celBorder" align="center">
 						<a
 							href="javascript:del('<c:out value="${comp.id}"/>')"><bean:message
 								key="button.delete"></bean:message></a>&nbsp;|&nbsp;<a
 							href="javascript:edit('<c:out value="${comp.id}"/>')"><bean:message
-								key="button.edit"></bean:message></a>
+								key="button.edit"></bean:message></a>&nbsp;|&nbsp;<a 
+							href="javascript:history('<c:out value="${comp.id}"/>')"><bean:message 
+								key="button.history"></bean:message></a>
 				</td>
 				</tr>	
 			</c:forEach>

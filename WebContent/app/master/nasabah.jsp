@@ -17,6 +17,8 @@
 <script src="scripts/view.js"></script>
 <script src="scripts/md5.js"></script>
 <script src="scripts/staticJS.jsp"></script>
+<script src="scripts/jquery.min.js"></script>
+
 <script type="text/javascript">
 	<c:if test="${DataList!=null}">
 	lastPage = <c:out value="${DataList.pageIndex}"></c:out>;
@@ -54,7 +56,7 @@
 <!-- Help Page Finish -->
 <html:form action="/nasabah.do" method="post" >	
 	<html:hidden property="dispatch" value="search"/>
-	<table border="0" width="100%">
+	<table border="0" width="80%">
 		<tbody>
 			<tr>
 				<td class="conLabel"><bean:message key="form.nasabah.name"></bean:message></td>
@@ -65,6 +67,14 @@
 				<td class="conLabel"><bean:message key="form.nasabah.telepon"></bean:message></td>
 				<td class="conText" colspan="3">
 					<html:text property="telepon" maxlength="60" size="20"></html:text>
+				</td>
+				
+				<td class="conLabel"><bean:message key="form.nasabah.cabang"></bean:message></td>
+				<td class="conText" colspan="3">
+					<html:select property="cabang">
+						<html:option value=""><bean:message key="form.all"></bean:message></html:option>
+						<html:options collection="CabangList" property="id" labelProperty="nama" />
+					</html:select>
 				</td>
 			</tr>
 			<tr>
@@ -82,14 +92,18 @@
 						<html:options collection="BankList" property="id" labelProperty="status" />
 					</html:select>
 				</td>
+				<td class="conLabel"><bean:message key="form.nasabah.unit"></bean:message></td>
+				<td class="conText" colspan="3">
+					<html:select property="unit">
+						<html:option value=""><bean:message key="form.all"></bean:message></html:option>
+						<html:options collection="UnitList" property="id" labelProperty="nama" />
+					</html:select>
+				</td>
 			</tr>
 			<tr>
-				<td  class="conLabel"><bean:message key="form.nasabah.statusAnggota"></bean:message></td>
+				<td  class="conLabel"><bean:message key="form.nasabah.nik"></bean:message></td>
 				<td class="conText" colspan="3">
-					<html:select property="stsAnggota">
-						<html:option value=""><bean:message key="form.all"></bean:message></html:option>
-						<html:options collection="StsAgtList" property="id" labelProperty="status" />
-					</html:select>
+					<html:text property="nik" maxlength="60" size="20"></html:text>
 				</td>
 				<td  class="conLabel"><bean:message key="form.nasabah.jenisAnggota"></bean:message></td>
 				<td class="conText" colspan="3">
@@ -100,16 +114,16 @@
 				</td>
 			</tr>
 			<tr>
-				<td  class="conLabel"><bean:message key="form.nasabah.agent"></bean:message></td>
+				<td  class="conLabel"><bean:message key="form.nasabah.statusKerja"></bean:message></td>
 				<td class="conText" colspan="3">
-					<html:select property="agentId">
+					<html:select property="stsKerja">
 						<html:option value=""><bean:message key="form.all"></bean:message></html:option>
-						<html:options collection="AgentList" property="id" labelProperty="status" />
+						<html:options collection="StsAgtList" property="id" labelProperty="status" />
 					</html:select>
 				</td>
 				<td class="conLabel"></td>
 				<td class="conText" colspan="3">
-					<html:checkbox property="anAgent"><bean:message key="form.nasabah.agent"></bean:message>&nbsp;only</html:checkbox>
+					<html:checkbox property="anAgent"><bean:message key="form.nasabah.anAgent"></bean:message></html:checkbox>
 				</td>
 			</tr>
 			<tr>
@@ -119,6 +133,20 @@
 				</html:submit></td>
 			</tr>
 		</tbody>
+		<script type="text/javascript">	
+			$('select[name="cabang"]').on('change', function(){    
+			    cabId = $(this).val();
+			    $('select[name="unit"]').html('');
+			    $.post("nasabah.do",
+		            {
+			    	  dispatch:"getUnitHtml",
+		              cabangId: cabId
+		            },
+		            function(data,status){
+		                $('select[name="unit"]').html(data);
+		            });
+			});
+		</script>
 	</table>
 	<c:if test="${DataList!=null}">
 		<table width="100%" border="0" cellpadding="3" cellspacing="0" class="tblBorder">
@@ -132,7 +160,7 @@
 				<td><bean:message key="form.nasabah.rekening"/></td>
 				<td><bean:message key="form.nasabah.perusahaan"/></td>
 				<td><bean:message key="form.nasabah.bank"/></td>
-				<td><bean:message key="form.nasabah.agent"/></td>
+				<td><bean:message key="form.nasabah.nik"/></td>
 				<td align="center"><bean:message key="form.action"></bean:message></td>
 			</tr>
 				<c:if test="${DataList.totalSize==0}">
@@ -156,7 +184,7 @@
 					<td class="celBorder"><c:out value="${comp.noRekening}"/>&nbsp;</td>
 					<td class="celBorder"><c:out value="${comp.pt.nama}"/>&nbsp;</td>
 					<td class="celBorder"><c:out value="${comp.bank.nama}"/>&nbsp;</td>
-					<td class="celBorder"><c:out value="${comp.agent.nama}"/>&nbsp;</td>
+					<td class="celBorder"><c:out value="${comp.nik}"/>&nbsp;</td>
 					<td class="celBorder" align="center">
 						<a href="javascript:del('<c:out value="${comp.id}"/>')">
 							<bean:message key="button.delete"></bean:message></a>&nbsp;|&nbsp;

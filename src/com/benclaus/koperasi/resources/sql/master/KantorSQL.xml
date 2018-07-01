@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap
+PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="KantorSQL">
+	
+	<resultMap id="pusatResult" class="com.benclaus.koperasi.model.kantor.Pusat">
+		<result property="id" column="id" />
+		<result property="nama" column="nama" />
+		<result property="alamat" column="alamat" />
+		<result property="telepon" column="telepon" />
+		<result property="fax" column="fax" />
+		<result property="badanHukum" column="badan_hukum" />
+		<result property="npwp" column="npwp" />
+		<result property="siup" column="siup" />
+		<result property="tdp" column="tdp" />
+		<result property="logoKoperasi" column="logo_koperasi" />
+		<result property="logoPerusahaan" column="logo_perusahaan" />
+	</resultMap>
+	<resultMap id="pusatHistoryResult" class="com.benclaus.koperasi.model.kantor.Pusat">
+		<result property="id" column="id" />
+		<result property="nama" column="nama" />
+		<result property="alamat" column="alamat" />
+		<result property="telepon" column="telepon" />
+		<result property="fax" column="fax" />
+		<result property="badanHukum" column="badan_hukum" />
+		<result property="npwp" column="npwp" />
+		<result property="siup" column="siup" />
+		<result property="tdp" column="tdp" />
+		<result property="logoKoperasi" column="logo_koperasi" />
+		<result property="logoPerusahaan" column="logo_perusahaan" />
+		<result property="createdBy" column="created_by" />
+		<result property="createDtm" column="created_time" />
+	</resultMap>
+	
+	<resultMap id="unitResult" class="com.benclaus.koperasi.model.kantor.Unit">
+		<result property="id" column="id" />
+		<result property="cabang.id" column="cabang_id" />
+		<result property="cabang.nama" column="cabang_nama" />
+		<result property="nama" column="nama" />
+		<result property="alamat" column="alamat" />
+		<result property="telepon" column="telepon" />
+		<result property="fax" column="fax" />
+		<result property="kepalaUnit" column="kepala_unit" />
+	</resultMap>
+	
+	<update id="updatePusat" parameterClass="com.benclaus.koperasi.model.kantor.Pusat">
+		UPDATE sy_pusat SET `nama` =#nama#, `alamat` = #alamat#, `telepon` = #telepon#, `fax` = #fax#,
+  			`badan_hukum` = #badanHukum#, `npwp` = #npwp#, `siup` = #siup#, `tdp` = #tdp#,
+  			`logo_koperasi` = #logoKoperasi#, `logo_perusahaan` = #logoPerusahaan#
+		WHERE `id`=1
+	</update>
+	
+	<insert id="insertPusatHistory" parameterClass="com.benclaus.koperasi.model.kantor.Pusat" >
+		INSERT INTO sy_pusat_hist (`id`, `nama`, `alamat`, `telepon`, `fax`, `badan_hukum`, `npwp`,
+			`siup`, `tdp`, `logo_koperasi`, `logo_perusahaan`, `created_by`) 
+		VALUES (#id#, #nama#, #alamat#, #telepon#, #fax#, #badanHukum#, #npwp#,
+			#siup#, #tdp#, #logoKoperasi#,  #logoPerusahaan#, #createdBy#)
+	</insert>
+	
+	<select id="getPusat" resultMap="pusatResult">
+		SELECT `id`, `nama`, `alamat`, `telepon`, `fax`, `badan_hukum`, `npwp`,
+			`siup`, `tdp`, `logo_koperasi`, `logo_perusahaan`
+			FROM sy_pusat sp
+			WHERE sp.id = 1
+	</select>
+	
+	<select id="getPusatHistory" resultMap="pusatHistoryResult">
+		SELECT `id`, `nama`, `alamat`, `telepon`, `fax`, `badan_hukum`, `npwp`,
+			`siup`, `tdp`, `logo_koperasi`, `logo_perusahaan`, `created_by`, `created_time`
+			FROM sy_pusat_hist p
+			WHERE p.id = 1
+	</select>
+	
+	<select id="getCabang" resultClass="com.benclaus.koperasi.model.kantor.Cabang">
+		SELECT id, nama
+			FROM sy_cabang
+		<isNotEmpty prepend="WHERE" property="cabangId">
+			id = #cabangId#
+		</isNotEmpty>	
+	</select>
+	
+	<select id="getUnit" resultMap="unitResult">
+		SELECT u.id, u.cabang_id, c.nama cabang_nama, u.nama, u.alamat, u.telepon, u.fax, u.kepala_unit
+		FROM `sy_unit` u
+		INNER JOIN sy_cabang c ON c.id = u.cabang_id
+		<isNotEmpty prepend="WHERE" property="cabangId">
+			u.cabang_id = #cabangId#
+		</isNotEmpty>	
+	</select>
+	
+</sqlMap>
+

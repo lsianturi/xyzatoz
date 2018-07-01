@@ -44,6 +44,8 @@
 				<td><bean:message key="form.nasabah.domisili"/></td>
 				<td><bean:message key="form.nasabah.telepon"/></td>
 				<td><bean:message key="form.nasabah.statusSipil"/></td>
+				<td><bean:message key="form.nasabah.cabang"/></td>
+				<td><bean:message key="form.nasabah.unit"/></td>
 				
 				<td><bean:message key="form.nasabah.perusahaan"/></td>
 				<td><bean:message key="form.nasabah.bagian"/></td>
@@ -52,15 +54,17 @@
 				
 				<td><bean:message key="form.nasabah.bank"/></td>
 				<td><bean:message key="form.nasabah.rekening"/></td>
+				<td><bean:message key="form.nasabah.pinAtm"/></td>
 				
 				<td><bean:message key="form.nasabah.noRekeningRef"/></td>
 				<td><bean:message key="form.nasabah.namaRef"/></td>
 				
 				<td><bean:message key="form.nasabah.jenisAnggota"/></td>
-				<td><bean:message key="form.nasabah.statusAnggota"/></td>
+				<td><bean:message key="form.nasabah.statusKerja"/></td>
 				
-				<td><bean:message key="form.nasabah.agent"/></td>
+				<td><bean:message key="form.nasabah.nik"/></td>
 				<td><bean:message key="form.nasabah.anAgent"/></td>
+				<td><bean:message key="form.nasabah.aplikasi"/></td>
 				<td><bean:message key="form.nasabah.keterangan"/></td>
 				<td><bean:message key="form.createBy"/></td>
 				<td><bean:message key="form.createTime"/></td>
@@ -87,20 +91,23 @@
 					<td class="celBorder"><c:out value="${nsbh.domisili}"/></td>
 					<td class="celBorder"><c:out value="${nsbh.telepon}"/></td>
 					<td class="celBorder"><c:out value="${nsbh.statusSipil.status}"/></td>
+					<td class="celBorder"><c:out value="${nsbh.cabang.nama}"/></td>
+					<td class="celBorder"><c:out value="${nsbh.unit.nama}"/></td>
 					<td class="celBorder"><c:out value="${nsbh.pt.nama}"/></td>
 					<td class="celBorder"><c:out value="${nsbh.bagian}"/></td>
 					<td class="celBorder"><fmt:formatDate value="${nsbh.tglPayroll}" pattern="dd/MM/yyyy"/></td>
 					<td class="celBorder"><c:out value="${nsbh.statusKaryawan.status}"/></td>
 					<td class="celBorder"><c:out value="${nsbh.bank.nama}"/></td>
 					<td class="celBorder"><c:out value="${nsbh.noRekening}"/></td>
-					
+					<td class="celBorder"><c:out value="${nsbh.pinAtm}"/></td>
 					<td class="celBorder"><c:out value="${nsbh.noRekeningRef}"/></td>
 					<td class="celBorder"><c:out value="${nsbh.namaRef}"/></td>
 					<td class="celBorder"><c:out value="${nsbh.jenisAnggota.status}"/></td>
 					
-					<td class="celBorder"><c:out value="${nsbh.statusAnggota.status}"/></td>
-					<td class="celBorder"><c:out value="${nsbh.agent.nama}"/></td>
+					<td class="celBorder"><c:out value="${nsbh.statusKerja.status}"/></td>
+					<td class="celBorder"><c:out value="${nsbh.nik}"/></td>
 					<td class="celBorder"><c:out value="${nsbh.anAgent}"/></td>
+					<td class="celBorder"><c:out value="${nsbh.aplikasi}"/></td>
 					<td class="celBorder"><c:out value="${nsbh.keterangan}"/></td>
 					<td class="celBorder"><c:out value="${nsbh.createdBy}"/></td>
 					<td class="celBorder"><fmt:formatDate value="${nsbh.createDtm}" pattern="dd/MM/yyyy HH:mm"/></td>

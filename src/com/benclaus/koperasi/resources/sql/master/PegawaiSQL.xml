@@ -15,15 +15,43 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 		<result property="statusPegawai.status" column="status_nama" />
 		<result property="statusSipil.id" column="sipil_id" />
 		<result property="statusSipil.status" column="sipil_nama" />
+		<result property="cabang.id" column="cabang_id" />
+		<result property="cabang.nama" column="cabang_nama" />
+		<result property="unit.id" column="unit_id" />
+		<result property="unit.nama" column="unit_nama" />
 		<result property="tglMasuk" column="tgl_masuk" />
 		<result property="keterangan" column="keterangan" />
 	</resultMap>
 	
+	<resultMap id="pegawaiHistoryResult" class="com.benclaus.koperasi.model.master.Pegawai">
+		<result property="id" column="id" />
+		<result property="nama" column="nama" />
+		<result property="alamat" column="alamat" />
+		<result property="domisili" column="domisili" />
+		<result property="telepon" column="telepon" />
+		<result property="statusPegawai.id" column="status_id" />
+		<result property="statusPegawai.status" column="status_nama" />
+		<result property="statusSipil.id" column="sipil_id" />
+		<result property="statusSipil.status" column="sipil_nama" />
+		<result property="cabang.id" column="cabang_id" />
+		<result property="cabang.nama" column="cabang_nama" />
+		<result property="unit.id" column="unit_id" />
+		<result property="unit.nama" column="unit_nama" />
+		<result property="tglMasuk" column="tgl_masuk" />
+		<result property="keterangan" column="keterangan" />
+		<result property="deleted" column="deleted" />
+		<result property="createdBy" column="created_by" />
+		<result property="createDtm" column="created_time" />
+	</resultMap>
+	
 	<select id="searchPegawai" resultMap="pegawaiResult" parameterClass="java.util.Map" >
-		SELECT p.id, p.nama, p.alamat, p.domisili, p.telepon, s.id status_id, s.status status_nama, s1.id sipil_id, s1.status sipil_nama, p.tgl_masuk, p.keterangan
+		SELECT p.id, p.nama, p.alamat, p.domisili, p.telepon, s.id status_id, s.status status_nama, s1.id sipil_id, s1.status sipil_nama, 
+			p.tgl_masuk, p.keterangan, c.id cabang_id, c.nama cabang_nama, u.id unit_id, u.nama unit_nama
 			FROM ms_pegawai p
 			INNER JOIN ms_sts_pegawai s on s.id = p.status_pegawai
 			INNER JOIN ms_sts_sipil s1 on s1.id = p.status_sipil
+			INNER JOIN sy_cabang c on c.id = p.cabang
+			INNER JOIN sy_unit u on u.id = p.unit
 			where p.deleted = 0
 			<isNotEmpty property="nama" prepend="AND">
 				p.nama LIKE concat('%',#nama#,'%')
@@ -36,6 +64,12 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 			</isNotEmpty>
 			<isNotEmpty property="domisili" prepend="AND">
 				p.domisili LIKE concat('%', #domisili#, '%')
+			</isNotEmpty>
+			<isNotEmpty property="cabang" prepend="AND">
+				p.cabang = #cabang#
+			</isNotEmpty>
+			<isNotEmpty property="unit" prepend="AND">
+				p.unit = #unit#
 			</isNotEmpty>
 	</select>
 	
@@ -44,6 +78,8 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 			FROM ms_pegawai p
 			INNER JOIN ms_sts_pegawai s on s.id = p.status_pegawai
 			INNER JOIN ms_sts_sipil s1 on s1.id = p.status_sipil
+			INNER JOIN sy_cabang c on c.id = p.cabang
+			INNER JOIN sy_unit u on u.id = p.unit
 			where p.deleted = 0
 			<isNotEmpty property="nama" prepend="AND">
 				p.nama LIKE concat('%',#nama#,'%')
@@ -57,15 +93,29 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 			<isNotEmpty property="domisili" prepend="AND">
 				p.domisili LIKE concat('%', #domisili#, '%')
 			</isNotEmpty>
+			<isNotEmpty property="cabang" prepend="AND">
+				p.cabang = #cabang#
+			</isNotEmpty>
+			<isNotEmpty property="unit" prepend="AND">
+				p.unit = #unit#
+			</isNotEmpty>
 	</select>
 	
 	<insert id="insertPegawai" parameterClass="com.benclaus.koperasi.model.master.Pegawai" >
-		INSERT INTO ms_pegawai (`nama`, `alamat`, `domisili`, `telepon`, `status_pegawai`, `status_sipil`, `tgl_masuk`, `keterangan`) 
-		VALUES (#nama#, #alamat#, #domisili#, #telepon#, #statusPegawai.id#, #statusSipil.id#, #tglMasuk#, #keterangan#)
+		<selectKey keyProperty="id" resultClass="int" type="post">
+			SELECT LAST_INSERT_ID() AS value
+		</selectKey>
+		INSERT INTO ms_pegawai (`cabang`, `unit`, `nama`, `alamat`, `domisili`, `telepon`, `status_pegawai`, `status_sipil`, `tgl_masuk`, `keterangan`) 
+		VALUES (#cabang.id#, #unit.id#, #nama#, #alamat#, #domisili#, #telepon#, #statusPegawai.id#, #statusSipil.id#, #tglMasuk#, #keterangan#)
+	</insert>
+	
+	<insert id="insertPegawaiHistory" parameterClass="com.benclaus.koperasi.model.master.Pegawai" >
+		INSERT INTO ms_pegawai_hist (`id`, `cabang`, `unit`, `nama`, `alamat`, `domisili`, `telepon`, `status_pegawai`, `status_sipil`, `tgl_masuk`, `keterangan`, `deleted`, `created_by`) 
+		VALUES (#id#, #cabang.id#, #unit.id#, #nama#, #alamat#, #domisili#, #telepon#, #statusPegawai.id#, #statusSipil.id#, #tglMasuk#, #keterangan#, #deleted#, #createdBy#)
 	</insert>
 	
 	<update id="updatePegawai" parameterClass="com.benclaus.koperasi.model.master.Pegawai">
-		UPDATE ms_pegawai SET  `nama` = #nama#, `alamat`=#alamat#, `domisili`=#domisili#, `telepon`=#telepon#, `status_pegawai` = #statusPegawai#,
+		UPDATE ms_pegawai SET  `cabang`=#cabang.id#, `unit`=#unit.id#, `nama` = #nama#, `alamat`=#alamat#, `domisili`=#domisili#, `telepon`=#telepon#, `status_pegawai` = #statusPegawai.id#,
 			`status_sipil`= #statusSipil.id#, `tgl_masuk` = #tglMasuk#, keterangan = #keterangan#
 		WHERE `id`=#id#
 	</update>
@@ -76,10 +126,25 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 	</update>
 	
 	<select id="getPegawai" resultMap="pegawaiResult">
-		SELECT p.id, p.nama, p.alamat, p.domisili, p.telepon, s.id status_id, s.status status_nama, s1.id sipil_id, s1.status sipil_nama, p.tgl_masuk, p.keterangan
+		SELECT p.id, p.nama, p.alamat, p.domisili, p.telepon, s.id status_id, s.status status_nama, s1.id sipil_id, s1.status sipil_nama, 
+		p.tgl_masuk, p.keterangan, c.id cabang_id, c.nama cabang_nama, u.id unit_id, u.nama unit_nama
 			FROM ms_pegawai p
 			INNER JOIN ms_sts_pegawai s on s.id = p.status_pegawai
 			INNER JOIN ms_sts_sipil s1 on s1.id = p.status_sipil
+			INNER JOIN sy_cabang c on c.id = p.cabang
+			INNER JOIN sy_unit u on u.id = p.unit
+			WHERE p.deleted = 0
+			AND p.id = #value#
+	</select>
+	
+	<select id="getPegawaiHistory" resultMap="pegawaiHistoryResult">
+		SELECT p.id, p.nama, p.alamat, p.domisili, p.telepon, s.id status_id, s.status status_nama, s1.id sipil_id, s1.status sipil_nama, 
+		p.tgl_masuk, p.keterangan, c.id cabang_id, c.nama cabang_nama, u.id unit_id, u.nama unit_nama, p.`deleted`, p.`created_by`, p.`created_time`
+			FROM ms_pegawai_hist p
+			INNER JOIN ms_sts_pegawai s on s.id = p.status_pegawai
+			INNER JOIN ms_sts_sipil s1 on s1.id = p.status_sipil
+			INNER JOIN sy_cabang c on c.id = p.cabang
+			INNER JOIN sy_unit u on u.id = p.unit
 			WHERE p.deleted = 0
 			AND p.id = #value#
 	</select>

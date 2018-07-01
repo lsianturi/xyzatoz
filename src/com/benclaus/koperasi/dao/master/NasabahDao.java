@@ -1,6 +1,5 @@
 package com.benclaus.koperasi.dao.master;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -9,7 +8,6 @@ import org.apache.log4j.Logger;
 import com.benclaus.koperasi.dao.BaseDAO;
 import com.benclaus.koperasi.exception.DaoException;
 import com.benclaus.koperasi.model.master.Nasabah;
-import com.benclaus.koperasi.model.master.StatusPK;
 import com.ibatis.common.util.PaginatedList;
 
 

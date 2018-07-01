@@ -12,7 +12,6 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="Content-Style-Type" content="text/css">
 <link href="theme/Master.css" rel="stylesheet" type="text/css">
-<link href="theme/W3layouts-style.css" rel="stylesheet" type="text/css" media="all" />
 <link href="//fonts.googleapis.com/css?family=Josefin+Sans" rel="stylesheet">
 <link href='//fonts.googleapis.com/css?family=Roboto+Condensed:400,300,300italic,400italic,700,700italic' rel='stylesheet' type='text/css'>
 <script src="scripts/view.js"></script>

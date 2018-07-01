@@ -1,11 +1,13 @@
 package com.benclaus.koperasi.dao.master;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 
 import com.benclaus.koperasi.exception.DaoException;
 import com.benclaus.koperasi.model.master.StatusPK;
+import com.benclaus.koperasi.utility.LabelValueBean;
 
 public class StatusPKService {
 	private StatusPKDao dao = StatusPKDao.getInstance();
@@ -78,7 +80,7 @@ public class StatusPKService {
 	}
 	public List<StatusPK> listStatusAnggota() throws DaoException {
 		try {
-			return dao.listStatusAnggota();
+			return dao.listStatusKerja();
 		} catch (Exception e) {
 			log.debug(e);
 		}
@@ -108,6 +110,30 @@ public class StatusPKService {
 		}
 		return null;
 	}
-	
-	
+	public List<StatusPK> listPegawai() throws DaoException {
+		try {
+			return dao.listPegawai();
+		} catch (Exception e) {
+			log.debug(e);
+		}
+		return null;
+	}
+	public List<LabelValueBean> listSukuBunga() throws DaoException {
+		try {
+			return dao.listSukuBunga();
+		} catch (Exception e) {
+			log.debug(e);
+		}
+		return null;
+	}
+	public List<StatusPK> listStatusKredit() {
+		List<StatusPK> list = new ArrayList<>();
+		StatusPK pk = new StatusPK(1,"Belum Realisasi");
+		list.add(pk);
+		pk = new StatusPK(2,"Sudah Realisasi");
+		list.add(pk);
+		pk = new StatusPK(3,"Sudah Lunas");
+		list.add(pk);
+		return list;
+	}
 }

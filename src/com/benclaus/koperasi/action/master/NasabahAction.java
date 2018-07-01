@@ -1,5 +1,6 @@
 package com.benclaus.koperasi.action.master;
 
+import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
@@ -9,8 +10,6 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.log4j.Logger;
-import org.apache.struts.action.ActionError;
-import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -20,8 +19,11 @@ import org.apache.struts.action.DynaActionForm;
 
 import com.benclaus.koperasi.action.SecurityAction;
 import com.benclaus.koperasi.dao.Page;
+import com.benclaus.koperasi.dao.kantor.KantorService;
 import com.benclaus.koperasi.dao.master.NasabahService;
 import com.benclaus.koperasi.dao.master.StatusPKService;
+import com.benclaus.koperasi.model.kantor.Cabang;
+import com.benclaus.koperasi.model.kantor.Unit;
 import com.benclaus.koperasi.model.master.Bank;
 import com.benclaus.koperasi.model.master.Nasabah;
 import com.benclaus.koperasi.model.master.Perusahaan;
@@ -40,6 +42,7 @@ public class NasabahAction extends SecurityAction {
 
 	private StatusPKService stService = StatusPKService.getInstance();
 	private NasabahService nService = NasabahService.getInstance();
+	private KantorService kService = KantorService.getInstance();
 	
 	private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
@@ -51,11 +54,13 @@ public class NasabahAction extends SecurityAction {
 			request.setAttribute("JnsAgtList", stService.listJenisAnggota());
 			request.setAttribute("StsAgtList", stService.listStatusAnggota());
 			request.setAttribute("AgentList", stService.listAgent());
+			request.setAttribute("CabangList", kService.getCabang());
+			request.setAttribute("UnitList", kService.getUnit());
 		} catch (Exception e) {
 		}
 	}
 	
-	private void prepareData(HttpServletRequest request) {
+	private void prepareData(HttpServletRequest request, Integer cabangId) {
 		try {
 			request.setAttribute("SexList", stService.listJnsKelamin());
 			request.setAttribute("SipilList", stService.listStatusSipil());
@@ -65,8 +70,32 @@ public class NasabahAction extends SecurityAction {
 			request.setAttribute("StsAgtList", stService.listStatusAnggota());
 			request.setAttribute("StsKrywnList", stService.listStatusKaryawan());
 			request.setAttribute("AgentList", stService.listAgent());
+			request.setAttribute("CabangList", kService.getCabang());
+			if (cabangId != null) {
+				request.setAttribute("UnitList", kService.getUnit(cabangId));
+			} else {
+				request.setAttribute("UnitList", kService.getUnit());
+			}
 		} catch (Exception e) {
 		}
+	}
+	
+	public ActionForward getUnitHtml(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		
+		Integer cabId = Integer.parseInt(request.getParameter("cabangId"));
+		List<Unit> units = kService.getUnit(cabId);
+		StringBuilder sb = new StringBuilder("<select name=\"unit\"><option value=\"\">All</option></select>");
+		if (units != null) {
+			for (Unit unit: units) {
+				sb.append("<option value=\""+unit.getId() +"\">"+ unit.getNama()+"</option>");
+			}
+		}
+		PrintWriter pw = response.getWriter();
+		pw.write(sb.toString());
+		pw.flush();
+		
+		return null;
 	}
 
 	public ActionForward prepare(ActionMapping mapping, ActionForm form, HttpServletRequest request,
@@ -92,6 +121,31 @@ public class NasabahAction extends SecurityAction {
 		saveToken(request);
 
 		forward = mapping.findForward("continue");
+		return forward;
+	}
+	public ActionForward list(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		log.debug("prepare");
+
+		ActionForward forward = new ActionForward();
+		HttpSession session = request.getSession();
+//		DynaActionForm actualForm = (DynaActionForm) form;
+
+		forward = hasMenuAccess(mapping, request, MENU_NSB_QUERY);
+		if (forward != null) {
+			return forward;
+		}
+		prepareSearch(request);
+		session.removeAttribute(MENU_NSB_QUERY);
+
+//		Integer year = Calendar.getInstance().get(Calendar.YEAR);
+//
+//		actualForm.set("fromYear", year);
+//		actualForm.set("toYear", year);
+
+//		saveToken(request);
+
+		forward = mapping.findForward("list");
 		return forward;
 	}
 
@@ -190,7 +244,7 @@ public class NasabahAction extends SecurityAction {
 			return forward;
 
 		try {
-			prepareData(request);
+			prepareData(request, null);
 			Integer nsbhId = request.getParameter("id").equals("") ? 0
 					: Integer.parseInt(request.getParameter("id"));
 			if (errors.size() > 0) {
@@ -230,7 +284,7 @@ public class NasabahAction extends SecurityAction {
 			return forward;
 
 		try {
-			prepareData(request);
+			prepareData(request, null);
 
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
@@ -267,12 +321,11 @@ public class NasabahAction extends SecurityAction {
 		if (userLogin == null) {
 			errors.add(Constant.GLOBALERROR, new ActionMessage("error.invalidLogin"));
 		}
-
+		Nasabah nsbh = new Nasabah();
 		try {
-			prepareData(request);
+			prepareSearch(request);
 			if (isTokenValid(request)) {
 				saveToken(request);
-				Nasabah nsbh = new Nasabah();
 				BeanUtils.copyProperties(nsbh, planForm);
 				nsbh.setJenisKelamin(new StatusPK((Integer)planForm.get("jnsKelamin")));
 				nsbh.setStatusSipil(new StatusPK((Integer)planForm.get("stsSipil")));
@@ -281,10 +334,12 @@ public class NasabahAction extends SecurityAction {
 				nsbh.setBank(new Bank((Integer)planForm.get("bankId")));
 				nsbh.setTglMasuk(sdf.parse(planForm.getString("strTglMasuk")));
 				nsbh.setTglPayroll(sdf.parse(planForm.getString("strTglPayroll")));
-				nsbh.setAgent(new Nasabah((Integer)planForm.get("agentId")));
-				nsbh.setStatusAnggota(new StatusPK((Integer)planForm.get("stsAnggota")));
+				nsbh.setStatusKerja(new StatusPK((Integer)planForm.get("stsKerja")));
 				nsbh.setJenisAnggota(new StatusPK((Integer)planForm.get("jnsAnggota")));
 				nsbh.setAnAgent(planForm.get("anAgent") != null ? true : false);
+				nsbh.setCabang(new Cabang((Integer)planForm.get("cabangId")));
+				nsbh.setUnit(new Unit((Integer)planForm.get("unitId")));
+				
 				Integer nsbhId = nService.insertNasabah(nsbh);
 				nsbh.setId(nsbhId);
 				nsbh.setCreatedBy(userLogin.getUser().getUserCode());
@@ -302,6 +357,7 @@ public class NasabahAction extends SecurityAction {
 		}
 
 		if (errors.size() > 0) {
+			prepareData(request, nsbh.getCabang().getId());
 			saveErrors(request, errors);
 			return mapping.findForward("fail");
 		}
@@ -324,7 +380,7 @@ public class NasabahAction extends SecurityAction {
 			return forward;
 
 		try {
-			prepareData(request);
+			
 			Integer nsbhId = request.getParameter("id").equals("") ? 0
 					: Integer.parseInt(request.getParameter("id"));
 			if (errors.size() > 0) {
@@ -334,16 +390,19 @@ public class NasabahAction extends SecurityAction {
 
 			Nasabah nsbh = nService.getNasabah(nsbhId);
 			BeanUtils.copyProperties(planForm, nsbh);
+			prepareData(request, nsbh.getCabang().getId());
 			planForm.set("strTglMasuk", sdf.format(nsbh.getTglMasuk()));
 			planForm.set("strTglPayroll", sdf.format(nsbh.getTglPayroll()));
-			planForm.set("agentId", nsbh.getAgent().getId());
 			planForm.set("jnsKelamin", nsbh.getJenisKelamin().getId());
 			planForm.set("stsSipil", nsbh.getStatusSipil().getId());
 			planForm.set("perusahaan", nsbh.getPt().getId());
 			planForm.set("stsKrywn", nsbh.getStatusKaryawan().getId());
 			planForm.set("bankId", nsbh.getBank().getId());
-			planForm.set("stsAnggota", nsbh.getStatusAnggota().getId());
+			planForm.set("stsKerja", nsbh.getStatusKerja().getId());
 			planForm.set("jnsAnggota", nsbh.getJenisAnggota().getId());
+			planForm.set("cabangId", nsbh.getCabang().getId());
+			planForm.set("unitId", nsbh.getUnit().getId());
+			
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			errors.add(Constant.GLOBALERROR, new ActionMessage("error.exception", e.getMessage()));
@@ -393,16 +452,18 @@ public class NasabahAction extends SecurityAction {
 				nsbh.setBank(new Bank((Integer)planForm.get("bankId")));
 				nsbh.setTglMasuk(sdf.parse(planForm.getString("strTglMasuk")));
 				nsbh.setTglPayroll(sdf.parse(planForm.getString("strTglPayroll")));
-				nsbh.setAgent(new Nasabah((Integer)planForm.get("agentId")));
-				nsbh.setStatusAnggota(new StatusPK((Integer)planForm.get("stsAnggota")));
+				nsbh.setStatusKerja(new StatusPK((Integer)planForm.get("stsKerja")));
 				nsbh.setJenisAnggota(new StatusPK((Integer)planForm.get("jnsAnggota")));
 				nsbh.setAnAgent(planForm.get("anAgent") != null ? true : false);
+				nsbh.setCabang(new Cabang((Integer)planForm.get("cabangId")));
+				nsbh.setUnit(new Unit((Integer)planForm.get("unitId")));
 				
 				nService.updateNasabah(nsbh);
 				
 				nsbh.setCreatedBy(userLogin.getUser().getUserCode());
 				nsbh.setDeleted(0);
 				nService.insertNasabahHistory(nsbh);
+				prepareSearch(request);
 
 			} else {
 				errors.add(Constant.GLOBALERROR, new ActionMessage("error.invalidToken"));
@@ -437,7 +498,7 @@ public class NasabahAction extends SecurityAction {
 			return forward;
 
 		try {
-			prepareData(request);
+			prepareData(request,null);
 			Integer nsbhId = request.getParameter("id").equals("") ? 0
 					: Integer.parseInt(request.getParameter("id"));
 			if (errors.size() > 0) {
@@ -479,7 +540,7 @@ public class NasabahAction extends SecurityAction {
 		if (forward != null)
 			return forward;
 
-		ActionErrors errors = new ActionErrors();
+		ActionMessages errors = new ActionMessages();
 		HttpSession session = request.getSession();
 		DynaActionForm compForm = (DynaActionForm) form;
 
@@ -487,7 +548,7 @@ public class NasabahAction extends SecurityAction {
 		if (userLogin == null) {
 			errors.add(
 				Constant.GLOBALERROR,
-				new ActionError("error.invalidLogin"));
+				new ActionMessage("error.invalidLogin"));
 		}
 
 		try {
@@ -502,7 +563,7 @@ public class NasabahAction extends SecurityAction {
 			int affectedRow = nService.deleteNasabah(nsbh);
 			if (affectedRow == 0) {
 				errors.add(Constant.GLOBALERROR,
-					new ActionError("error.deleteFail", getMessage(request, "error.noRowUpdated")));
+					new ActionMessage("error.deleteFail", getMessage(request, "error.noRowUpdated")));
 			} else {
 				nService.insertNasabahHistory(nsbh);
 			}
@@ -511,13 +572,13 @@ public class NasabahAction extends SecurityAction {
 			log.error(e.getMessage(), e);
 			errors.add(
 				Constant.GLOBALERROR,
-				new ActionError("error.exception", e.getMessage()));
+				new ActionMessage("error.exception", e.getMessage()));
 		}
 
 		if (errors.size() > 0) {
 			saveErrors(request, errors);
 		}
-		prepareData(request);
+		prepareSearch(request);
 
 		// Return to Search
 		return mapping.findForward("success");

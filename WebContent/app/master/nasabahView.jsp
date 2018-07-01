@@ -161,7 +161,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td width="100" class="conLabel"><bean:message key="form.nasabah.statusAnggota"></bean:message></td>
+				<td width="100" class="conLabel"><bean:message key="form.nasabah.statusKerja"></bean:message></td>
 				<td class="conText">
 				</td>
 			</tr>
@@ -171,7 +171,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td width="100" class="conLabel"><bean:message key="form.nasabah.agent"></bean:message></td>
+				<td width="100" class="conLabel"><bean:message key="form.nasabah.nik"></bean:message></td>
 				<td class="conText">
 				</td>
 			</tr>

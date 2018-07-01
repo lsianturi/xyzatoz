@@ -7,7 +7,7 @@ import org.apache.log4j.Logger;
 
 import com.benclaus.koperasi.dao.BaseDAO;
 import com.benclaus.koperasi.exception.DaoException;
-import com.benclaus.koperasi.model.master.Area;
+import com.benclaus.koperasi.model.kantor.Unit;
 import com.benclaus.koperasi.model.master.Industri;
 import com.benclaus.koperasi.model.master.Nasabah;
 import com.benclaus.koperasi.model.master.Perusahaan;
@@ -67,17 +67,13 @@ public class PerusahaanDao extends BaseDAO {
 		log.info("PrshnSQL.getIndustries");
 		return (List<Industri>) super.getList("PrshnSQL.getIndustries", null);
 	}
-	public List<Area> getAreas() throws DaoException {
-		log.info("PrshnSQL.getAreas");
-		return (List<Area>) super.getList("PrshnSQL.getAreas", null);
-	}
 	public Integer insertPerusahaanHistory(Perusahaan prshn) throws DaoException {
-		log.info("NasabahSQL.insertPerusahaanHistory");
+		log.info("PrshnSQL.insertPerusahaanHistory");
 		return (Integer) super.update("PrshnSQL.insertPerusahaanHistory", prshn);
 	}
 	
-	public List<Perusahaan> getPerusahaanVersion(Integer id) throws DaoException {
-		log.info("PrshnSQL.getPerusahaanVersion");
+	public List<Perusahaan> getPerusahaanHistory(Integer id) throws DaoException {
+		log.info("PrshnSQL.getPerusahaanHistory");
 		return (List<Perusahaan>) super.getList("PrshnSQL.getPerusahaanHistory", id);
 	}
 }

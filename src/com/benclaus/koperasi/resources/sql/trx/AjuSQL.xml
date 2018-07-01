@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap
+PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="AjuSQL">
+	
+	<resultMap id="AjuSearchResult" class="com.benclaus.koperasi.model.trx.Aju">
+		<result property="id" column="id" />
+		<result property="noKredit" column="no_kredit" />
+		<result property="tglAju" column="tgl_aju" />
+		<result property="nasabah.nama" column="nasabah_nama" />
+		<result property="nasabah.nik" column="nasabah_nik" />
+		<result property="nasabah.pt.nama" column="pt_nama" />
+		<result property="tipeKredit" column="tipe_kredit" />
+		<result property="jenisPinjam" column="jenis_pinjam" />
+		<result property="sponsor.nama" column="sponsor_nama" />
+		<result property="marketing.nama" column="marketing_nama" />
+		<result property="nasabah.bank.nama" column="bank_nama" />
+		<result property="realisasi" column="realisasi" />
+	</resultMap>
+	
+	<resultMap id="AjuResult" class="com.benclaus.koperasi.model.trx.Aju">
+		<result property="id" column="id" />
+		<result property="noKredit" column="no_kredit" />
+		<result property="tglAju" column="tgl_aju" />
+		<result property="nasabah.id" column="n_id" />
+		<result property="nasabah.nik" column="n_nik" />
+		<result property="nasabah.nama" column="n_nama" />
+		<result property="nasabah.alamat" column="n_alamat" />
+		<result property="nasabah.jenisKelamin.id" column="n_jenis_kelamin_id" />
+		<result property="nasabah.jenisKelamin.status" column="n_jenis_kelamin_status" />
+		<result property="nasabah.nik" column="n_nik" />
+		<result property="nasabah.bagian" column="n_bagian" />
+		<result property="nasabah.pt.id" column="pt_id" />
+		<result property="nasabah.pt.nama" column="pt_nama" />
+		<result property="nasabah.bank.id" column="bank_id" />
+		<result property="nasabah.bank.nama" column="bank_nama" />
+		<result property="nasabah.tglPayroll" column="n_tgl_payroll" />
+		<result property="nasabah.aplikasi" column="n_aplikasi" />
+		<result property="tipeKredit" column="tipe_kredit" />
+		<result property="jenisPinjam" column="jenis_pinjam" />
+		<result property="sponsor.nama" column="sponsor_nama" />
+		<result property="marketing.nama" column="marketing_nama" />
+		<result property="jumlahAju" column="jumlah_aju" />
+		<result property="tenor" column="tenor" />
+		<result property="interestRate" column="interest_rate" />
+		<result property="angsuranAju" column="angsuran_aju" />
+		<result property="penjamin" column="penjamin" />
+		<result property="agunan" column="agunan" />
+		<result property="jatuhTempo" column="jatuh_tempo" />
+	</resultMap>
+	
+	<!-- ==================================================================== COMPANY START =================  -->
+	<select id="searchAju" resultMap="AjuSearchResult">
+		SELECT a.id, no_kredit, n.nik nasabah_nik, a.tgl_aju, n.nama nasabah_nama, p.nama pt_nama,
+			a.tipe_kredit, a.jenis_pinjam, na.nama sponsor_nama, pe.nama marketing_nama, 
+			b.nama bank_nama, a.realisasi
+			FROM `tx_kr_aju` a
+			INNER JOIN ms_nasabah n on n.id = a.nasabah_id
+			INNER JOIN ms_perusahaan p ON p.id = n.perusahaan_id
+			LEFT JOIN ms_nasabah na on na.id = a.sponsor
+			LEFT JOIN ms_pegawai pe on pe.id = a.marketing
+			LEFT JOIN ms_bank b ON b.id = n.bank_id
+		<dynamic prepend=" WHERE">
+			<isNotEmpty property="tglAjuFrom" prepend="AND">
+				a.tgl_aju <![CDATA[>=]]> DATE(#tglAjuFrom#)
+			</isNotEmpty>
+			<isNotEmpty property="tglAjuTo" prepend="AND">
+				a.tgl_aju <![CDATA[<=]]> DATE(#tglAjuTo#)
+			</isNotEmpty>
+			<isNotEmpty property="nasabah" prepend="AND">
+				n.nama LIKE CONCAT('%', #nasabah# ,'%')
+			</isNotEmpty>
+			<isNotEmpty property="nik" prepend="AND">
+				n.nik LIKE CONCAT('%', #nik#,'%')
+			</isNotEmpty>
+			<isNotEmpty property="noKredit" prepend="AND">
+				a.no_kredit LIKE CONCAT('%', #noKredit#,'%')
+			</isNotEmpty>
+			<isNotNull property="perusahaan">
+				<isNotEqual property="perusahaan" prepend="AND" compareValue="0">
+					p.id = #perusahaan#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="tipeKredit">
+				<isNotEqual property="tipeKredit" prepend="AND" compareValue="0">
+					a.tipe_kredit = #tipeKredit#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="jenisPinjam">
+				<isNotEqual property="jenisPinjam" prepend="AND" compareValue="0">
+					a.jenis_pinjam = #jenisPinjam#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="sponsor">
+				<isNotEqual property="sponsor" prepend="AND" compareValue="0">
+					a.sponsor = #sponsor#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="marketing">
+				<isNotEqual property="marketing" prepend="AND" compareValue="0">
+					a.marketing = #marketing#
+				</isNotEqual>
+			</isNotNull>
+			<isEqual property="status" prepend="AND" compareValue="1">
+				a.realisasi = 0
+			</isEqual>
+			<isEqual property="status" prepend="AND" compareValue="2">
+				a.realisasi = 1
+			</isEqual>
+			<isEqual property="status" prepend="AND" compareValue="3">
+				a.lunas = 1
+			</isEqual>
+		</dynamic>
+		ORDER BY a.tgl_aju DESC, a.no_kredit DESC, n.nama DESC
+	</select>
+	
+	<select id="searchAjuSize" resultClass="java.lang.Integer">
+		SELECT count(*)
+		FROM `tx_kr_aju` a
+			INNER JOIN ms_nasabah n on n.id = a.nasabah_id
+			INNER JOIN ms_perusahaan p ON p.id = n.perusahaan_id
+			LEFT JOIN ms_nasabah na on na.id = a.sponsor
+			LEFT JOIN ms_pegawai pe on pe.id = a.marketing
+		<dynamic prepend=" WHERE">
+			<isNotEmpty property="tglAjuFrom" prepend="AND">
+				a.tgl_aju <![CDATA[>=]]> DATE(#tglAjuFrom#)
+			</isNotEmpty>
+			<isNotEmpty property="tglAjuTo" prepend="AND">
+				a.tgl_aju <![CDATA[<=]]> DATE(#tglAjuTo#)
+			</isNotEmpty>
+			<isNotEmpty property="nasabah" prepend="AND">
+				n.nama LIKE CONCAT('%',#nasabah# ,'%')
+			</isNotEmpty>
+			<isNotEmpty property="nik" prepend="AND">
+				n.nik LIKE CONCAT('%', #nasabah#,'%')
+			</isNotEmpty>
+			<isNotEmpty property="noKredit" prepend="AND">
+				a.no_kredit LIKE CONCAT('%', #noKredit#,'%')
+			</isNotEmpty>
+			<isNotNull property="perusahaan">
+				<isNotEqual property="perusahaan" prepend="AND" compareValue="0">
+					p.id = #perusahaan#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="tipeKredit">
+				<isNotEqual property="tipeKredit" prepend="AND" compareValue="0">
+					a.tipe_kredit = #tipeKredit#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="jenisPinjam">
+				<isNotEqual property="jenisPinjam" prepend="AND" compareValue="0">
+					a.jenis_pinjam = #jenisPinjam#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="sponsor">
+				<isNotEqual property="sponsor" prepend="AND" compareValue="0">
+					a.sponsor = #sponsor#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull property="marketing">
+				<isNotEqual property="marketing" prepend="AND" compareValue="0">
+					a.marketing = #marketing#
+				</isNotEqual>
+			</isNotNull>
+			<isEqual property="status" prepend="AND" compareValue="1">
+				a.realisasi = 0
+			</isEqual>
+			<isEqual property="status" prepend="AND" compareValue="2">
+				a.realisasi = 0
+			</isEqual>
+			<isEqual property="status" prepend="AND" compareValue="3">
+				a.lunas = 1
+			</isEqual>
+		</dynamic>
+	</select>
+	
+	<select id="getAju" resultMap="AjuResult">
+		SELECT a.id, a.nasabah_id n_id, `no_kredit`,a.tgl_aju, n.nama n_nama, n.alamat n_alamat, n.jns_kelamin_id n_jenis_kelamin_id, n.aplikasi n_aplikasi,
+		k.nama n_jenis_kelamin_status, n.nik n_nik, n.bagian n_bagian, p.id pt_id, p.nama pt_nama, n.bank_id, b.nama bank_nama,
+		n.tgl_payroll n_tgl_payroll, a.tipe_kredit, a.jenis_pinjam, a.jatuh_tempo,
+			na.nama sponsor_nama, pe.nama marketing_nama,
+			a.jumlah_aju, a.tenor, a.interest_rate, a.angsuran_aju, a.penjamin, a.agunan
+			FROM `tx_kr_aju` a
+			INNER JOIN ms_nasabah n on n.id = a.nasabah_id
+			INNER JOIN ms_perusahaan p ON p.id = n.perusahaan_id
+			LEFT JOIN ms_nasabah na on na.id = a.sponsor
+			LEFT JOIN ms_pegawai pe on pe.id = a.marketing
+			INNER JOIN ms_jns_kelamin k ON k.id = n.jns_kelamin_id
+			INNER JOIN ms_bank b ON b.id = n.bank_id
+		WHERE a.id=#value#
+	</select>
+	
+	<!-- 
+	`tgl_realisasi`,
+  `jumlah_realisasi`,
+  `biaya_adm`,
+  `biaya_lain`,
+  `biaya_provisi`,
+  `angsuran_realisasi`,
+  `uang_diterima`,
+  `terbilang_diterima`,
+  `keterangan` -->
+	
+	<insert id="insertAju" parameterClass="com.benclaus.koperasi.model.trx.Aju" >
+		<selectKey keyProperty="id" resultClass="int" type="post">
+			SELECT LAST_INSERT_ID() AS value
+		</selectKey>
+		INSERT INTO `tx_kr_aju` (`no_kredit`, `tgl_aju`, `nasabah_id`, `tipe_kredit`, `jenis_pinjam`, `jumlah_aju`, `tenor`, `interest_rate`,
+					`angsuran_aju`, `sponsor`, `marketing`, `penjamin`, `agunan`, `jatuh_tempo`, `created_by`)
+		VALUES (#noKredit#, #tglAju#, #nasabah.id#, #tipeKredit#, #jenisPinjam#, #jumlahAju#, #tenor#, #interestRate#, 
+				#angsuranAju#, #sponsor.id#, #marketing.id#, #penjamin#, #agunan#, #jatuhTempo#, #createdBy#)
+	</insert>
+	
+	<update id="updateAju" parameterClass="com.benclaus.koperasi.model.trx.Aju" >
+		UPDATE `tx_kr_aju` SET `no_kredit` = #noKredit#, `tgl_aju`= #tglAju#, `nasabah_id`=#nasabah.id#, `tipe_kredit`=#tipeKredit#, 
+			`jenis_pinjam`=#jenisPinjam#, `jumlah_aju`=#jumlahAju#, `tenor`=#tenor#, `interest_rate`=#interestRate#,
+			`angsuran_aju`=#angsuranAju#, `sponsor`=#sponsor.id#, `marketing`=#marketing.id#, `penjamin`=#penjamin#,
+			`agunan`=#agunan#, `jatuh_tempo`=#jatuhTempo#
+		WHERE id = #id#
+	</update>
+	
+</sqlMap>
+

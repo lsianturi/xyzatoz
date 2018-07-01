@@ -12,8 +12,10 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 		<result property="alamat" column="alamat" />
 		<result property="industri.id" column="industri_id" />
 		<result property="industri.nama" column="industri_nama" />
-		<result property="area.id" column="area_id" />
-		<result property="area.nama" column="area_nama" />
+		<result property="cabang.id" column="cabang_id" />
+		<result property="cabang.nama" column="cabang_nama" />
+		<result property="unit.id" column="unit_id" />
+		<result property="unit.nama" column="unit_nama" />
 	</resultMap>
 	
 	<resultMap id="prshnHistoryResult" class="com.benclaus.koperasi.model.master.Perusahaan">
@@ -22,18 +24,21 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 		<result property="alamat" column="alamat" />
 		<result property="industri.id" column="industri_id" />
 		<result property="industri.nama" column="industri_nama" />
-		<result property="area.id" column="area_id" />
-		<result property="area.nama" column="area_nama" />
-		<result property="deleted" column="deleted" />
+		<result property="cabang.id" column="cabang_id" />
+		<result property="cabang.nama" column="cabang_nama" />
+		<result property="unit.id" column="unit_id" />
+		<result property="unit.nama" column="unit_nama" />
 		<result property="createdBy" column="created_by" />
 		<result property="createDtm" column="created_time" />
 	</resultMap>
 	
 	<select id="searchPerusahaan" resultMap="prshnResult" parameterClass="java.util.Map" >
-		SELECT p.id, p.nama, p.alamat, i.id industri_id, i.nama industri_nama, a.id area_id, a.nama area_nama
+		SELECT p.id, p.nama, p.alamat, i.id industri_id, i.nama industri_nama, c.id cabang_id, c.nama cabang_nama,
+			u.id unit_id, u.nama unit_nama
 			FROM ms_perusahaan p
 			INNER JOIN ms_industri i on i.id = p.industri
-			INNER JOIN ms_area a on a.id = p.area 
+			INNER JOIN sy_cabang c on c.id = p.cabang
+			INNER JOIN sy_unit u on u.id = p.unit
 			where p.deleted = 0
 			<isNotEmpty property="nama" prepend="AND">
 				p.nama LIKE concat('%',#nama#,'%')
@@ -41,8 +46,11 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 			<isNotEmpty property="industri" prepend="AND">
 				p.industri = #industri#
 			</isNotEmpty>
-			<isNotEmpty property="area" prepend="AND">
-				p.area = #area#
+			<isNotEmpty property="cabang" prepend="AND">
+				p.cabang = #cabang#
+			</isNotEmpty>
+			<isNotEmpty property="unit" prepend="AND">
+				p.unit = #unit#
 			</isNotEmpty>
 	</select>
 	
@@ -50,7 +58,8 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 		SELECT count(*) 
 			FROM ms_perusahaan p
 			INNER JOIN ms_industri i on i.id = p.industri
-			INNER JOIN ms_area a on a.id = p.area  
+			INNER JOIN sy_cabang c on c.id = p.cabang
+			INNER JOIN sy_unit u on u.id = p.unit
 			where p.deleted = 0
 			<isNotEmpty property="nama" prepend="AND">
 				p.nama LIKE concat('%',#nama#,'%')
@@ -58,8 +67,11 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 			<isNotEmpty property="industri" prepend="AND">
 				p.industri = #industri#
 			</isNotEmpty>
-			<isNotEmpty property="area" prepend="AND">
-				p.area = #area#
+			<isNotEmpty property="cabang" prepend="AND">
+				p.cabang = #cabang#
+			</isNotEmpty>
+			<isNotEmpty property="unit" prepend="AND">
+				p.unit = #unit#
 			</isNotEmpty>
 	</select>
 	
@@ -67,17 +79,18 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 		<selectKey keyProperty="id" resultClass="int" type="post">
 			SELECT LAST_INSERT_ID() AS value
 		</selectKey>
-		INSERT INTO ms_perusahaan (`nama`, `alamat`, `industri`, `area`) 
-		VALUES (#nama#, #alamat#, #industri.id#, #area.id#)
+		INSERT INTO ms_perusahaan (`nama`, `alamat`, `industri`, `cabang`, `unit`) 
+		VALUES (#nama#, #alamat#, #industri.id#, #cabang.id#, #unit.id#)
 	</insert>
 	
 	<insert id="insertPerusahaanHistory" parameterClass="com.benclaus.koperasi.model.master.Perusahaan" >
-		INSERT INTO ms_perusahaan_hist (`id`, `nama`, `alamat`, `industri`, `area`, `deleted`, `created_by`) 
-		VALUES (#id#, #nama#, #alamat#, #industri.id#, #area.id#, #deleted#, #createdBy#)
+		INSERT INTO ms_perusahaan_hist (`id`, `nama`, `alamat`, `industri`, `cabang`, `unit`, `deleted`, `created_by`) 
+		VALUES (#id#, #nama#, #alamat#, #industri.id#, #cabang.id#, #unit.id#, #deleted#, #createdBy#)
 	</insert>
 	
 	<update id="updatePerusahaan" parameterClass="com.benclaus.koperasi.model.master.Perusahaan">
-		UPDATE ms_perusahaan SET  `nama` = #nama#, `alamat`=#alamat#, `industri`=#industri.id#, `area`=#area.id#
+		UPDATE ms_perusahaan SET  `nama` = #nama#, `alamat`=#alamat#, `industri`=#industri.id#, `cabang`=#cabang.id#,
+			`unit`=#unit.id#
 		WHERE `id`=#id#
 	</update>
 	
@@ -87,10 +100,12 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 	</update>
 	
 	<select id="getPerusahaan" resultMap="prshnResult">
-		SELECT p.id, p.nama, p.alamat, i.id industri_id, i.nama industri_nama, a.id area_id, a.nama area_nama
+		SELECT p.id, p.nama, p.alamat, i.id industri_id, i.nama industri_nama, c.id cabang_id, c.nama cabang_nama,
+			u.id unit_id, u.nama unit_nama
 			FROM ms_perusahaan p
 			INNER JOIN ms_industri i on i.id = p.industri
-			INNER JOIN ms_area a on a.id = p.area 
+			INNER JOIN sy_cabang c on c.id = p.cabang
+			INNER JOIN sy_unit u on u.id = p.unit
 			WHERE p.deleted = 0
 			AND p.id = #value#
 	</select>
@@ -100,17 +115,14 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 			FROM ms_industri
 	</select>
 	
-	<select id="getAreas" resultClass="com.benclaus.koperasi.model.master.Area">
-		SELECT id, nama
-			FROM ms_area
-	</select>
 	
 	<select id="getPerusahaanHistory" resultMap="prshnHistoryResult">
-		SELECT p.id, p.nama, p.alamat, i.id industri_id, i.nama industri_nama, a.id area_id, a.nama area_nama,
-			p.`deleted`, p.`created_by`, p.`created_time`
+		SELECT p.id, p.nama, p.alamat, i.id industri_id, i.nama industri_nama, c.id cabang_id, c.nama cabang_nama,
+			u.id unit_id, u.nama unit_nama, p.created_by, p.created_time
 			FROM ms_perusahaan_hist p
 			INNER JOIN ms_industri i on i.id = p.industri
-			INNER JOIN ms_area a on a.id = p.area 
+			INNER JOIN sy_cabang c on c.id = p.cabang
+			INNER JOIN sy_unit u on u.id = p.unit
 			WHERE p.deleted = 0
 			AND p.id = #value#
 	</select>

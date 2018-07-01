@@ -36,7 +36,8 @@
 			<tr class="tblHeader"> 
 				<td><bean:message key="form.company.name"/></td>
 				<td><bean:message key="form.company.address"/></td>
-				<td><bean:message key="form.company.area"/></td>
+				<td><bean:message key="form.company.cabang"/></td>
+				<td><bean:message key="form.company.unit"/></td>
 				<td><bean:message key="form.company.industri"/></td>
 				<td><bean:message key="form.createBy"/></td>
 				<td><bean:message key="form.createTime"/></td>
@@ -58,7 +59,8 @@
 				</c:choose>
 					<td class="celBorder"><c:out value="${comp.nama}"/>&nbsp;</td>
 					<td class="celBorder"><c:out value="${comp.alamat}"/>&nbsp;</td>
-					<td class="celBorder"><c:out value="${comp.area.nama}"/>&nbsp;</td>
+					<td class="celBorder"><c:out value="${comp.cabang.nama}"/>&nbsp;</td>
+					<td class="celBorder"><c:out value="${comp.unit.nama}"/>&nbsp;</td>
 					<td class="celBorder"><c:out value="${comp.industri.nama}"/>&nbsp;</td>
 					<td class="celBorder"><c:out value="${comp.createdBy}"/></td>
 					<td class="celBorder"><fmt:formatDate value="${comp.createDtm}" pattern="dd/MM/yyyy HH:mm"/></td>

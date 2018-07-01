@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 import com.benclaus.koperasi.dao.BaseDAO;
 import com.benclaus.koperasi.exception.DaoException;
 import com.benclaus.koperasi.model.master.StatusPK;
+import com.benclaus.koperasi.utility.LabelValueBean;
 
 
 public class StatusPKDao extends BaseDAO {
@@ -52,9 +53,9 @@ public class StatusPKDao extends BaseDAO {
 		return (List<StatusPK>) super.getList("StatusPKSQL.listJenisAnggota", null);
 	}
 	
-	public List<StatusPK> listStatusAnggota() throws DaoException {
+	public List<StatusPK> listStatusKerja() throws DaoException {
 		log.info("StatusPKSQL.listStatusAnggota");
-		return (List<StatusPK>) super.getList("StatusPKSQL.listStatusAnggota", null);
+		return (List<StatusPK>) super.getList("StatusPKSQL.listStatusKerja", null);
 	}
 	
 	public List<StatusPK> listPerusahaan() throws DaoException {
@@ -69,5 +70,13 @@ public class StatusPKDao extends BaseDAO {
 		log.info("StatusPKSQL.listAgent");
 		return (List<StatusPK>) super.getList("StatusPKSQL.listAgent", null);
 	}
+	public List<StatusPK> listPegawai() throws DaoException {
+		log.info("StatusPKSQL.listPegawai");
+		return (List<StatusPK>) super.getList("StatusPKSQL.listPegawai", null);
+	}
 	
+	public List<LabelValueBean> listSukuBunga() throws DaoException {
+		log.info("StatusPKSQL.listSukuBunga");
+		return (List<LabelValueBean>) super.getList("StatusPKSQL.listSukuBunga", null);
+	}
 }

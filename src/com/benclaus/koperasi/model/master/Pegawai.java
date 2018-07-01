@@ -3,6 +3,8 @@ package com.benclaus.koperasi.model.master;
 import java.lang.reflect.Field;
 import java.util.Date;
 
+import com.benclaus.koperasi.model.kantor.Cabang;
+import com.benclaus.koperasi.model.kantor.Unit;
 import com.benclaus.koperasi.model.system.Audit;
 import com.benclaus.koperasi.model.usm.Menu;
 
@@ -16,12 +18,20 @@ public class Pegawai extends Audit{
 	private StatusPK statusPegawai;
 	private StatusPK statusSipil;
 	private Date tglMasuk ;
+	private Cabang cabang;
+	private Unit unit;
 	private String keterangan;
 
 	public Pegawai() {
 		super();
 		super.tableName = "ms_pegawai";
 		super.fields = "id";
+	}
+	public Pegawai(Integer id) {
+		super();
+		super.tableName = "ms_pegawai";
+		super.fields = "id";
+		this.id = id;
 	}
 	
 	public Integer getId() {
@@ -94,6 +104,21 @@ public class Pegawai extends Audit{
 
 	public void setKeterangan(String keterangan) {
 		this.keterangan = keterangan;
+	}
+	public Cabang getCabang() {
+		return cabang;
+	}
+
+	public void setCabang(Cabang cabang) {
+		this.cabang = cabang;
+	}
+
+	public Unit getUnit() {
+		return unit;
+	}
+
+	public void setUnit(Unit unit) {
+		this.unit = unit;
 	}
 
 	public String toString() {

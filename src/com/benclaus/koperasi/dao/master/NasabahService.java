@@ -53,13 +53,13 @@ public class NasabahService {
 		return 0;
 	}
 	
-	public Integer insertNasabah(Nasabah nasabah) {
-		try {
+	public Integer insertNasabah(Nasabah nasabah) throws Exception{
+//		try {
 			return dao.insertNasabah(nasabah);
-		} catch (Exception e) {
-			log.debug(e);
-		}
-		return 0;
+//		} catch (Exception e) {
+//			log.debug(e);
+//		}
+//		return 0;
 	}
 	
 	public Integer updateNasabah(Nasabah nasabah) {

@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 
 import com.benclaus.koperasi.exception.DaoException;
 import com.benclaus.koperasi.model.master.Pegawai;
+import com.benclaus.koperasi.model.master.Perusahaan;
 import com.benclaus.koperasi.model.master.StatusPK;
 import com.ibatis.common.util.PaginatedList;
 
@@ -61,7 +62,22 @@ public class PegawaiService {
 		}
 		return 0;
 	}
-	
+	public Integer insertPegawaiHistory(Pegawai pegawai) {
+		try {
+			return dao.insertPegawaiHistory(pegawai);
+		} catch (Exception e) {
+			log.debug(e);
+		}
+		return 0;
+	}
+	public List<Pegawai> getPegawaiHistory(Integer id) {
+		try {
+			return dao.getPegawaiHistory(id);
+		} catch (Exception e) {
+			log.debug(e);
+		}
+		return null;
+	}
 	public Integer updatePegawai(Pegawai pegawai) {
 		try {
 			return dao.updatePegawai(pegawai);

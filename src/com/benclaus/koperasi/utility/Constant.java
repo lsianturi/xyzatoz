@@ -26,6 +26,15 @@ public interface Constant {
 	String PREPARE = "prepare";
 	String NEXT = "next";
 	
+	String KREDIT_BARU="BARU";
+	String KREDIT_RO="RO";
+	String KREDIT_TOPUP="TOPUP";
+	String KREDIT_TAKEOVER="TAKEOVER";
+	
+	String PREFIX_KREDIT_BARU="110";
+	String PREFIX_REPEAT_ORDER="110";
+	String PREFIX_TOP_UP="110";
+	String PREFIX_TAKE_OVER="110";
 	
 	// Constant for SupplySlip Pages
 	String SS_ENTRY="entry";

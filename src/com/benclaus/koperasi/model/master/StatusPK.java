@@ -11,6 +11,11 @@ public class StatusPK {
 		super();
 		this.id = id;
 	}
+	public StatusPK(Integer id, String status) {
+		super();
+		this.id = id;
+		this.status= status;
+	}
 	public Integer getId() {
 		return id;
 	}

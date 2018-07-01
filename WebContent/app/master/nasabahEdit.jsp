@@ -19,6 +19,8 @@
 <script src="scripts/view.js"></script>
 <script src="scripts/staticJS.jsp"></script>
 <script src="scripts/calendar2.js"></script>
+<script src="scripts/jquery.min.js"></script>
+
 <html:javascript formName="nasabahForm" dynamicJavascript="true" staticJavascript="false"/>
 </HEAD>
 <BODY>
@@ -51,7 +53,7 @@
 		<tbody>
 			<tr>
 				<td class="conLabel"><bean:message key="form.nasabah.tglMasuk"></bean:message></td>
-				<td class="conText">
+				<td class="conText"> 
 					<html:text property="strTglMasuk" maxlength="14" size="20"></html:text>
 					<a href="javascript:cal1.popup();"><img src="icons/cal.gif"  border="0" height="16" width="16"></a>
 				</td>
@@ -93,6 +95,22 @@
 				<td class="conText">
 					<html:select property="stsSipil">
 						<html:options collection="SipilList" property="id" labelProperty="status" />
+					</html:select>
+				</td>
+			</tr>
+			<tr>
+				<td width="100" class="conLabel"><bean:message key="form.company.cabang"></bean:message></td>
+				<td class="conText">
+					<html:select property="cabangId" >
+						<html:options collection="CabangList" property="id" labelProperty="nama" />
+					</html:select>
+				</td>
+			</tr>
+			<tr>
+				<td width="100" class="conLabel"><bean:message key="form.company.unit"></bean:message></td>
+				<td class="conText">
+					<html:select property="unitId">
+						<html:options collection="UnitList" property="id" labelProperty="nama" />
 					</html:select>
 				</td>
 			</tr>
@@ -140,6 +158,12 @@
 				</td>
 			</tr>
 			<tr>
+				<td class="conLabel"><bean:message key="form.nasabah.pinAtm"></bean:message></td>
+				<td class="conText">
+					<html:text property="pinAtm" maxlength="10" size="60"></html:text>
+				</td>
+			</tr>
+			<tr>
 				<td class="conLabel"><bean:message key="form.nasabah.noRekeningRef"></bean:message></td>
 				<td class="conText">
 					<html:text property="noRekeningRef" maxlength="60" size="60"></html:text>
@@ -160,45 +184,61 @@
 				</td>
 			</tr>
 			<tr>
-				<td width="100" class="conLabel"><bean:message key="form.nasabah.statusAnggota"></bean:message></td>
+				<td width="100" class="conLabel"><bean:message key="form.nasabah.statusKerja"></bean:message></td>
 				<td class="conText">
-					<html:select property="stsAnggota">
+					<html:select property="stsKerja">
 						<html:options collection="StsAgtList" property="id" labelProperty="status" />
 					</html:select>
 				</td>
 			</tr>
 			<tr>
-				<td class="conLabel"><bean:message key="form.nasabah.keterangan"></bean:message></td>
+				<td class="conLabel"><bean:message key="form.nasabah.aplikasi"></bean:message></td>
 				<td class="conText">
-					<html:textarea property="keterangan" rows="2" cols="60"></html:textarea>
+					<html:textarea property="aplikasi" rows="3" cols="60"></html:textarea>
 				</td>
 			</tr>
 			<tr>
-				<td width="100" class="conLabel"><bean:message key="form.nasabah.agent"></bean:message></td>
+				<td class="conLabel"><bean:message key="form.nasabah.keterangan"></bean:message></td>
 				<td class="conText">
-					<html:select property="agentId">
-						<html:option value="0">&nbsp;</html:option>
-						<html:options collection="AgentList" property="id" labelProperty="status" />
-					</html:select>
+					<html:textarea property="keterangan" rows="3" cols="60"></html:textarea>
 				</td>
+			</tr>
+			<tr>
+				<td width="100" class="conLabel"><bean:message key="form.nasabah.nik"></bean:message></td>
+				<td class="conText"><html:text property="nik" maxlength="60" size="60"></html:text></td>
 			</tr>
 			<tr>
 				<td class="conLabel"></td>
 				<td class="conText">
-					<html:checkbox property="anAgent"></html:checkbox><bean:message key="form.nasabah.agent"></bean:message>
+					<html:checkbox property="anAgent"></html:checkbox><bean:message key="form.nasabah.anAgent"></bean:message>
 				</td>
 			</tr>
-		</tbody>
-	</table>
-	<table width="100%" border="0">
-		<tbody>
 			<tr>
+				<td class="conLabel">&nbsp;</td>
+				<td class="conText"></td>
+			</tr>
+			<tr>
+				<td class="conLabel"></td>
 				<td>
 					<html:submit property="btnSubmit" styleClass="frmButton" ><bean:message key="button.save"></bean:message></html:submit>
 					<html:button property="btnCancel" styleClass="frmButton" onclick="cancel()"><bean:message key="button.cancel"></bean:message></html:button>
 				</td>
 			</tr>
 		</tbody>
+		<script type="text/javascript">	
+			$('select[name="cabangId"]').on('change', function(){    
+			    cabId = $(this).val();
+			    $('select[name="unitId"]').html('');
+			    $.post("perusahaan.do",
+		            {
+			    	  dispatch:"getUnitHtml",
+		              cabangId: cabId
+		            },
+		            function(data,status){
+		                $('select[name="unitId"]').html(data);
+		            });
+			});
+	</script>
 	</table>	
 </html:form>
 <script language="JavaScript">

@@ -60,6 +60,23 @@
 			</field>
 		</form>
 		
+		<form name="ajuForm">
+			<field property="jmlAju" depends="required">
+				<arg0 key="form.aju.jmlAju" />
+			</field>
+			<field property="nasabah" depends="required">
+				<arg0 key="form.aju.nasabah" />
+			</field>
+		</form>
+		<form name="realForm">
+			<field property="jmlReal" depends="required">
+				<arg0 key="form.aju.jmlAju" />
+			</field>
+			<field property="tglReal" depends="required">
+				<arg0 key="form.aju.tglReal" />
+			</field>
+		</form>
+		
 		
 		
 		

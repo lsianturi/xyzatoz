@@ -17,6 +17,8 @@
 <script src="scripts/view.js"></script>
 <script src="scripts/md5.js"></script>
 <script src="scripts/staticJS.jsp"></script>
+<script src="scripts/jquery.min.js"></script>
+
 <script type="text/javascript">
 	<c:if test="${DataList!=null}">
 	lastPage = <c:out value="${DataList.pageIndex}"></c:out>;
@@ -51,7 +53,7 @@
 <!-- Help Page Finish -->
 <html:form action="/perusahaan.do" method="post" >	
 	<html:hidden property="dispatch" value="search"/>
-	<table border="0">
+	<table border="0" width="50%">
 		<tbody>
 			<tr>
 				<td class="conLabel"><bean:message key="form.company.name"></bean:message></td>
@@ -69,11 +71,20 @@
 				</td>
 			</tr>
 			<tr>
-				<td width="100" class="conLabel"><bean:message key="form.company.area"></bean:message></td>
+				<td width="100" class="conLabel"><bean:message key="form.company.cabang"></bean:message></td>
 				<td class="conText" colspan="3">
-					<html:select property="area">
+					<html:select property="cabang">
 						<html:option value=""><bean:message key="form.all"></bean:message></html:option>
-						<html:options collection="AreaList" property="id" labelProperty="nama" />
+						<html:options collection="CabangList" property="id" labelProperty="nama" />
+					</html:select>
+				</td>
+			</tr>
+			<tr>
+				<td width="100" class="conLabel"><bean:message key="form.company.unit"></bean:message></td>
+				<td class="conText" colspan="3">
+					<html:select property="unit">
+						<html:option value=""><bean:message key="form.all"></bean:message></html:option>
+						<html:options collection="UnitList" property="id" labelProperty="nama" />
 					</html:select>
 				</td>
 			</tr>
@@ -84,6 +95,20 @@
 				</html:submit></td>
 			</tr>
 		</tbody>
+		<script type="text/javascript">	
+			$('select[name="cabang"]').on('change', function(){    
+			    cabId = $(this).val();
+			    $('select[name="unit"]').html('');
+			    $.post("perusahaan.do",
+		            {
+			    	  dispatch:"getUnitHtml",
+		              cabangId: cabId
+		            },
+		            function(data,status){
+		                $('select[name="unit"]').html(data);
+		            });
+			});
+		</script>
 	</table>
 	<c:if test="${DataList!=null}">
 		<table width="100%" border="0" cellpadding="3" cellspacing="0" class="tblBorder">
@@ -93,7 +118,8 @@
 			<tr class="tblHeader"> 
 				<td><bean:message key="form.company.name"/></td>
 				<td><bean:message key="form.company.address"/></td>
-				<td><bean:message key="form.company.area"/></td>
+				<td><bean:message key="form.company.cabang"/></td>
+				<td><bean:message key="form.company.unit"/></td>
 				<td><bean:message key="form.company.industri"/></td>
 				<td align="center"><bean:message key="form.action"></bean:message></td>
 			</tr>
@@ -120,7 +146,8 @@
 					<%-- <td class="celBorder"><c:out value="${comp.pillar.name}"/>&nbsp;</td> --%>
 					<td class="celBorder"><c:out value="${comp.nama}"/>&nbsp;</td>
 					<td class="celBorder"><c:out value="${comp.alamat}"/>&nbsp;</td>
-					<td class="celBorder"><c:out value="${comp.area.nama}"/>&nbsp;</td>
+					<td class="celBorder"><c:out value="${comp.cabang.nama}"/>&nbsp;</td>
+					<td class="celBorder"><c:out value="${comp.unit.nama}"/>&nbsp;</td>
 					<td class="celBorder"><c:out value="${comp.industri.nama}"/>&nbsp;</td>
 					<td class="celBorder" align="center">
 						<a

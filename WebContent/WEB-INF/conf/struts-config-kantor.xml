@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN"
+                               "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+  -->
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.2//EN" 
+		"http://struts.apache.org/dtds/struts-config_1_2.dtd">
+
+<struts-config>
+	<form-beans>
+		<form-bean name="pusatForm" type="org.apache.struts.validator.DynaValidatorForm">
+			<form-property name="dispatch" type="java.lang.String" />
+			<form-property name="id" type="java.lang.Integer" />
+			<form-property name="nama" type="java.lang.String" />
+			<form-property name="alamat" type="java.lang.String" />
+			<form-property name="telepon" type="java.lang.String" />
+			<form-property name="fax" type="java.lang.String" />
+			<form-property name="badanHukum" type="java.lang.String" />
+			<form-property name="npwp" type="java.lang.String" />
+			<form-property name="siup" type="java.lang.String" />
+			<form-property name="tdp" type="java.lang.String" />
+			<form-property name="logoKoperasi" type="java.lang.String" />
+			<form-property name="logoPerusahaan" type="java.lang.String" />
+		</form-bean>
+		
+		
+		<form-bean name="cabangSearch" type="org.apache.struts.validator.DynaValidatorForm">
+			<form-property name="dispatch" type="java.lang.String" initial="prepare" />
+			<form-property name="nama" type="java.lang.String" />
+			<form-property name="statusPegawai" type="java.lang.String" />
+			<form-property name="statusSipil" type="java.lang.String" />
+			<form-property name="domisili" type="java.lang.String" />
+			<form-property name="pageIndex" type="java.lang.String" initial="1" />	
+			<form-property name="totalPage" type="java.lang.String" />
+			<form-property name="totalSize" type="java.lang.String" />		
+		</form-bean>
+		
+		<form-bean name="cabangForm" type="org.apache.struts.validator.DynaValidatorForm">
+			<form-property name="dispatch" type="java.lang.String" />
+			<form-property name="id" type="java.lang.Integer" />
+			<form-property name="nama" type="java.lang.String" />
+			<form-property name="alamat" type="java.lang.String" />
+			<form-property name="domisili" type="java.lang.String" />
+			<form-property name="telepon" type="java.lang.String" />
+			<form-property name="stsPegawai" type="java.lang.Integer" />
+			<form-property name="stsSipil" type="java.lang.Integer" />
+			<form-property name="tanggalMasuk" type="java.lang.String" />
+			<form-property name="keterangan" type="java.lang.String" />
+		</form-bean>
+		
+	</form-beans>
+	
+	<action-mappings>
+		<action path="/kantor/pusat" name="pusatForm" type="com.benclaus.koperasi.action.kantor.PusatAction" scope="request" validate="false" parameter="dispatch">
+    		<forward name="continue" path="/app/kantor/Pusat.jsp" />
+    	</action>
+		
+		<action path="/kantor/cabang" name="cabangSearch" type="com.benclaus.koperasi.action.kantor.PusatAction" scope="request" validate="false" parameter="dispatch">
+    		<forward name="continue" path="/app/master/pegawai.jsp" />	
+    		<forward name="fail" path="/main.jsp" />
+    	</action>
+    	<action path="/kantor/updateCabang" name="cabangForm" type="com.benclaus.koperasi.action.kantor.PusatAction" scope="request" parameter="dispatch" validate="false">
+			<forward name="success" path="/pegawai.do?dispatch=returned" />
+			<forward name="continue" path="/app/master/pegawaiEdit.jsp" />
+			<forward name="fail" path="/app/master/pegawaiEdit.jsp" />
+		</action>
+		
+	</action-mappings>
+</struts-config>

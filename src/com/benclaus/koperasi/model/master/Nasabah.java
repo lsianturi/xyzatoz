@@ -3,6 +3,8 @@ package com.benclaus.koperasi.model.master;
 import java.lang.reflect.Field;
 import java.util.Date;
 
+import com.benclaus.koperasi.model.kantor.Cabang;
+import com.benclaus.koperasi.model.kantor.Unit;
 import com.benclaus.koperasi.model.system.Audit;
 import com.benclaus.koperasi.model.usm.Menu;
 
@@ -15,20 +17,24 @@ public class Nasabah extends Audit{
 	private String domisili;
 	private String alamat;
 	private String telepon;
-	private Nasabah agent;
 	private Perusahaan pt;
+	private String nik;
 	private Bank bank;
 	private String bagian;
 	private String noRekening;
+	private String pinAtm;
 	private Date tglMasuk;
 	private Date tglPayroll;
 	private StatusPK statusKaryawan;
 	private StatusPK jenisAnggota;
-	private StatusPK statusAnggota;
+	private StatusPK statusKerja;
 	private String noRekeningRef;
 	private String namaRef;
+	private String aplikasi;
 	private String keterangan;
 	private boolean anAgent;
+	private Cabang cabang;
+	private Unit unit;
 
 	public Nasabah() {
 		super();
@@ -160,17 +166,16 @@ public class Nasabah extends Audit{
 	public void setJenisAnggota(StatusPK jenisAnggota) {
 		this.jenisAnggota = jenisAnggota;
 	}
-
-	public StatusPK getStatusAnggota() {
-		return statusAnggota;
-	}
-
-	public void setStatusAnggota(StatusPK statusAnggota) {
-		this.statusAnggota = statusAnggota;
-	}
-
 	public String getNoRekeningRef() {
 		return noRekeningRef;
+	}
+
+	public StatusPK getStatusKerja() {
+		return statusKerja;
+	}
+
+	public void setStatusKerja(StatusPK statusKerja) {
+		this.statusKerja = statusKerja;
 	}
 
 	public void setNoRekeningRef(String noRekeningRef) {
@@ -192,13 +197,13 @@ public class Nasabah extends Audit{
 	public void setKeterangan(String keterangan) {
 		this.keterangan = keterangan;
 	}
-
-	public Nasabah getAgent() {
-		return agent;
+	
+	public String getNik() {
+		return nik;
 	}
 
-	public void setAgent(Nasabah agent) {
-		this.agent = agent;
+	public void setNik(String nik) {
+		this.nik = nik;
 	}
 
 	public boolean isAnAgent() {
@@ -207,6 +212,37 @@ public class Nasabah extends Audit{
 
 	public void setAnAgent(boolean anAgent) {
 		this.anAgent = anAgent;
+	}
+	public String getPinAtm() {
+		return pinAtm;
+	}
+
+	public void setPinAtm(String pinAtm) {
+		this.pinAtm = pinAtm;
+	}
+
+	public String getAplikasi() {
+		return aplikasi;
+	}
+
+	public void setAplikasi(String aplikasi) {
+		this.aplikasi = aplikasi;
+	}
+
+	public Cabang getCabang() {
+		return cabang;
+	}
+
+	public void setCabang(Cabang cabang) {
+		this.cabang = cabang;
+	}
+
+	public Unit getUnit() {
+		return unit;
+	}
+
+	public void setUnit(Unit unit) {
+		this.unit = unit;
 	}
 
 	public String toString() {

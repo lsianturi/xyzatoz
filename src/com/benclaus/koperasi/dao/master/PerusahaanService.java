@@ -6,9 +6,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import com.benclaus.koperasi.exception.DaoException;
-import com.benclaus.koperasi.model.master.Area;
 import com.benclaus.koperasi.model.master.Industri;
-import com.benclaus.koperasi.model.master.Nasabah;
 import com.benclaus.koperasi.model.master.Perusahaan;
 import com.ibatis.common.util.PaginatedList;
 
@@ -100,15 +98,6 @@ public class PerusahaanService {
 		}
 		return null;
 	}
-	public List<Area> getAreas() throws DaoException {
-		try {
-			return dao.getAreas();
-		} catch (Exception e) {
-			log.debug(e);
-		}
-		return null;
-	}
-	
 	public Integer insertPerusahaanHistory(Perusahaan prshn) {
 		try {
 			return dao.insertPerusahaanHistory(prshn);
@@ -117,9 +106,9 @@ public class PerusahaanService {
 		}
 		return 0;
 	}
-	public List<Perusahaan> getPerusahaanVersion(Integer id) {
+	public List<Perusahaan> getPerusahaanHistory(Integer id) {
 		try {
-			return dao.getPerusahaanVersion(id);
+			return dao.getPerusahaanHistory(id);
 		} catch (Exception e) {
 			log.debug(e);
 		}

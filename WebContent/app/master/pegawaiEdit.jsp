@@ -20,6 +20,8 @@
 <script src="scripts/view.js"></script>
 <script src="scripts/staticJS.jsp"></script>
 <script src="scripts/calendar2.js"></script>
+<script src="scripts/jquery.min.js"></script>
+
 <html:javascript formName="pegawaiForm" dynamicJavascript="true" staticJavascript="false"/>
 </HEAD>
 <BODY>
@@ -50,6 +52,22 @@
 	<html:hidden property="id"></html:hidden>
 	<table width="100%" border="0">
 		<tbody>
+			<tr>
+				<td width="100" class="conLabel"><bean:message key="form.company.cabang"></bean:message></td>
+				<td class="conText" colspan="3">
+					<html:select property="cabangId" >
+						<html:options collection="CabangList" property="id" labelProperty="nama" />
+					</html:select>
+				</td>
+			</tr>
+			<tr>
+				<td width="100" class="conLabel"><bean:message key="form.company.unit"></bean:message></td>
+				<td class="conText" colspan="3">
+					<html:select property="unitId">
+						<html:options collection="UnitList" property="id" labelProperty="nama" />
+					</html:select>
+				</td>
+			</tr>
 			<tr>
 				<td class="conLabel"><bean:message key="form.pegawai.name"></bean:message></td>
 				<td class="conText">
@@ -90,12 +108,6 @@
 				</td>
 			</tr>
 			<tr>
-				<td class="conLabel"><bean:message key="form.pegawai.keterangan"></bean:message></td>
-				<td class="conText">
-					<html:textarea property="keterangan" rows="2" cols="60"></html:textarea>
-				</td>
-			</tr>
-			<tr>
 				<td width="100" class="conLabel"><bean:message key="form.pegawai.statusPegawai"></bean:message></td>
 				<td class="conText">
 					<html:select property="stsPegawai">
@@ -103,18 +115,40 @@
 					</html:select>
 				</td>
 			</tr>
-		</tbody>
-	</table>
-	<table width="100%" border="0">
-		<tbody>
 			<tr>
+				<td class="conLabel"><bean:message key="form.pegawai.keterangan"></bean:message></td>
+				<td class="conText">
+					<html:textarea property="keterangan" rows="2" cols="60"></html:textarea>
+				</td>
+			</tr>
+			
+			<tr>
+				<td class="conLabel">&nbsp;</td>
+				<td class="conText"></td>
+			</tr>
+			<tr>
+				<td class="conLabel"></td>
 				<td>
 					<html:submit property="btnSubmit" styleClass="frmButton" ><bean:message key="button.save"></bean:message></html:submit>
 					<html:button property="btnCancel" styleClass="frmButton" onclick="cancel()"><bean:message key="button.cancel"></bean:message></html:button>
 				</td>
 			</tr>
 		</tbody>
-	</table>	
+		<script type="text/javascript">	
+			$('select[name="cabangId"]').on('change', function(){    
+			    cabId = $(this).val();
+			    $('select[name="unitId"]').html('');
+			    $.post("perusahaan.do",
+		            {
+			    	  dispatch:"getUnitHtml",
+		              cabangId: cabId
+		            },
+		            function(data,status){
+		                $('select[name="unitId"]').html(data);
+		            });
+			});
+	</script>
+	</table>
 </html:form>
 </BODY>
 <script language="JavaScript">

@@ -1,5 +1,6 @@
 package com.benclaus.koperasi.action.master;
 
+import java.io.PrintWriter;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,10 +20,11 @@ import org.apache.struts.action.DynaActionForm;
 
 import com.benclaus.koperasi.action.SecurityAction;
 import com.benclaus.koperasi.dao.Page;
+import com.benclaus.koperasi.dao.kantor.KantorService;
 import com.benclaus.koperasi.dao.master.PerusahaanService;
-import com.benclaus.koperasi.model.master.Area;
+import com.benclaus.koperasi.model.kantor.Cabang;
+import com.benclaus.koperasi.model.kantor.Unit;
 import com.benclaus.koperasi.model.master.Industri;
-import com.benclaus.koperasi.model.master.Nasabah;
 import com.benclaus.koperasi.model.master.Perusahaan;
 import com.benclaus.koperasi.model.usm.Login;
 import com.benclaus.koperasi.utility.Constant;
@@ -37,14 +39,48 @@ public class PerusahaanAction extends SecurityAction {
 	private String MENU_PRSHN_DEL= "MST_PRSHN_del";
 
 	private PerusahaanService service = PerusahaanService.getInstance();
+	private KantorService kService = KantorService.getInstance();
 
 	private void prepareData(HttpServletRequest request) {
 
 		try {
 			request.setAttribute("IndustriList", service.getIndustries());
-			request.setAttribute("AreaList", service.getAreas());
+			request.setAttribute("CabangList", kService.getCabang());
+			request.setAttribute("UnitList", kService.getUnit());
 		} catch (Exception e) {
 		}
+	}
+	
+	private void prepareData(HttpServletRequest request, Integer cabangId) {
+
+		try {
+			request.setAttribute("IndustriList", service.getIndustries());
+			request.setAttribute("CabangList", kService.getCabang());
+			if (cabangId != null) {
+				request.setAttribute("UnitList", kService.getUnit(cabangId));
+			} else {
+				request.setAttribute("UnitList", kService.getUnit());
+			}
+		} catch (Exception e) {
+		}
+	}
+	
+	public ActionForward getUnitHtml(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		
+		Integer cabId = Integer.parseInt(request.getParameter("cabangId"));
+		List<Unit> units = kService.getUnit(cabId);
+		StringBuilder sb = new StringBuilder("<select name=\"unit\"></select>");
+		if (units != null) {
+			for (Unit unit: units) {
+				sb.append("<option value=\""+unit.getId() +"\">"+ unit.getNama()+"</option>");
+			}
+		}
+		PrintWriter pw = response.getWriter();
+		pw.write(sb.toString());
+		pw.flush();
+		
+		return null;
 	}
 
 	public ActionForward prepare(ActionMapping mapping, ActionForm form, HttpServletRequest request,
@@ -209,7 +245,8 @@ public class PerusahaanAction extends SecurityAction {
 				prshn.setId((Integer)planForm.get("id"));
 				prshn.setAlamat(planForm.getString("alamat"));
 				prshn.setNama(planForm.getString("nama"));
-				prshn.setArea(new Area((Integer)planForm.get("area")));
+				prshn.setCabang(new Cabang((Integer)planForm.get("cabang")));
+				prshn.setUnit(new Unit((Integer)planForm.get("unit")));
 				prshn.setIndustri(new Industri((Integer)planForm.get("industri")));
 				Integer nsbhId = service.insertPerusahaan(prshn);
 				
@@ -251,11 +288,13 @@ public class PerusahaanAction extends SecurityAction {
 			return forward;
 
 		try {
-			prepareData(request);
+			
 			Integer id = Integer.parseInt(request.getParameter("id"));
 			Perusahaan prshn = service.getPerusahaan(id);
+			prepareData(request, prshn.getCabang().getId());
 			BeanUtils.copyProperties(planForm, prshn);
-			planForm.set("area", prshn.getArea().getId());
+			planForm.set("cabang", prshn.getCabang().getId());
+			planForm.set("unit", prshn.getUnit().getId());
 			planForm.set("industri", prshn.getIndustri().getId());
 
 		} catch (Exception e) {
@@ -302,7 +341,8 @@ public class PerusahaanAction extends SecurityAction {
 				prshn.setId((Integer)planForm.get("id"));
 				prshn.setAlamat(planForm.getString("alamat"));
 				prshn.setNama(planForm.getString("nama"));
-				prshn.setArea(new Area((Integer)planForm.get("area")));
+				prshn.setCabang(new Cabang((Integer)planForm.get("cabang")));
+				prshn.setUnit(new Unit((Integer)planForm.get("unit")));
 				prshn.setIndustri(new Industri((Integer)planForm.get("industri")));
 				service.updatePerusahaan(prshn);
 				
@@ -391,7 +431,7 @@ public class PerusahaanAction extends SecurityAction {
 //		HttpSession session = request.getSession();
 		ActionForward forward = new ActionForward();
 		DynaActionForm planForm = (DynaActionForm) form;
-		forward = hasMenuAccess(mapping, request, MENU_PRSHN_UPD);
+		forward = hasMenuAccess(mapping, request, MENU_PRSHN_VIEW);
 		if (forward != null)
 			return forward;
 
@@ -404,7 +444,7 @@ public class PerusahaanAction extends SecurityAction {
 				return mapping.findForward("continue");
 			}
 
-			List<Perusahaan> nsbh = service.getPerusahaanVersion(nsbhId);
+			List<Perusahaan> nsbh = service.getPerusahaanHistory(nsbhId);
 			request.setAttribute("DataList", nsbh);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
