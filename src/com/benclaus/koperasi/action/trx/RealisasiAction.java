@@ -230,7 +230,7 @@ public class RealisasiAction extends SecurityAction {
 	        		sb.append("<tr class=\"oddRow\" tbody=\"barisSimulasi\">");
 	        	}
 		        sb.append("<td class=\"celBorder\">"+ i++ +"</td>");
-		        sb.append("<td class=\"celBorder\">"+ sdf.format(sim.getTanggal()) +"</td>");
+		        sb.append("<td class=\"celBorder\">"+ sdf.format(sim.getTglCicilan()) +"</td>");
 		        sb.append("<td class=\"celBorder\">"+ nf.format(sim.getSaldo()) +"</td>");
 		        sb.append("<td class=\"celBorder\">"+ nf.format(sim.getPokok()) +"</td>");
 		        sb.append("<td class=\"celBorder\">"+ nf.format(sim.getBunga()) +"</td>");

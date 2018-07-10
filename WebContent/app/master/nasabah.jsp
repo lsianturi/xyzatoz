@@ -148,6 +148,15 @@
 			});
 		</script>
 	</table>
+	<table width="100%" border="0">
+		<tbody>
+			<tr>
+				<td align="right"><html:button property="btnAdd" styleClass="frmButton" onclick="add()">
+					<bean:message key="button.add"></bean:message>
+				</html:button></td>
+			</tr>
+		</tbody>
+	</table>
 	<c:if test="${DataList!=null}">
 		<table width="100%" border="0" cellpadding="3" cellspacing="0" class="tblBorder">
 			<tr class="conLabel"> 
@@ -198,15 +207,7 @@
 		</table>
 	<%@include file="../../includes/paging.html"%>
 	</c:if>
-	<table width="100%" border="0">
-		<tbody>
-			<tr>
-				<td align="right"><html:button property="btnAdd" styleClass="frmButton" onclick="add()">
-					<bean:message key="button.add"></bean:message>
-				</html:button></td>
-			</tr>
-		</tbody>
-	</table>
+	
 </html:form>
 </BODY>
 </html:html>

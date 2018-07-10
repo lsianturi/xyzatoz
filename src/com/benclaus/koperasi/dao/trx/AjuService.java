@@ -1,11 +1,13 @@
 package com.benclaus.koperasi.dao.trx;
 
+import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
 
 import com.benclaus.koperasi.exception.DaoException;
 import com.benclaus.koperasi.model.trx.Aju;
+import com.benclaus.koperasi.model.trx.Simulasi;
 import com.ibatis.common.util.PaginatedList;
 
 public class AjuService {
@@ -73,6 +75,21 @@ public class AjuService {
 			return dao.updateAju(aju);
 		} catch (Exception e) {
 			log.debug(e);
+		}
+		return 0;
+	}
+	
+	public Integer maintainSimulai(List<Simulasi> sims, Integer ajuId) throws DaoException {
+		if (sims != null) {
+			dao.deleteSimulasi(ajuId);
+			try {
+				for (Simulasi sim : sims) {
+					sim.setAjuId(ajuId);
+					dao.insertSimulasi(sim);
+				}
+			} catch (Exception e) {
+				log.debug(e);
+			}
 		}
 		return 0;
 	}

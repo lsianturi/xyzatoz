@@ -45,7 +45,7 @@
 			<form-property name="agunan" type="java.lang.String" />
 			<form-property name="sponsor" type="java.lang.Integer" />
 			<form-property name="marketing" type="java.lang.Integer"/>
-			<form-property name="tipeKredit" type="java.lang.Integer" />
+			<form-property name="tipeKredit" type="java.lang.Integer" initial="1"/>
 			<form-property name="jenisPinjam" type="java.lang.Integer" />
 			<form-property name="jumlahAju" type="java.lang.String" />
 			<form-property name="tenor" type="java.lang.Integer" />
@@ -109,6 +109,7 @@
 			<form-property name="biayaAdmin" type="java.lang.String" />
 			<form-property name="biayaProvisi" type="java.lang.String" />
 			<form-property name="biayaLain" type="java.lang.String" />
+			<form-property name="sisaAngsuran" type="java.lang.String" />
 			<form-property name="angsuranReal" type="java.lang.String" />
 			<form-property name="diterima" type="java.lang.String" />
 			<form-property name="terbilang" type="java.lang.String" />

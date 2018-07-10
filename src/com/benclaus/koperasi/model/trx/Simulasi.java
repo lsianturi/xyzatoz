@@ -7,22 +7,50 @@ import java.util.Date;
 import java.util.List;
 
 public class Simulasi {
-	
-	private Date tanggal;
+	private Integer id;
+	private Integer ajuId;
+	private Integer noUrut;
+	private Date tglCicilan;
 	private Double saldo;
 	private Double pokok;
 	private Double bunga;
 	private Double angsuran;
+	private Double dibayar;
+	private Date tglBayar;
 
 	public Simulasi() {
 	}
 
-	public Date getTanggal() {
-		return tanggal;
+	public Integer getId() {
+		return id;
 	}
 
-	public void setTanggal(Date tanggal) {
-		this.tanggal = tanggal;
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public Integer getAjuId() {
+		return ajuId;
+	}
+
+	public void setAjuId(Integer ajuId) {
+		this.ajuId = ajuId;
+	}
+
+	public Integer getNoUrut() {
+		return noUrut;
+	}
+
+	public void setNoUrut(Integer noUrut) {
+		this.noUrut = noUrut;
+	}
+
+	public Date getTglCicilan() {
+		return tglCicilan;
+	}
+
+	public void setTglCicilan(Date tglCicilan) {
+		this.tglCicilan = tglCicilan;
 	}
 
 	public Double getSaldo() {
@@ -62,6 +90,22 @@ public class Simulasi {
 	     return (pokok + rate) / tenor;
 	}
 	
+	public Double getDibayar() {
+		return dibayar;
+	}
+
+	public void setDibayar(Double dibayar) {
+		this.dibayar = dibayar;
+	}
+
+	public Date getTglBayar() {
+		return tglBayar;
+	}
+
+	public void setTglBayar(Date tglBayar) {
+		this.tglBayar = tglBayar;
+	}
+
 	public static List<Simulasi> getSimulasi(Double pokok, Double ir, Integer tenor, Date tglAju, Date tglPayroll) {
 		List<Simulasi> list = new ArrayList<Simulasi>();
 		
@@ -83,7 +127,8 @@ public class Simulasi {
         Simulasi sim = null;
         
         sim = new Simulasi();
-        sim.setTanggal(calAju.getTime());
+        sim.setNoUrut(0);
+        sim.setTglCicilan(calAju.getTime());
         sim.setSaldo(pokok);
         sim.setPokok(0D);
         sim.setBunga(0D);
@@ -99,8 +144,9 @@ public class Simulasi {
         
     	for (int i = 1; i <= tenor; i++) {
     		sim = new Simulasi();
+    		sim.setNoUrut(i);
     		calAju.add(Calendar.MONTH, 1);
-    		sim.setTanggal(calAju.getTime());
+    		sim.setTglCicilan(calAju.getTime());
     		pokok = pokok - pokok_;
     		sim.setSaldo(pokok);
     		sim.setPokok(pokok_);

@@ -220,22 +220,43 @@ public class AjuAction extends SecurityAction {
         List<Simulasi> simulasi = Simulasi.getSimulasi(pokok, ir, tenor, tglAju, tglPayroll);
         
         int i =0;
+        double pokokTotal = 0;
+        double bungaTotal = 0;
+        double angsuranTotal = 0;
         if (simulasi != null) {
         	sb.append("<tbody id=\"barisSimulasi\" >");
         	for (Simulasi sim : simulasi) {
+        		pokokTotal += sim.getPokok();
+        		bungaTotal += sim.getBunga();
+        		angsuranTotal += sim.getAngsuran();
 	        	if( i % 2 == 0) {
 	        		sb.append("<tr class=\"evenRow\" tbody=\"barisSimulasi\">");
 	        	} else {
 	        		sb.append("<tr class=\"oddRow\" tbody=\"barisSimulasi\">");
 	        	}
-		        sb.append("<td class=\"celBorder\">"+ i++ +"</td>");
-		        sb.append("<td class=\"celBorder\">"+ sdf.format(sim.getTanggal()) +"</td>");
+	        	if (i==0) {
+	        		sb.append("<td class=\"celBorder\"><b>Realisasi</b></td>");
+	        		i++;
+	        	} else {
+	        		sb.append("<td class=\"celBorder\">"+ i++ +"</td>");
+	        	}
+		        sb.append("<td class=\"celBorder\">"+ sdf.format(sim.getTglCicilan()) +"</td>");
 		        sb.append("<td class=\"celBorder\">"+ nf.format(sim.getSaldo()) +"</td>");
 		        sb.append("<td class=\"celBorder\">"+ nf.format(sim.getPokok()) +"</td>");
 		        sb.append("<td class=\"celBorder\">"+ nf.format(sim.getBunga()) +"</td>");
 		        sb.append("<td class=\"celBorder\">"+ nf.format(sim.getAngsuran()) +"");
 		        sb.append("</tr>");
         	}
+        	if( i % 2 == 0) {
+        		sb.append("<tr class=\"evenRow\" tbody=\"barisSimulasi\">");
+        	} else {
+        		sb.append("<tr class=\"oddRow\" tbody=\"barisSimulasi\">");
+        	}
+        	sb.append("<td class=\"celBorder\" colspan=\"3\"><b>Total</b></td>");
+        	sb.append("<td class=\"celBorder\"><b>"+ nf.format(pokokTotal) +"</b></td>");
+        	sb.append("<td class=\"celBorder\"><b>"+ nf.format(bungaTotal) +"</b></td>"); 
+        	sb.append("<td class=\"celBorder\"><b>"+ nf.format(angsuranTotal) +"</b></td>");
+        	sb.append("</tr>");
         }
 		
 		pw.write(sb.toString());
@@ -402,7 +423,7 @@ public class AjuAction extends SecurityAction {
 			if (isTokenValid(request)) {
 				saveToken(request);
 				Aju aju = new Aju();
-				aju.setTipeKredit(1); // tipe kredit harus melihat history pinjaman sebelumnya.
+				aju.setTipeKredit((Integer)myForm.get("tipeKredit")); // tipe kredit harus melihat history pinjaman sebelumnya.
 				aju.setNoKredit(TipeKredit.getPrefix(aju.getTipeKredit()) +
 						+ service.getLastNo(TipeKredit.getTipeKredit(aju.getTipeKredit())));
 				aju.setTglAju(sdf.parse(myForm.getString("tglAju")));
@@ -425,6 +446,9 @@ public class AjuAction extends SecurityAction {
 				
 				Integer id = service.insertAju(aju);
 				System.out.println("Aju Id: " +id);
+				
+				List<Simulasi> sims = Simulasi.getSimulasi(aju.getJumlahAju(), aju.getInterestRate(), aju.getTenor(), aju.getTglAju(), aju.getJatuhTempo());
+				service.maintainSimulai(sims, id);
 			} else {
 				errors.add(Constant.GLOBALERROR, new ActionMessage("error.invalidToken"));
 				saveErrors(request, errors);
@@ -527,7 +551,6 @@ public class AjuAction extends SecurityAction {
 		}
 
 		try {
-			
 			if (isTokenValid(request)) {
 				saveToken(request);
 				Aju aju = new Aju();
@@ -553,7 +576,10 @@ public class AjuAction extends SecurityAction {
 				
 				service.updateAju(aju);
 				aju.setCreatedBy(userLogin.getUser().getUserCode());
-
+				
+				List<Simulasi> sims = Simulasi.getSimulasi(aju.getJumlahAju(), aju.getInterestRate(), 
+						aju.getTenor(), aju.getTglAju(), aju.getJatuhTempo());
+				service.maintainSimulai(sims, aju.getId());
 			} else {
 				errors.add(Constant.GLOBALERROR, new ActionMessage("error.invalidToken"));
 				saveErrors(request, errors);

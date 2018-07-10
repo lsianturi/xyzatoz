@@ -54,6 +54,12 @@
 	
 	function simulasi() {
 		$('input[name="btnSimulasi"]').click();
+		$('input[name="btnHitung"]').click();
+	}
+	
+	function clickSubmit() {
+		cekCicilan();
+		document.ajuForm.submit();
 	}
 	
 </script>
@@ -100,10 +106,11 @@
 			</tr>
 		</tbody>
 	</table>
-<html:form action="/trx/ajuUpdate" onsubmit="return validateAjuForm(this);">
+<html:form action="/trx/ajuUpdate" onsubmit="return validateAjuForm(form);">
 	<html:hidden property="dispatch"></html:hidden>
 	<html:hidden property="id"></html:hidden>
 	<html:hidden property="nsbhId"></html:hidden>
+	<html:hidden property="tipeKredit"></html:hidden>
 	<div id="Nasabah" class="w3-container aju">
 	<table border="0">
 		<tbody>
@@ -250,13 +257,13 @@
 			<tr>
 				<td class="conLabel"><bean:message key="form.aju.tenor"></bean:message></td>
 				<td class="conText">
-					<html:text property="tenor" maxlength="14" size="60"></html:text>
+					<html:text property="tenor" maxlength="14" size="60" onchange="simulasi()"></html:text>
 				</td>
 			</tr>
 			<tr>
 				<td class="conLabel"><bean:message key="form.aju.angsuranAju"></bean:message></td>
 				<td class="conText">
-					<html:text property="angsuranAju" maxlength="14" size="42" styleClass="frmReadOnly" readonly="true"></html:text>&nbsp;<html:button property="btnCancel" styleClass="frmButton" onclick="cekCicilan()">Hitung</html:button>
+					<html:text property="angsuranAju" maxlength="14" size="42" styleClass="frmReadOnly" readonly="true"></html:text>&nbsp;<html:button property="btnHitung" styleClass="frmButton" onclick="cekCicilan()">Hitung</html:button>
 				</td>
 			</tr>
 			
@@ -340,7 +347,7 @@
 		</tr>
 		<tr> 
 			<td class="conLabel"><bean:message key="form.aju.noKredit"></bean:message></td>
-			<td class="conText" colspan="3"><bean:write name="aju" property="noKredit"/></td>
+			<c:if test="${aju != null}"><td class="conText" colspan="3"><bean:write name="aju" property="noKredit"/></td></c:if>
 		</tr>
 		<tr class="tblHeader"> 
 			<td>No</td>
@@ -364,7 +371,7 @@
 			</tr>
 			<tr>
 				<td>
-					<html:submit property="btnSubmit" styleClass="frmButton" onclick="save()"><bean:message key="button.save"></bean:message></html:submit>
+					<html:submit property="btnSubmit" styleClass="frmButton" ><bean:message key="button.save"></bean:message></html:submit>
 					<html:button property="btnCancel" styleClass="frmButton" onclick="cancel()"><bean:message key="button.cancel"></bean:message></html:button>
 				</td>
 			</tr>

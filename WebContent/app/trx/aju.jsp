@@ -52,64 +52,44 @@
 	
 <html:form action="/trx/aju.do" method="post">	
 	<html:hidden property="dispatch" value="search"/>
-	  	<table border="0">
+	  	<table border="0" width="70%">
 		<tbody>
 			<tr>
 				<td class="conLabel"><bean:message key="form.aju.noKredit"></bean:message></td>
-				<td class="conText" colspan="3">
+				<td class="conText" >
 					<html:text property="noKredit" maxlength="30" size="40"></html:text>
 				</td>
-			</tr>
-			<tr>
-				<td class="conLabel"><bean:message key="form.nasabah.nik"></bean:message></td>
-				<td class="conText" colspan="3">
-					<html:text property="nik" maxlength="30" size="40"></html:text>
-				</td>
-			</tr>
-			<tr>
-				<td class="conLabel"><bean:message key="form.aju.nasabah"></bean:message></td>
-				<td class="conText" colspan="3">
-					<html:text property="nasabah" maxlength="30" size="40"></html:text>
-				</td>
-			</tr>
-			<tr>
-				<td class="conLabel"><bean:message key="form.aju.tglAju"></bean:message></td>
-				<td class="conText" colspan="3">
-					<html:text property="tglAjuFrom" maxlength="12" size="15"></html:text>&nbsp;<a href="javascript:cal1.popup();"><img src="../icons/cal.gif"  border="0" height="16" width="16"></a>&nbsp;To&nbsp;
-					<html:text property="tglAjuTo" maxlength="12" size="15"></html:text>&nbsp;<a href="javascript:cal2.popup();"><img src="../icons/cal.gif"  border="0" height="16" width="16"></a>
-				</td>
-			</tr>
-			<tr>
-				<td width="100" class="conLabel"><bean:message key="form.aju.perusahaan"></bean:message></td>
-				<td class="conText" colspan="3">
-					<html:select property="perusahaan">
-						<html:option value=""><bean:message key="form.all"></bean:message></html:option>
-						<html:options collection="PerusahaanList" property="id" labelProperty="status" />
-					</html:select>
-				</td>
-			</tr>
-			<tr>
+				
 				<td width="100" class="conLabel"><bean:message key="form.aju.tipeKredit"></bean:message></td>
-				<td class="conText" colspan="3">
+				<td class="conText" >
 					<html:select property="tipeKredit">
 						<html:option value=""><bean:message key="form.all"></bean:message></html:option>
 						<html:options collection="TipeKreditList" property="value" labelProperty="label" />
 					</html:select>
 				</td>
-			</tr> 
+			</tr>
 			<tr>
+				<td class="conLabel"><bean:message key="form.nasabah.nik"></bean:message></td>
+				<td class="conText" >
+					<html:text property="nik" maxlength="30" size="40"></html:text>
+				</td>
+				
 				<td width="100" class="conLabel"><bean:message key="form.aju.jenisPinjam"></bean:message></td>
-				<td class="conText" colspan="3">
+				<td class="conText" >
 					<html:select property="jenisPinjam">
 						<html:option value=""><bean:message key="form.all"></bean:message></html:option>
 						<html:options collection="JenisPinjamList" property="value" labelProperty="label" />
 					</html:select>
 				</td>
 			</tr>
-	
 			<tr>
+				<td class="conLabel"><bean:message key="form.aju.nasabah"></bean:message></td>
+				<td class="conText" >
+					<html:text property="nasabah" maxlength="30" size="40"></html:text>
+				</td>
+				
 				<td width="100" class="conLabel"><bean:message key="form.aju.sponsor"></bean:message></td>
-				<td class="conText" colspan="3">
+				<td class="conText" >
 					<html:select property="sponsor">
 						<html:option value=""><bean:message key="form.all"></bean:message></html:option>
 						<html:options collection="AgentList" property="id" labelProperty="status" />
@@ -117,8 +97,14 @@
 				</td>
 			</tr>
 			<tr>
+				<td class="conLabel"><bean:message key="form.aju.tglAju"></bean:message></td>
+				<td class="conText" >
+					<html:text property="tglAjuFrom" maxlength="12" size="15"></html:text>&nbsp;<a href="javascript:cal1.popup();"><img src="../icons/cal.gif"  border="0" height="16" width="16"></a>&nbsp;To&nbsp;
+					<html:text property="tglAjuTo" maxlength="12" size="15"></html:text>&nbsp;<a href="javascript:cal2.popup();"><img src="../icons/cal.gif"  border="0" height="16" width="16"></a>
+				</td>
+				
 				<td width="100" class="conLabel"><bean:message key="form.aju.marketing"></bean:message></td>
-				<td class="conText" colspan="3">
+				<td class="conText" >
 					<html:select property="marketing">
 						<html:option value=""><bean:message key="form.all"></bean:message></html:option>
 						<html:options collection="MarketingList" property="id" labelProperty="status" />
@@ -126,8 +112,16 @@
 				</td>
 			</tr>
 			<tr>
+				<td width="100" class="conLabel"><bean:message key="form.aju.perusahaan"></bean:message></td>
+				<td class="conText" >
+					<html:select property="perusahaan">
+						<html:option value=""><bean:message key="form.all"></bean:message></html:option>
+						<html:options collection="PerusahaanList" property="id" labelProperty="status" />
+					</html:select>
+				</td>
+				
 				<td width="100" class="conLabel"><bean:message key="form.aju.status"></bean:message></td>
-				<td class="conText" colspan="3">
+				<td class="conText" >
 					<html:select property="status">
 						<html:option value=""><bean:message key="form.all"></bean:message></html:option>
 						<html:options collection="StatusList" property="id" labelProperty="status" />
@@ -142,11 +136,19 @@
 			</tr>
 		</tbody>
 	</table>
-	
+	<table width="100%" border="0">
+		<tbody>
+			<tr>
+				<td align="right"><html:button property="btnAdd" styleClass="frmButton" onclick="add()">
+					<bean:message key="button.add"></bean:message>
+				</html:button></td>
+			</tr>
+		</tbody>
+	</table>	
 	<c:if test="${DataList!=null}">
 		<table width="100%" border="0" cellpadding="3" cellspacing="0" class="tblBorder">
 			<tr class="conLabel"> 
-				<td colspan="3">Search Result</td>
+				<td colspan="9">Search Result</td>
 			</tr>
 			<tr class="tblHeader"> 
 				<td><bean:message key="form.aju.tglAju"/></td>
@@ -205,15 +207,6 @@
 		</table>
 	<%@include file="../../includes/paging.html"%>
 	</c:if>
-	<table width="100%" border="0">
-		<tbody>
-			<tr>
-				<td align="right"><html:button property="btnAdd" styleClass="frmButton" onclick="add()">
-					<bean:message key="button.add"></bean:message>
-				</html:button></td>
-			</tr>
-		</tbody>
-	</table>
 </html:form>
 <script language="JavaScript">
 	var cal1 = new calendar2(document.forms['ajuSearch'].elements['tglAjuFrom']);

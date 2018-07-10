@@ -10,6 +10,7 @@ import org.apache.log4j.Logger;
 import com.benclaus.koperasi.dao.BaseDAO;
 import com.benclaus.koperasi.exception.DaoException;
 import com.benclaus.koperasi.model.trx.Aju;
+import com.benclaus.koperasi.model.trx.Simulasi;
 import com.ibatis.common.util.PaginatedList;
 
 
@@ -55,6 +56,17 @@ public class AjuDao extends BaseDAO {
 		log.info("AjuSQL.updateAju");
 		return (Integer) super.insert("AjuSQL.updateAju", aju);
 	}
+	
+	public Integer insertSimulasi(Simulasi sim) throws DaoException {
+		log.info("AjuSQL.insertSimulasi");
+		return (Integer) super.insert("AjuSQL.insertSimulasi", sim);
+	}
+	
+	public Integer deleteSimulasi(Integer ajuId) throws DaoException {
+		log.info("AjuSQL.deleteSimulasi");
+		return (Integer) super.insert("AjuSQL.deleteSimulasi", ajuId);
+	}
+	
 	
 	public Integer getLastNo(String tipeKredit) throws DaoException {
 		log.info("AjuSQL.getLastNo");

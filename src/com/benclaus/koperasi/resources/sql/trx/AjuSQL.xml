@@ -51,6 +51,19 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 		<result property="jatuhTempo" column="jatuh_tempo" />
 	</resultMap>
 	
+	<resultMap id="SimulasiResult" class="com.benclaus.koperasi.model.trx.Simulasi">
+		<result property="id" column="id" />
+		<result property="ajuId" column="aju_id" />
+		<result property="noUrut" column="no_urut" />
+		<result property="tglCicilan" column="tgl_cicil" />
+		<result property="saldo" column="saldo" />
+		<result property="pokok" column="pokok" />
+		<result property="bunga" column="bunga" />
+		<result property="angsuran" column="angsuran" />
+		<result property="dibayar" column="dibayar" />
+		<result property="tglBayar" column="tgl_bayar" />
+	</resultMap>
+	
 	<!-- ==================================================================== COMPANY START =================  -->
 	<select id="searchAju" resultMap="AjuSearchResult">
 		SELECT a.id, no_kredit, n.nik nasabah_nik, a.tgl_aju, n.nama nasabah_nama, p.nama pt_nama,
@@ -220,6 +233,15 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 			`agunan`=#agunan#, `jatuh_tempo`=#jatuhTempo#
 		WHERE id = #id#
 	</update>
+	
+	<insert id="insertSimulasi" parameterClass="com.benclaus.koperasi.model.trx.Simulasi" >
+		INSERT INTO `tx_kr_aju_sim` (`aju_id`, `tgl_cicil`, `no_urut`, `saldo`, `pokok`, `bunga`, `angsuran`)
+		VALUES (#ajuId#, #tglCicilan#, #noUrut#, #saldo#, #pokok#, #bunga#, #angsuran#)
+	</insert>
+	<update id="deleteSimulasi" parameterClass="java.lang.Integer" >
+		DELETE FROM tx_kr_aju_sim WHERE aju_id = #value# AND dibayar IS NULL AND tgl_bayar IS NULL
+	</update>
+	
 	
 </sqlMap>
 

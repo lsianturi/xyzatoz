@@ -54,6 +54,7 @@
 	
 	function simulasi() {
 		$('input[name="btnSimulasi"]').click();
+		$('input[name="btnCekCicilan"]').click();
 		openTab('Aju');
 	}
 	
@@ -91,7 +92,7 @@
 <div class="w3-bar w3-blue">
   <button class="w3-bar-item w3-button conTitle" onclick="openTab('Nasabah')">Nasabah</button>
   <button class="w3-bar-item w3-button conTitle" onclick="openTab('Jaminan')">Jaminan</button>
-  <button class="w3-bar-item w3-button conTitle" onclick="openTab('Aju')">Pengajuan</button>
+  <button class="w3-bar-item w3-button conTitle" onclick="openTab('Aju')">Realisasi</button>
   <button class="w3-bar-item w3-button conTitle" onclick="openTab('Simulasi')">Simulasi</button>
 </div>
 <table border="0">
@@ -281,6 +282,44 @@
 	<table border="0">
 		<tbody>
 			<tr > 
+				<td colspan="6">&nbsp;</td>
+			</tr>
+			<tr class="tblHeader"> 
+				<td colspan="6">Pinjaman Aktif</td>
+			</tr>
+			<c:if test="${PinjamanList!=null}">
+			
+			<tr> 
+				<td class="conLabel"><bean:message key="form.aju.noKredit"></bean:message></td>
+				<td class="conText" colspan="5"><bean:write name="aju" property="noKredit"/></td>
+			</tr>
+			<c:forEach var="aju" items="${DataList.list}" varStatus="status">
+			<tr class="tblHeader"> 
+				<td>No</td>
+				<td>Tanggal</td>
+				<td>Saldo</td>
+				<td>Pokok</td>
+				<td>Bunga</td>
+				<td>Angsuran</td>
+			</tr>
+				<c:choose>
+					<c:when test="${status.count % 2 != 0}">
+						<tr class="oddRow">
+					</c:when>
+					<c:otherwise>
+						<tr class="evenRow">
+					</c:otherwise>
+				</c:choose>
+				
+				</tr>
+			</c:forEach>
+			</c:if>
+		</tbody>
+	</table>
+	
+	<table border="0">
+		<tbody>
+			<tr > 
 				<td colspan="2">&nbsp;</td>
 			</tr>
 			<tr class="tblHeader"> 
@@ -318,9 +357,15 @@
 				</td>
 			</tr>
 			<tr>
+				<td class="conLabel"><bean:message key="form.real.sisa"></bean:message></td>
+				<td class="conText">
+					<html:text property="biayaLain" maxlength="14" size="60"></html:text>
+				</td>
+			</tr>
+			<tr>
 				<td class="conLabel"><bean:message key="form.real.diterima"></bean:message></td>
 				<td class="conText">
-					<html:text property="diterima" maxlength="14" size="42" styleClass="frmReadOnly" readonly="true"></html:text>&nbsp;<html:button property="btnCancel" styleClass="frmButton" onclick="cekCicilan()">Hitung</html:button>
+					<html:text property="diterima" maxlength="14" size="42" styleClass="frmReadOnly" readonly="true"></html:text>&nbsp;<html:button property="btnCekCicilan" styleClass="frmButton" onclick="cekCicilan()">Hitung</html:button>
 				</td>
 			</tr>
 			<tr>
@@ -425,7 +470,7 @@
 			</tr>
 			<tr>
 				<td>
-					<html:submit property="btnSubmit" styleClass="frmButton" onclick="save()"><bean:message key="button.save"></bean:message></html:submit>
+					<html:submit property="btnSubmit" styleClass="frmButton"><bean:message key="button.save"></bean:message></html:submit>
 					<html:button property="btnCancel" styleClass="frmButton" onclick="cancel()"><bean:message key="button.cancel"></bean:message></html:button>
 				</td>
 			</tr>
