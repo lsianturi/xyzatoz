@@ -103,4 +103,22 @@ public class AjuService {
 		return 0;
 	}
 	
+	public List<Aju> getDueAju(Integer nsbhId) throws DaoException {
+		try {
+			return dao.getDueAju(nsbhId);
+		} catch (Exception e) {
+			log.debug(e);
+		}
+		return null;
+	}
+	
+	public List<Simulasi> getDueSimulasi(Integer ajuId) throws DaoException {
+		try {
+			return dao.getDueSimulasi(ajuId);
+		} catch (Exception e) {
+			log.debug(e);
+		}
+		return null;
+	}
+	
 }

@@ -2,6 +2,7 @@ package com.benclaus.koperasi.model.trx;
 
 import java.lang.reflect.Field;
 import java.util.Date;
+import java.util.List;
 
 import com.benclaus.koperasi.model.master.Nasabah;
 import com.benclaus.koperasi.model.master.Pegawai;
@@ -26,6 +27,7 @@ public class Aju extends Audit{
 	private String agunan;
 	private Date jatuhTempo;
 	private Integer realisasi;
+	private List<Simulasi> simulasi;
 
 	public Aju() {
 	}
@@ -158,6 +160,14 @@ public class Aju extends Audit{
 
 	public void setRealisasi(Integer realisasi) {
 		this.realisasi = realisasi;
+	}
+
+	public List<Simulasi> getSimulasi() {
+		return simulasi;
+	}
+
+	public void setSimulasi(List<Simulasi> simulasi) {
+		this.simulasi = simulasi;
 	}
 
 	public String toString() {

@@ -50,6 +50,7 @@ public class RealisasiAction extends SecurityAction {
 	private StatusPKService stService = StatusPKService.getInstance();
 	private NasabahService nService = NasabahService.getInstance();
 	private RealisasiService service = RealisasiService.getInstance();
+	private AjuService ajuService = AjuService.getInstance();
 	
 	private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 	private SimpleDateFormat sdfMysql = new SimpleDateFormat("yyyy-MM-dd");
@@ -394,6 +395,16 @@ public class RealisasiAction extends SecurityAction {
 			planForm.set("biayaProvisi", nf.format(biaya));
 			planForm.set("biayaLain", "0.00");
 			planForm.set("diterima", nf.format(aju.getJumlahAju() - (biaya * 2)));
+			
+			List<Aju> ajus = ajuService.getDueAju(aju.getNasabah().getId());
+			if (ajus != null) {
+				List<Simulasi> sims = null;
+				for (Aju a : ajus) {
+					sims = ajuService.getDueSimulasi(a.getId());
+					a.setSimulasi(sims);
+				}
+				request.setAttribute("DueList", ajus);
+			}
 			
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);

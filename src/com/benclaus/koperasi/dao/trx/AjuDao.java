@@ -3,6 +3,7 @@ package com.benclaus.koperasi.dao.trx;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -84,8 +85,15 @@ public class AjuDao extends BaseDAO {
 		return result;
 	}
 	
+	public List<Aju> getDueAju(Integer nsbhId) throws DaoException {
+		log.info("AjuSQL.getDueAju");
+		return (List) super.getList("AjuSQL.getDueAju", nsbhId);
+	}
 	
-	
+	public List<Simulasi> getDueSimulasi(Integer ajuId) throws DaoException {
+		log.info("AjuSQL.getDueSimulasi");
+		return (List) super.getList("AjuSQL.getDueSimulasi", ajuId);
+	}
 	/*
 	 * CASE 
 		WHEN lastNo IS NULL THEN

@@ -3,6 +3,7 @@
 <%@ taglib uri="/tags/struts-bean" prefix="bean" %>
 <%@taglib uri="/tags/struts-logic" prefix="logic"%>
 <%@taglib uri="http://java.sun.com/jstl/core" prefix="c"%>
+<%@taglib uri="http://java.sun.com/jstl/fmt" prefix="fmt"%>
 <html:html>
 <HEAD>
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8" %>
@@ -279,6 +280,7 @@
 		</tbody>
 	</table>
 	
+	<c:if test="${DueList != null}">
 	<table border="0">
 		<tbody>
 			<tr > 
@@ -287,35 +289,65 @@
 			<tr class="tblHeader"> 
 				<td colspan="6">Pinjaman Aktif</td>
 			</tr>
-			<c:if test="${PinjamanList!=null}">
 			
-			<tr> 
-				<td class="conLabel"><bean:message key="form.aju.noKredit"></bean:message></td>
-				<td class="conText" colspan="5"><bean:write name="aju" property="noKredit"/></td>
-			</tr>
-			<c:forEach var="aju" items="${DataList.list}" varStatus="status">
-			<tr class="tblHeader"> 
-				<td>No</td>
-				<td>Tanggal</td>
-				<td>Saldo</td>
-				<td>Pokok</td>
-				<td>Bunga</td>
-				<td>Angsuran</td>
-			</tr>
-				<c:choose>
-					<c:when test="${status.count % 2 != 0}">
-						<tr class="oddRow">
-					</c:when>
-					<c:otherwise>
-						<tr class="evenRow">
-					</c:otherwise>
-				</c:choose>
+			<c:set var="kekurangan" value="${0}"/>
+			<c:forEach var="aju" items="${DueList}" varStatus="status">
+				<c:set var="totalUtang" value="${0}"/>
+				<c:set var="totalBayar" value="${0}"/>
 				
+				<tr> 
+					<td class="conLabel"><bean:message key="form.aju.noKredit"></bean:message></td>
+					<td class="conText" colspan="5"><bean:write name="aju" property="noKredit"/></td>
+				</tr>
+				<tr class="tblHeader"> 
+					<td>No</td>
+					<td>Tanggal Cicilan</td>
+					<td>Saldo</td>
+					<td>Pokok</td>
+					<td>Bunga</td>
+					<td>Angsuran</td>
+					<td>Dibayar</td>
+					<td>Tanggal Bayar</td>
+				</tr>
+				<c:forEach var="sim" items="${aju.simulasi}" varStatus="statusSim">
+					<c:choose>
+						<c:when test="${statusSim.count % 2 != 0}">
+							<tr class="oddRow">
+						</c:when>
+						<c:otherwise>
+							<tr class="evenRow">
+						</c:otherwise>
+					</c:choose>
+					<td class="celBorder"><c:out value="${sim.noUrut}"/></td>
+					<td class="celBorder"><fmt:formatDate value="${sim.tglCicilan}" pattern="dd/MM/yyyy"/></td>
+					<td class="celBorder"><fmt:formatNumber value="${sim.saldo}" type="currency" groupingUsed="true" maxFractionDigits="0"/></td>
+					<td class="celBorder"><fmt:formatNumber value="${sim.pokok}" type="currency" groupingUsed="true" maxFractionDigits="0"/></td>
+					<td class="celBorder"><fmt:formatNumber value="${sim.bunga}" type="currency" groupingUsed="true" maxFractionDigits="0"/></td>
+					<td class="celBorder"><fmt:formatNumber value="${sim.pokok+sim.bunga}" type="currency" groupingUsed="true" maxFractionDigits="0"/></td>
+					<td class="celBorder"><fmt:formatNumber value="${sim.dibayar}" type="currency" groupingUsed="true" maxFractionDigits="0"/></td>
+					<td class="celBorder"><fmt:formatDate value="${sim.tglBayar}" pattern="dd/MM/yyyy"/></td>
+				</tr>
+					<c:set var="totalUtang" value="${totalUtang + sim.pokok + sim.bunga}" />
+					<c:set var="totalBayar" value="${totalBayar + sim.dibayar}" />
+				</c:forEach>
+				<tr> 
+					<td class="conLabel" colspan="5">Total</td>
+					<td class="conText"><fmt:formatNumber value="${totalUtang}" type="currency" groupingUsed="true" maxFractionDigits="0"/></td>
+					<td class="conText"><fmt:formatNumber value="${totalBayar}" type="currency" groupingUsed="true" maxFractionDigits="0"/></td>
+					<c:set var="kekurangan" value="${kekurangan + totalUtang - totalBayar}" />
+				</tr>
+				<tr> 
+					<td class="conLabel" colspan="5">Kekurangan</td>
+					<td class="conText"><fmt:formatNumber value="${totalUtang - totalBayar}" type="currency" groupingUsed="true" maxFractionDigits="0"/></td>
 				</tr>
 			</c:forEach>
-			</c:if>
+			<tr> 
+				<td class="conLabel" colspan="5">Total kekurangan</td>
+				<td class="conText"><fmt:formatNumber value="${kekurangan}" type="currency" groupingUsed="true" maxFractionDigits="0"/></td>
+			</tr>
 		</tbody>
 	</table>
+	</c:if>
 	
 	<table border="0">
 		<tbody>
@@ -359,7 +391,7 @@
 			<tr>
 				<td class="conLabel"><bean:message key="form.real.sisa"></bean:message></td>
 				<td class="conText">
-					<html:text property="biayaLain" maxlength="14" size="60"></html:text>
+					<html:text property="biayaLain" maxlength="14" size="60" value="${kekurangan}"></html:text>
 				</td>
 			</tr>
 			<tr>
