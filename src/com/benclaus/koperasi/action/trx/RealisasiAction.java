@@ -344,6 +344,9 @@ public class RealisasiAction extends SecurityAction {
 
 		log.debug("Realisasi");
 
+		nf.setMaximumFractionDigits(0);
+		nf.setMinimumFractionDigits(0);
+		nf.setGroupingUsed(true);
 		ActionMessages errors = new ActionMessages();
 		// Check Menu Access
 		HttpSession session = request.getSession();
@@ -394,17 +397,28 @@ public class RealisasiAction extends SecurityAction {
 			planForm.set("biayaAdmin", nf.format(biaya));
 			planForm.set("biayaProvisi", nf.format(biaya));
 			planForm.set("biayaLain", "0.00");
-			planForm.set("diterima", nf.format(aju.getJumlahAju() - (biaya * 2)));
 			
+			
+			double totalUtang = 0d;
+			double totalBayar = 0d;
 			List<Aju> ajus = ajuService.getDueAju(aju.getNasabah().getId());
 			if (ajus != null) {
 				List<Simulasi> sims = null;
 				for (Aju a : ajus) {
 					sims = ajuService.getDueSimulasi(a.getId());
-					a.setSimulasi(sims);
+					if (sims != null) {
+						a.setSimulasi(sims);
+						for (Simulasi s: sims) {
+							totalUtang += s.getPokok();
+							totalUtang += s.getBunga();
+							totalBayar += s.getDibayar() == null ? 0d : s.getDibayar();
+						}
+					}
 				}
 				request.setAttribute("DueList", ajus);
 			}
+			double kurang = (totalUtang - totalBayar);
+			planForm.set("sisaAngsuran", nf.format(kurang));
 			
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);

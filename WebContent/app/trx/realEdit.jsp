@@ -320,11 +320,11 @@
 					</c:choose>
 					<td class="celBorder"><c:out value="${sim.noUrut}"/></td>
 					<td class="celBorder"><fmt:formatDate value="${sim.tglCicilan}" pattern="dd/MM/yyyy"/></td>
-					<td class="celBorder"><fmt:formatNumber value="${sim.saldo}" type="currency" groupingUsed="true" maxFractionDigits="0"/></td>
-					<td class="celBorder"><fmt:formatNumber value="${sim.pokok}" type="currency" groupingUsed="true" maxFractionDigits="0"/></td>
-					<td class="celBorder"><fmt:formatNumber value="${sim.bunga}" type="currency" groupingUsed="true" maxFractionDigits="0"/></td>
-					<td class="celBorder"><fmt:formatNumber value="${sim.pokok+sim.bunga}" type="currency" groupingUsed="true" maxFractionDigits="0"/></td>
-					<td class="celBorder"><fmt:formatNumber value="${sim.dibayar}" type="currency" groupingUsed="true" maxFractionDigits="0"/></td>
+					<td class="celBorder"><fmt:formatNumber value="${sim.saldo}" type="number" groupingUsed="true" maxFractionDigits="0"/></td>
+					<td class="celBorder"><fmt:formatNumber value="${sim.pokok}" type="number" groupingUsed="true" maxFractionDigits="0"/></td>
+					<td class="celBorder"><fmt:formatNumber value="${sim.bunga}" type="number" groupingUsed="true" maxFractionDigits="0"/></td>
+					<td class="celBorder"><fmt:formatNumber value="${sim.pokok+sim.bunga}" type="number" groupingUsed="true" maxFractionDigits="0"/></td>
+					<td class="celBorder"><fmt:formatNumber value="${sim.dibayar}" type="number" groupingUsed="true" maxFractionDigits="0"/></td>
 					<td class="celBorder"><fmt:formatDate value="${sim.tglBayar}" pattern="dd/MM/yyyy"/></td>
 				</tr>
 					<c:set var="totalUtang" value="${totalUtang + sim.pokok + sim.bunga}" />
@@ -332,18 +332,18 @@
 				</c:forEach>
 				<tr> 
 					<td class="conLabel" colspan="5">Total</td>
-					<td class="conText"><fmt:formatNumber value="${totalUtang}" type="currency" groupingUsed="true" maxFractionDigits="0"/></td>
-					<td class="conText"><fmt:formatNumber value="${totalBayar}" type="currency" groupingUsed="true" maxFractionDigits="0"/></td>
+					<td class="conText"><fmt:formatNumber value="${totalUtang}" type="number" groupingUsed="true" maxFractionDigits="0"/></td>
+					<td class="conText"><fmt:formatNumber value="${totalBayar}" type="number" groupingUsed="true" maxFractionDigits="0"/></td>
 					<c:set var="kekurangan" value="${kekurangan + totalUtang - totalBayar}" />
 				</tr>
 				<tr> 
 					<td class="conLabel" colspan="5">Kekurangan</td>
-					<td class="conText"><fmt:formatNumber value="${totalUtang - totalBayar}" type="currency" groupingUsed="true" maxFractionDigits="0"/></td>
+					<td class="conText"><fmt:formatNumber value="${totalUtang - totalBayar}" type="number" groupingUsed="true" maxFractionDigits="0"/></td>
 				</tr>
 			</c:forEach>
 			<tr> 
 				<td class="conLabel" colspan="5">Total kekurangan</td>
-				<td class="conText"><fmt:formatNumber value="${kekurangan}" type="currency" groupingUsed="true" maxFractionDigits="0"/></td>
+				<td class="conText"><fmt:formatNumber value="${kekurangan}" type="number" groupingUsed="true" maxFractionDigits="0"/></td>
 			</tr>
 		</tbody>
 	</table>
@@ -391,7 +391,7 @@
 			<tr>
 				<td class="conLabel"><bean:message key="form.real.sisa"></bean:message></td>
 				<td class="conText">
-					<html:text property="biayaLain" maxlength="14" size="60" value="${kekurangan}"></html:text>
+					<html:text property="sisaAngsuran" maxlength="14" size="60"></html:text>
 				</td>
 			</tr>
 			<tr>
@@ -430,8 +430,12 @@
 				biayaLain = $('input[name="biayaLain"]').val();
 				biayaLain = Number(biayaLain.replace(/[^0-9\.-]+/g, ""));
 				$('input[name="biayaLain"]').val(Intl.NumberFormat().format(biayaLain));
+				
+				sisaAngsuran = $('input[name="sisaAngsuran"]').val();
+				sisaAngsuran = Number(sisaAngsuran.replace(/[^0-9\.-]+/g, ""));
+				$('input[name="sisaAngsuran"]').val(Intl.NumberFormat().format(sisaAngsuran));
 
-				diterima = jumlahReal - (biayaAdmin + biayaProvisi + biayaLain);
+				diterima = jumlahReal - (biayaAdmin + biayaProvisi + biayaLain + sisaAngsuran);
 				$('input[name="diterima"]').val(Intl.NumberFormat().format(diterima));
 				$('input[name="terbilang"]').val(terbilang(diterima));
 			}
