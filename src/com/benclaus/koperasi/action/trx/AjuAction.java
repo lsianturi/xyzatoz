@@ -1,10 +1,12 @@
 package com.benclaus.koperasi.action.trx;
 
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -14,7 +16,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang.WordUtils;
 import org.apache.log4j.Logger;
+import org.apache.struts.action.ActionError;
+import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -32,11 +37,26 @@ import com.benclaus.koperasi.model.master.Pegawai;
 import com.benclaus.koperasi.model.trx.Aju;
 import com.benclaus.koperasi.model.trx.JenisPinjam;
 import com.benclaus.koperasi.model.trx.Simulasi;
+import com.benclaus.koperasi.model.trx.StatusPinjaman;
 import com.benclaus.koperasi.model.trx.TipeKredit;
 import com.benclaus.koperasi.model.usm.Login;
 import com.benclaus.koperasi.utility.Constant;
 import com.benclaus.koperasi.utility.DAFContainer;
 import com.ibatis.common.util.PaginatedList;
+import com.lowagie.text.BadElementException;
+import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.Element;
+import com.lowagie.text.Paragraph;
+import com.lowagie.text.Phrase;
+import com.lowagie.text.Rectangle;
+import com.lowagie.text.pdf.PdfPCell;
+import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.PdfWriter;
+
+import id.co.ggpc.absensi.model.EmployeeAbsensi;
+import id.co.ggpc.absensi.model.MonthlySummary;
+import id.co.ggpc.absensi.utility.YearHelper;
 
 public class AjuAction extends SecurityAction {
 	private static Logger log = Logger.getLogger(AjuAction.class);
@@ -62,7 +82,7 @@ public class AjuAction extends SecurityAction {
 			request.setAttribute("JenisPinjamList", JenisPinjam.getJenisPinjam());
 			request.setAttribute("AgentList", stService.listAgent());
 			request.setAttribute("MarketingList", stService.listPegawai());
-			request.setAttribute("StatusList", stService.listStatusKredit());
+			request.setAttribute("StatusList", StatusPinjaman.getStatusPinjaman());
 		} catch (Exception e) {
 		}
 	}
@@ -207,7 +227,7 @@ public class AjuAction extends SecurityAction {
         Integer tglToday = calAju.get(Calendar.DATE);
         Integer tglGajian= calPayroll.get(Calendar.DATE);
         
-        System.out.println(tglToday + " & " + tglGajian);
+//        System.out.println(tglToday + " & " + tglGajian);
         
         calAju.set(Calendar.DATE, tglGajian);
         if ( tglGajian > tglToday) {
@@ -422,12 +442,15 @@ public class AjuAction extends SecurityAction {
 		try {
 			if (isTokenValid(request)) {
 				saveToken(request);
+				Integer nsbhId = (Integer)myForm.get("nsbhId");
+				Nasabah nsbh = nService.getNasabah(nsbhId);
+				
 				Aju aju = new Aju();
 				aju.setTipeKredit((Integer)myForm.get("tipeKredit")); // tipe kredit harus melihat history pinjaman sebelumnya.
 				aju.setNoKredit(TipeKredit.getPrefix(aju.getTipeKredit()) +
 						+ service.getLastNo(TipeKredit.getTipeKredit(aju.getTipeKredit())));
 				aju.setTglAju(sdf.parse(myForm.getString("tglAju")));
-				aju.setNasabah(new Nasabah((Integer)myForm.get("nsbhId")));
+				aju.setNasabah(nsbh);
 				aju.setPenjamin(myForm.getString("penjamin"));
 				aju.setAgunan(myForm.getString("agunan"));
 				aju.setJenisPinjam((Integer)myForm.get("jenisPinjam"));
@@ -436,6 +459,7 @@ public class AjuAction extends SecurityAction {
 				aju.setInterestRate(Double.valueOf(myForm.getString("interestRate")));
 				aju.setAngsuranAju(Double.valueOf(nf.parse(myForm.getString("angsuranAju")).doubleValue()));
 				aju.setJatuhTempo(sdf.parse(myForm.getString("jatuhTempo")));
+				aju.setNoUrutNsbh(nsbh.getLastKreditId() + 1);
 				try {
 					aju.setSponsor(new Nasabah((Integer)myForm.get("sponsor")));
 				}catch (Exception e){}
@@ -445,10 +469,13 @@ public class AjuAction extends SecurityAction {
 				aju.setCreatedBy(userLogin.getUser().getUserCode());
 				
 				Integer id = service.insertAju(aju);
-				System.out.println("Aju Id: " +id);
-				
-				List<Simulasi> sims = Simulasi.getSimulasi(aju.getJumlahAju(), aju.getInterestRate(), aju.getTenor(), aju.getTglAju(), aju.getJatuhTempo());
-				service.maintainSimulai(sims, id);
+//				System.out.println("Aju Id: " +id);
+				if (id > 0) {
+					nService.incLastKreditNo(aju.getNasabah().getId());
+					
+					List<Simulasi> sims = Simulasi.getSimulasi(aju.getJumlahAju(), aju.getInterestRate(), aju.getTenor(), aju.getTglAju(), aju.getJatuhTempo());
+					service.maintainSimulai(sims, id);
+				}
 			} else {
 				errors.add(Constant.GLOBALERROR, new ActionMessage("error.invalidToken"));
 				saveErrors(request, errors);
@@ -751,5 +778,187 @@ private static void createTable(Paragraph content, List<MonthlySummary> summary,
 
 	}*/
 
+	public ActionForward generate(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		log.info("generate");
+		
+		ActionMessages errors = new ActionMessages();
+		// Check Menu Access
+		HttpSession session = request.getSession();
+		ActionForward forward = new ActionForward();
+		DynaActionForm planForm = (DynaActionForm) form;
+		forward = hasMenuAccess(mapping, request, TRX_PJM_VIEW);
+		if (forward != null)
+			return forward;
+
+		try {
+			prepareData(request);
+			Integer ajuId = request.getParameter("id").equals("") ? 0
+					: Integer.parseInt(request.getParameter("id"));
+			if (errors.size() > 0) {
+				saveErrors(request, errors);
+				return mapping.findForward("continue");
+			}
+
+			Aju aju = service.getAju(ajuId);
+				
+			try {
+				response.setContentType("application/octet-stream");
+				response.setHeader("Content-Disposition", "attachment; filename=" + year + "-"+param.get("month") + "-MonthlySummary.pdf");
+				OutputStream fileOut = response.getOutputStream();
+				
+				Document document = new Document(new Rectangle(792, 612));
+				PdfWriter.getInstance(document, fileOut);
+				document.open();
+				addMetaData(document);
+				addContent(document, month, year, summaryList, workdays);
+				document.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+				
+			
+		}catch(Exception e) { 						
+			log.error(e.getMessage(), e);			
+			errors.add(Constant.GLOBALERROR, new ActionError("error.exception", e.getMessage()));
+			saveErrors(request, errors);
+		}
+		return mapping.findForward("main");
+	} 
+	
+	private static void addMetaData(Document document) {
+		document.addTitle("Attendance summary");
+		document.addSubject("Attendance summary");
+		document.addKeywords("attendance,summary");
+		document.addAuthor("Lambok Sianturi");
+		document.addCreator("Lambok Sianturi");
+	}
+	
+	private static void addContent(Document document, Integer month, Integer year, List<MonthlySummary> summary, Integer workdays) throws DocumentException {
+		Paragraph report = new Paragraph();
+		Paragraph title = new Paragraph();
+		title.add(new Paragraph("Attendance Monthly Summary Report", titleFont));
+		title.add(new Paragraph("In Time: 08:00 WIB               Out time: 17:15 / 17:30 WIB (Friday)", subTitleFont));
+		title.add(new Paragraph("Daily work hours: 8hr (excl. break)", subTitleFont));
+		title.add(new Paragraph("Month: " + YearHelper.getInstance().getMonthName(month)+", Year " + year, subTitleFont));
+		title.add(new Paragraph("Workday(s): "+ workdays + " days = " + workdays * 8 + " hours", subTitleFont));
+		
+		title.add(new Paragraph("AL: Annual Leave, BT: Business Travel, ANL: Annual Leave Half day, SiL: Sick Leave, SpL: Special Leave, UL: Unpaid Leave", tableRow));
+
+		report.add(title);
+
+		// add a table
+		createTable(report, summary, workdays * 8);
+		
+		// now add all this to the document
+		document.add(report);
+
+	}
+
+private static void createTable(Paragraph content, List<MonthlySummary> summary, Integer workhour) throws BadElementException, DocumentException  {
+		PdfPTable table = new PdfPTable(15);
+		table.setHorizontalAlignment(Element.ALIGN_JUSTIFIED_ALL);
+		table.setWidths(new float[] { 25, 55, 100, 95, 50, 35, 45,40, 40, 40, 40, 40, 40, 40, 120 });
+		table.setWidthPercentage(100);
+		table.setSpacingBefore(0f);
+        table.setSpacingAfter(0f);
+        
+		
+		PdfPCell c1 = new PdfPCell(new Phrase("No", tableHeader));
+		c1.setHorizontalAlignment(Element.ALIGN_LEFT);
+		table.addCell(c1);
+
+		c1 = new PdfPCell(new Phrase("Employee No", tableHeader));
+		c1.setHorizontalAlignment(Element.ALIGN_LEFT);
+		table.addCell(c1);
+
+		c1 = new PdfPCell(new Phrase("Name", tableHeader));
+		c1.setHorizontalAlignment(Element.ALIGN_LEFT);
+		table.addCell(c1);
+		
+		c1 = new PdfPCell(new Phrase("Job Title", tableHeader));
+		c1.setHorizontalAlignment(Element.ALIGN_LEFT);
+		table.addCell(c1);
+		
+		c1 = new PdfPCell(new Phrase("Job Level", tableHeader));
+		c1.setHorizontalAlignment(Element.ALIGN_LEFT);
+		table.addCell(c1);
+		
+		c1 = new PdfPCell(new Phrase("Work days", tableHeader));
+		c1.setHorizontalAlignment(Element.ALIGN_CENTER);
+		table.addCell(c1);
+		
+		c1 = new PdfPCell(new Phrase("Work hours", tableHeader));
+		c1.setHorizontalAlignment(Element.ALIGN_CENTER);
+		table.addCell(c1);
+
+		c1 = new PdfPCell(new Phrase("Early In", tableHeader));
+		c1.setHorizontalAlignment(Element.ALIGN_LEFT);
+		table.addCell(c1);
+
+		c1 = new PdfPCell(new Phrase("Late In", tableHeader));
+		c1.setHorizontalAlignment(Element.ALIGN_LEFT);
+		table.addCell(c1);
+
+		c1 = new PdfPCell(new Phrase("Early Out", tableHeader));
+		c1.setHorizontalAlignment(Element.ALIGN_LEFT);
+		table.addCell(c1);
+		
+		c1 = new PdfPCell(new Phrase("Late Out", tableHeader));
+		c1.setHorizontalAlignment(Element.ALIGN_LEFT);
+		table.addCell(c1);
+
+		c1 = new PdfPCell(new Phrase("Under time", tableHeader));
+		c1.setHorizontalAlignment(Element.ALIGN_LEFT);
+		table.addCell(c1);
+		
+		c1 = new PdfPCell(new Phrase("Over time", tableHeader));
+		c1.setHorizontalAlignment(Element.ALIGN_LEFT);
+		table.addCell(c1);
+		
+		c1 = new PdfPCell(new Phrase("Over - Under", tableHeader));
+		c1.setHorizontalAlignment(Element.ALIGN_LEFT);
+		table.addCell(c1);
+
+		c1 = new PdfPCell(new Phrase("Leave", tableHeader));
+		c1.setHorizontalAlignment(Element.ALIGN_LEFT);
+		table.addCell(c1);
+
+		table.setHeaderRows(1);
+		int i = 1;
+		Integer hour =0;
+		for (MonthlySummary sum : summary) {
+			if (sum.getWorkdays() != null && sum.getWorkdays() != 0) {
+				hour = Integer.parseInt(sum.getTotalWork().substring(0, sum.getTotalWork().indexOf("h") ));
+				table.addCell(new Phrase(""+ i++, tableRow));
+				table.addCell(new Phrase(sum.getEmployeeNo().toString(), tableRow));
+				table.addCell(new Phrase(WordUtils.capitalizeFully(sum.getFirstName() + ( sum.getLastName() != null ? " " +sum.getLastName() : "")), tableRow));
+				table.addCell(new Phrase(WordUtils.capitalizeFully(sum.getJobTitle()), tableRow));
+				table.addCell(new Phrase(WordUtils.capitalizeFully(sum.getJobLevel()), tableRow));
+				table.addCell(new Phrase(""+sum.getWorkdays(), tableRow));
+				if (hour == workhour ) {
+					table.addCell(new Phrase(sum.getTotalWork(), tableRow));
+				} else if (hour > workhour) { 
+					table.addCell(new Phrase(sum.getTotalWork(), tableRowGreen));
+				} else {
+					table.addCell(new Phrase(sum.getTotalWork(), tableRowRed));
+				}
+				table.addCell(new Phrase(sum.getEarlyIn(), tableRow));
+				table.addCell(new Phrase(sum.getLateIn(), tableRow));
+				table.addCell(new Phrase(sum.getEarlyOut(), tableRow));
+				table.addCell(new Phrase(sum.getLateOut(), tableRow));
+				table.addCell(new Phrase(sum.getUnderTime(), tableRow));
+				table.addCell(new Phrase(sum.getOverTime(), tableRow));
+				if (sum.getOverMinUnder().startsWith("-")) {
+					table.addCell(new Phrase(sum.getOverMinUnder(), tableRowRed));
+				} else {
+					table.addCell(new Phrase(sum.getOverMinUnder(), tableRow));
+				}
+				table.addCell(new Phrase(sum.getNote(), tableRow));
+			}
+		}
+
+		content.add(table);
+
+	}
 
 }

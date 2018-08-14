@@ -126,14 +126,4 @@ public class StatusPKService {
 		}
 		return null;
 	}
-	public List<StatusPK> listStatusKredit() {
-		List<StatusPK> list = new ArrayList<>();
-		StatusPK pk = new StatusPK(1,"Belum Realisasi");
-		list.add(pk);
-		pk = new StatusPK(2,"Sudah Realisasi");
-		list.add(pk);
-		pk = new StatusPK(3,"Sudah Lunas");
-		list.add(pk);
-		return list;
-	}
 }

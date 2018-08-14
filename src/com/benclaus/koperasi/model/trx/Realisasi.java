@@ -9,7 +9,7 @@ public class Realisasi extends Aju {
 	private Double biayaAdmin;
 	private Double biayaProvisi;
 	private Double biayaLain;
-	private Double angsuranReal;
+	private Double sisaAngsuran;
 	private Double diterima;
 	private String terbilang;
 	private String keterangan;
@@ -57,12 +57,12 @@ public class Realisasi extends Aju {
 	public void setBiayaLain(Double biayaLain) {
 		this.biayaLain = biayaLain;
 	}
-	public Double getAngsuranReal() {
-		return angsuranReal;
+	public Double getSisaAngsuran() {
+		return sisaAngsuran;
 	}
 
-	public void setAngsuranReal(Double angsuranReal) {
-		this.angsuranReal = angsuranReal;
+	public void setSisaAngsuran(Double sisaAngsuran) {
+		this.sisaAngsuran = sisaAngsuran;
 	}
 
 	public Double getDiterima() {

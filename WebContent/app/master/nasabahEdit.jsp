@@ -164,6 +164,18 @@
 				</td>
 			</tr>
 			<tr>
+				<td class="conLabel"><bean:message key="form.nasabah.nomorKartu"></bean:message></td>
+				<td class="conText">
+					<html:text property="nomorKartu" maxlength="30" size="60"></html:text>
+				</td>
+			</tr>
+			<tr>
+				<td class="conLabel"><bean:message key="form.nasabah.validThru"></bean:message></td>
+				<td class="conText">
+					<html:text property="validThru" maxlength="10" size="60"></html:text>
+				</td>
+			</tr>
+			<tr>
 				<td class="conLabel"><bean:message key="form.nasabah.noRekeningRef"></bean:message></td>
 				<td class="conText">
 					<html:text property="noRekeningRef" maxlength="60" size="60"></html:text>

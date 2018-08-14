@@ -78,6 +78,7 @@
 			<form-property name="usercode" type="java.lang.String" />
 			<form-property name="id" type="java.lang.Integer" />
 			<form-property name="noKredit" type="java.lang.String" />
+			<form-property name="noUrut" type="java.lang.Integer" />
 			<form-property name="tglAju" type="java.lang.String" />
 			<form-property name="nsbhId" type="java.lang.Integer" />
 			<form-property name="nsbhNama" type="java.lang.String" />

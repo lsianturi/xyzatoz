@@ -118,7 +118,7 @@ public class Simulasi {
         Integer tglToday = calAju.get(Calendar.DATE);
         Integer tglGajian= calPayroll.get(Calendar.DATE);
         
-        System.out.println(tglToday + " & " + tglGajian);
+//        System.out.println(tglToday + " & " + tglGajian);
         
         Double pokok_ = pokok/tenor;
         Double angsuran = Simulasi.getCicilan(pokok, ir, tenor);

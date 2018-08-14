@@ -107,4 +107,12 @@ public class NasabahService {
 		return null;
 	}
 	
+	public Integer incLastKreditNo(Integer id) {
+		try {
+			return dao.incLastKreditNo(id);
+		} catch (Exception e) {
+			log.debug(e);
+		}
+		return 0;
+	}
 }

@@ -47,13 +47,23 @@ public class RealisasiDao extends BaseDAO {
 		return (Realisasi)super.getObject("RealSQL.getReal", id);
 	}
 	
-	public Integer insertReal(Realisasi real) throws DaoException {
-		log.info("RealSQL.insertReal");
-		return (Integer) super.insert("RealSQL.insertReal", real);
+	public Integer saveReal(Realisasi real) throws DaoException {
+		log.info("RealSQL.saveReal");
+		return (Integer) super.insert("RealSQL.saveReal", real);
 	}
 	public Integer updateReal(Realisasi real) throws DaoException {
 		log.info("RealSQL.updateReal");
 		return (Integer) super.insert("RealSQL.updateReal", real);
+	}
+	
+	public Integer setSimulasiLunas(Map<String, Object> param) throws DaoException {
+		log.info("RealSQL.setSimulasiLunas");
+		return (Integer) super.update("RealSQL.setSimulasiLunas", param);
+	}
+	
+	public Integer setAjuLunas(Integer ajuId) throws DaoException {
+		log.info("RealSQL.setAjuLunas");
+		return (Integer) super.update("RealSQL.setAjuLunas", ajuId);
 	}
 	
 }

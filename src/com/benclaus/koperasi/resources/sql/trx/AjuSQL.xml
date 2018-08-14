@@ -5,12 +5,13 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 
 <sqlMap namespace="AjuSQL">
 	
-	<resultMap id="AjuSearchResult" class="com.benclaus.koperasi.model.trx.Aju">
+	<resultMap id="AjuSearchResult" class="com.benclaus.koperasi.model.trx.Realisasi">
 		<result property="id" column="id" />
 		<result property="noKredit" column="no_kredit" />
 		<result property="tglAju" column="tgl_aju" />
 		<result property="nasabah.nama" column="nasabah_nama" />
 		<result property="nasabah.nik" column="nasabah_nik" />
+		<result property="noUrutNsbh" column="no_urut_nsbh" />
 		<result property="nasabah.pt.nama" column="pt_nama" />
 		<result property="tipeKredit" column="tipe_kredit" />
 		<result property="jenisPinjam" column="jenis_pinjam" />
@@ -18,12 +19,16 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 		<result property="marketing.nama" column="marketing_nama" />
 		<result property="nasabah.bank.nama" column="bank_nama" />
 		<result property="realisasi" column="realisasi" />
+		<result property="jumlahAju" column="jumlah_aju" />
+		<result property="lunas" column="lunas" />
+		
 	</resultMap>
 	
 	<resultMap id="AjuResult" class="com.benclaus.koperasi.model.trx.Aju">
 		<result property="id" column="id" />
 		<result property="noKredit" column="no_kredit" />
 		<result property="tglAju" column="tgl_aju" />
+		<result property="noUrutNsbh" column="no_urut_nsbh" />
 		<result property="nasabah.id" column="n_id" />
 		<result property="nasabah.nik" column="n_nik" />
 		<result property="nasabah.nama" column="n_nama" />
@@ -67,8 +72,8 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 	<!-- ==================================================================== COMPANY START =================  -->
 	<select id="searchAju" resultMap="AjuSearchResult">
 		SELECT a.id, no_kredit, n.nik nasabah_nik, a.tgl_aju, n.nama nasabah_nama, p.nama pt_nama,
-			a.tipe_kredit, a.jenis_pinjam, na.nama sponsor_nama, pe.nama marketing_nama, 
-			b.nama bank_nama, a.realisasi
+			a.tipe_kredit, a.jenis_pinjam, na.nama sponsor_nama, pe.nama marketing_nama, a.no_urut_nsbh,
+			b.nama bank_nama, a.realisasi, a.jumlah_aju, a.lunas
 			FROM `tx_kr_aju` a
 			INNER JOIN ms_nasabah n on n.id = a.nasabah_id
 			INNER JOIN ms_perusahaan p ON p.id = n.perusahaan_id
@@ -136,6 +141,7 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 			INNER JOIN ms_perusahaan p ON p.id = n.perusahaan_id
 			LEFT JOIN ms_nasabah na on na.id = a.sponsor
 			LEFT JOIN ms_pegawai pe on pe.id = a.marketing
+			LEFT JOIN ms_bank b ON b.id = n.bank_id
 		<dynamic prepend=" WHERE">
 			<isNotEmpty property="tglAjuFrom" prepend="AND">
 				a.tgl_aju <![CDATA[>=]]> DATE(#tglAjuFrom#)
@@ -144,10 +150,10 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 				a.tgl_aju <![CDATA[<=]]> DATE(#tglAjuTo#)
 			</isNotEmpty>
 			<isNotEmpty property="nasabah" prepend="AND">
-				n.nama LIKE CONCAT('%',#nasabah# ,'%')
+				n.nama LIKE CONCAT('%', #nasabah# ,'%')
 			</isNotEmpty>
 			<isNotEmpty property="nik" prepend="AND">
-				n.nik LIKE CONCAT('%', #nasabah#,'%')
+				n.nik LIKE CONCAT('%', #nik#,'%')
 			</isNotEmpty>
 			<isNotEmpty property="noKredit" prepend="AND">
 				a.no_kredit LIKE CONCAT('%', #noKredit#,'%')
@@ -181,7 +187,7 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 				a.realisasi = 0
 			</isEqual>
 			<isEqual property="status" prepend="AND" compareValue="2">
-				a.realisasi = 0
+				a.realisasi = 1
 			</isEqual>
 			<isEqual property="status" prepend="AND" compareValue="3">
 				a.lunas = 1
@@ -192,7 +198,7 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 	<select id="getAju" resultMap="AjuResult">
 		SELECT a.id, a.nasabah_id n_id, `no_kredit`,a.tgl_aju, n.nama n_nama, n.alamat n_alamat, n.jns_kelamin_id n_jenis_kelamin_id, n.aplikasi n_aplikasi,
 		k.nama n_jenis_kelamin_status, n.nik n_nik, n.bagian n_bagian, p.id pt_id, p.nama pt_nama, n.bank_id, b.nama bank_nama,
-		n.tgl_payroll n_tgl_payroll, a.tipe_kredit, a.jenis_pinjam, a.jatuh_tempo,
+		n.tgl_payroll n_tgl_payroll, a.tipe_kredit, a.jenis_pinjam, a.jatuh_tempo, a.no_urut_nsbh,
 			na.nama sponsor_nama, pe.nama marketing_nama,
 			a.jumlah_aju, a.tenor, a.interest_rate, a.angsuran_aju, a.penjamin, a.agunan
 			FROM `tx_kr_aju` a
@@ -220,9 +226,9 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 		<selectKey keyProperty="id" resultClass="int" type="post">
 			SELECT LAST_INSERT_ID() AS value
 		</selectKey>
-		INSERT INTO `tx_kr_aju` (`no_kredit`, `tgl_aju`, `nasabah_id`, `tipe_kredit`, `jenis_pinjam`, `jumlah_aju`, `tenor`, `interest_rate`,
+		INSERT INTO `tx_kr_aju` (`no_kredit`, `tgl_aju`, `nasabah_id`, `no_urut_nsbh`, `tipe_kredit`, `jenis_pinjam`, `jumlah_aju`, `tenor`, `interest_rate`,
 					`angsuran_aju`, `sponsor`, `marketing`, `penjamin`, `agunan`, `jatuh_tempo`, `created_by`)
-		VALUES (#noKredit#, #tglAju#, #nasabah.id#, #tipeKredit#, #jenisPinjam#, #jumlahAju#, #tenor#, #interestRate#, 
+		VALUES (#noKredit#, #tglAju#, #nasabah.id#, #noUrutNsbh#, #tipeKredit#, #jenisPinjam#, #jumlahAju#, #tenor#, #interestRate#, 
 				#angsuranAju#, #sponsor.id#, #marketing.id#, #penjamin#, #agunan#, #jatuhTempo#, #createdBy#)
 	</insert>
 	
@@ -230,7 +236,7 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 		UPDATE `tx_kr_aju` SET `no_kredit` = #noKredit#, `tgl_aju`= #tglAju#, `nasabah_id`=#nasabah.id#, `tipe_kredit`=#tipeKredit#, 
 			`jenis_pinjam`=#jenisPinjam#, `jumlah_aju`=#jumlahAju#, `tenor`=#tenor#, `interest_rate`=#interestRate#,
 			`angsuran_aju`=#angsuranAju#, `sponsor`=#sponsor.id#, `marketing`=#marketing.id#, `penjamin`=#penjamin#,
-			`agunan`=#agunan#, `jatuh_tempo`=#jatuhTempo#
+			`agunan`=#agunan#, `jatuh_tempo`=#jatuhTempo#, `no_urut_nsbh` = #noUrutNsbh#
 		WHERE id = #id#
 	</update>
 	
@@ -246,7 +252,7 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 	<select id="getDueAju" resultMap="AjuResult">
 		SELECT a.id, a.nasabah_id n_id, `no_kredit`,a.tgl_aju, n.nama n_nama, n.alamat n_alamat, n.jns_kelamin_id n_jenis_kelamin_id, n.aplikasi n_aplikasi,
 		k.nama n_jenis_kelamin_status, n.nik n_nik, n.bagian n_bagian, p.id pt_id, p.nama pt_nama, n.bank_id, b.nama bank_nama,
-		n.tgl_payroll n_tgl_payroll, a.tipe_kredit, a.jenis_pinjam, a.jatuh_tempo,
+		n.tgl_payroll n_tgl_payroll, a.tipe_kredit, a.jenis_pinjam, a.jatuh_tempo, a.no_urut_nsbh,
 			na.nama sponsor_nama, pe.nama marketing_nama,
 			a.jumlah_aju, a.tenor, a.interest_rate, a.angsuran_aju, a.penjamin, a.agunan
 			FROM `tx_kr_aju` a

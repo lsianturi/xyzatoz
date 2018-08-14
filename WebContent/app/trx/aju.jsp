@@ -1,4 +1,5 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<%@page import="com.benclaus.koperasi.model.trx.StatusPinjaman"%>
 <%@page import="com.benclaus.koperasi.utility.Constant"%>
 <%@page import="com.benclaus.koperasi.model.usm.Login"%>
 <%@ taglib uri="/WEB-INF/tld/struts-html.tld" prefix="html" %>
@@ -27,6 +28,9 @@
 	totalPage = <c:out value="${DataList.totalPage}"></c:out>;
 	</c:if>	
 	
+	function view(id) {
+		doGoToUrl('<c:url value="/trx/realUpdate.do?dispatch=view"/>'+'&id='+id);
+	}
 	function edit(id) {
 		doGoToUrl('<c:url value="/trx/ajuUpdate.do?dispatch=update"/>'+'&id='+id);
 	}
@@ -124,7 +128,7 @@
 				<td class="conText" >
 					<html:select property="status">
 						<html:option value=""><bean:message key="form.all"></bean:message></html:option>
-						<html:options collection="StatusList" property="id" labelProperty="status" />
+						<html:options collection="StatusList" property="value" labelProperty="label" />
 					</html:select>
 				</td>
 			</tr>
@@ -153,12 +157,15 @@
 			<tr class="tblHeader"> 
 				<td><bean:message key="form.aju.tglAju"/></td>
 				<td><bean:message key="form.aju.noKredit"/></td>
-				<td><bean:message key="form.aju.tipeKredit"/></td>
 				<td><bean:message key="form.nasabah.nik"/></td>
+				<td>Pengajuan ke</td>
+				<td><bean:message key="form.aju.tipeKredit"/></td>
 				<td><bean:message key="form.aju.nasabah"/></td>
 				<td><bean:message key="form.aju.perusahaan"/></td>
 				<td><bean:message key="form.aju.sponsor"/></td>
+				<td>Pokok</td>
 				<td><bean:message key="form.aju.marketing"/></td>
+				<td><bean:message key="form.aju.status"/></td>
 				<td align="center"><bean:message key="form.action"></bean:message></td>
 			</tr>
 				<c:if test="${DataList.totalSize==0}">
@@ -167,7 +174,7 @@
 							key="form.noDataFound"></bean:message></td>
 					</tr>
 				</c:if>
-			<c:forEach var="comp" items="${DataList.list}" varStatus="status">
+			<c:forEach var="aju" items="${DataList.list}" varStatus="status">
 				<c:choose>
 					<c:when test="${status.count % 2 != 0}">
 						<tr class="oddRow">
@@ -181,26 +188,42 @@
 						<tr class="manualRow">
 					</c:when>
 				</c:choose>
-					<%-- <td class="celBorder"><c:out value="${comp.pillar.name}"/>&nbsp;</td> --%>
-					<td class="celBorder"><fmt:formatDate value="${comp.tglAju}" pattern="dd/MM/yyyy"/>&nbsp;</td>
-					<td class="celBorder"><c:out value="${comp.noKredit}"/>&nbsp;</td>
-					<td class="celBorder"><c:out value="${comp.tipeKreditName}"/>&nbsp;</td>
-					<td class="celBorder"><c:out value="${comp.nasabah.nik}"/>&nbsp;</td>
-					<td class="celBorder"><c:out value="${comp.nasabah.nama}"/>&nbsp;</td>
-					<td class="celBorder"><c:out value="${comp.nasabah.pt.nama}"/>&nbsp;</td>
-					<td class="celBorder"><c:out value="${comp.sponsor.nama}"/>&nbsp;</td>
-					<td class="celBorder"><c:out value="${comp.marketing.nama}"/>&nbsp;</td>
+					<%-- <td class="celBorder"><c:out value="${aju.pillar.name}"/>&nbsp;</td> --%>
+					<td class="celBorder"><fmt:formatDate value="${aju.tglAju}" pattern="dd/MM/yyyy"/>&nbsp;</td>
+					<td class="celBorder"><c:out value="${aju.noKredit}"/>&nbsp;</td>
+					<td class="celBorder"><c:out value="${aju.nasabah.nik}"/>&nbsp;</td>
+					<td class="celBorder"><c:out value="${aju.noUrutNsbh}"/>&nbsp;</td>
+					<td class="celBorder"><c:out value="${aju.tipeKreditName}"/>&nbsp;</td>
+					<td class="celBorder"><c:out value="${aju.nasabah.nama}"/>&nbsp;</td>
+					<td class="celBorder"><c:out value="${aju.nasabah.pt.nama}"/>&nbsp;</td>
+					<td class="celBorder"><c:out value="${aju.sponsor.nama}"/>&nbsp;</td>
+					<td class="celBorder"><fmt:formatNumber value="${aju.jumlahAju}" groupingUsed="true" maxFractionDigits="0" minFractionDigits="0"/>&nbsp;</td>
+					<td class="celBorder"><c:out value="${aju.marketing.nama}"/>&nbsp;</td>
+					<td class="celBorder">
+					<c:choose >
+						<c:when test="${aju.realisasi == 0 }">
+							Belum realisasi
+						</c:when>
+						<c:when test="${aju.realisasi == 1 && aju.lunas == 0 }">
+							Sudah realisasi
+						</c:when>
+						<c:when test="${aju.lunas == 1 }">
+							Lunas
+						</c:when>
+					</c:choose></td>
 					<td class="celBorder" align="center">
-						<a
-							href="javascript:del('<c:out value="${comp.id}"/>')"><bean:message
-								key="button.delete"></bean:message></a>&nbsp;|&nbsp;<a
-							href="javascript:edit('<c:out value="${comp.id}"/>')"><bean:message
-								key="button.edit"></bean:message></a>
-							<logic:equal name="comp" property="realisasi" value="0">
-								&nbsp;|&nbsp;<a
-							href="javascript:real('<c:out value="${comp.id}"/>')"><bean:message
-								key="button.real"></bean:message></a>
-							</logic:equal>
+					<a href="javascript:view('<c:out value="${aju.id}"/>')"><bean:message
+							key="form.view"></bean:message></a>
+					<logic:equal name="aju" property="realisasi" value="0">&nbsp;|&nbsp;<a
+						href="javascript:del('<c:out value="${aju.id}"/>')"><bean:message
+							key="button.delete"></bean:message></a>&nbsp;|&nbsp;<a
+						href="javascript:edit('<c:out value="${aju.id}"/>')"><bean:message
+							key="button.edit"></bean:message></a>
+						
+							&nbsp;|&nbsp;<a
+						href="javascript:real('<c:out value="${aju.id}"/>')"><bean:message
+							key="button.real"></bean:message></a>
+						</logic:equal>
 				</td>
 				</tr>	
 			</c:forEach>

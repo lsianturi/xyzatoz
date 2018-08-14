@@ -70,4 +70,9 @@ public class NasabahDao extends BaseDAO {
 		log.info("NasabahSQL.deleteNasabah");
 		return (Integer) super.update("NasabahSQL.deleteNasabah", nasabah);
 	}
+	public Integer incLastKreditNo(Integer id) throws DaoException {
+		log.info("NasabahSQL.incLastKreditNo");
+		return (Integer) super.update("NasabahSQL.incLastKreditNo", id);
+	}
+	
 }

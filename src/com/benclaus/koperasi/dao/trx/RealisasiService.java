@@ -33,7 +33,7 @@ public class RealisasiService {
 		super();
 	}
 
-	public PaginatedList searchReal(Map map) throws DaoException {
+	public PaginatedList searchReal(Map map) {
 		try {
 			return dao.searchReal(map);
 		} catch (Exception e) {
@@ -42,7 +42,7 @@ public class RealisasiService {
 		return null;
 	}
 
-	public Integer searchRealSize(Map map) throws DaoException {
+	public Integer searchRealSize(Map map) {
 		try {
 			return dao.searchRealSize(map);
 		} catch (Exception e) {
@@ -51,7 +51,7 @@ public class RealisasiService {
 		return 0;
 	}
 
-	public Realisasi getReal(Integer id) throws DaoException {
+	public Realisasi getReal(Integer id) {
 		try {
 			return dao.getReal(id);
 		} catch (Exception e) {
@@ -60,21 +60,36 @@ public class RealisasiService {
 		return null;
 	}
 
-	public Integer insertReal(Realisasi real) throws DaoException {
+	public Integer saveReal(Realisasi real) {
 		try {
-			return dao.insertReal(real);
+			return dao.saveReal(real);
 		} catch (Exception e) {
 			log.debug(e);
 		}
 		return 0;
 	}
-	public Integer updateReal(Realisasi real) throws DaoException {
+	public Integer updateReal(Realisasi real) {
 		try {
 			return dao.updateReal(real);
 		} catch (Exception e) {
 			log.debug(e);
 		}
 		return 0;
+	}
+	
+	public Integer saveReal(Realisasi real, Map<String, Object> param, Integer ajuId) throws DaoException {
+		Integer result = 0;
+		dao.startTransaction();
+		try {
+			result +=dao.saveReal(real);
+			if (param != null) result += dao.setSimulasiLunas(param);
+			if (ajuId != null) result += dao.setAjuLunas(ajuId);
+			dao.commitTransaction();
+		} catch (Exception e) {
+			dao.endTransaction();
+		}
+		
+		return result;
 	}
 	
 }

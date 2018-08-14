@@ -15,6 +15,7 @@ public class Aju extends Audit{
 	private String noKredit;
 	private Date tglAju;
 	private Nasabah nasabah;
+	private Integer noUrutNsbh;
 	private Integer tipeKredit; //BARU, RO,TU, TO
 	private Integer jenisPinjam; //Bulanan, Mingguan, Harian
 	private Double jumlahAju;
@@ -55,6 +56,15 @@ public class Aju extends Audit{
 	public void setNasabah(Nasabah nasabah) {
 		this.nasabah = nasabah;
 	}
+
+	public Integer getNoUrutNsbh() {
+		return noUrutNsbh;
+	}
+
+	public void setNoUrutNsbh(Integer noUrutNsbh) {
+		this.noUrutNsbh = noUrutNsbh;
+	}
+
 	public Integer getTipeKredit() {
 		return tipeKredit;
 	}

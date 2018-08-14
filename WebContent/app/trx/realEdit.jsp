@@ -56,7 +56,7 @@
 	function simulasi() {
 		$('input[name="btnSimulasi"]').click();
 		$('input[name="btnCekCicilan"]').click();
-		openTab('Aju');
+		openTab('Realisasi');
 	}
 	
 </script>
@@ -83,7 +83,7 @@
 				
 			</td>
 			<td class="conText" align="right">
-				<a href="javascript:openHelp('help/<bean:message key="form.language.name"></bean:message>/blank.html');"><img src="icons/help.gif" width="21" height="21" border="0" alt=""></a>
+				<a href="javascript:openHelp('help/<bean:message key="form.language.name"></bean:message>/blank.html');"><img src="../icons/help.gif" width="21" height="21" border="0" alt=""></a>
 			</td>
 		</tr>
 	</table>
@@ -93,7 +93,7 @@
 <div class="w3-bar w3-blue">
   <button class="w3-bar-item w3-button conTitle" onclick="openTab('Nasabah')">Nasabah</button>
   <button class="w3-bar-item w3-button conTitle" onclick="openTab('Jaminan')">Jaminan</button>
-  <button class="w3-bar-item w3-button conTitle" onclick="openTab('Aju')">Realisasi</button>
+  <button class="w3-bar-item w3-button conTitle" onclick="openTab('Realisasi')">Realisasi</button>
   <button class="w3-bar-item w3-button conTitle" onclick="openTab('Simulasi')">Simulasi</button>
 </div>
 <table border="0">
@@ -108,6 +108,7 @@
 	<html:hidden property="dispatch"></html:hidden>
 	<html:hidden property="id"></html:hidden>
 	<html:hidden property="nsbhId"></html:hidden>
+	<html:hidden property="noUrut"></html:hidden>
 	<div id="Nasabah" class="w3-container aju">
 	<table border="0">
 		<tbody>
@@ -218,7 +219,7 @@
 	</table>
 	</div>
 	
-	<div id="Aju" class="w3-container aju" style="display:none">
+	<div id="Realisasi" class="w3-container aju" style="display:none">
 	<table border="0">
 		<tbody>
 			<tr>
@@ -280,7 +281,7 @@
 		</tbody>
 	</table>
 	
-	<c:if test="${DueList != null}">
+	<c:if test = "${DueList != null}">
 	<table border="0">
 		<tbody>
 			<tr > 

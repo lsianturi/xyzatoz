@@ -22,6 +22,8 @@ public class Nasabah extends Audit{
 	private Bank bank;
 	private String bagian;
 	private String noRekening;
+	private String nomorKartu;
+	private String validThru;
 	private String pinAtm;
 	private Date tglMasuk;
 	private Date tglPayroll;
@@ -35,6 +37,7 @@ public class Nasabah extends Audit{
 	private boolean anAgent;
 	private Cabang cabang;
 	private Unit unit;
+	private Integer lastKreditId;
 
 	public Nasabah() {
 		super();
@@ -117,6 +120,22 @@ public class Nasabah extends Audit{
 
 	public void setBank(Bank bank) {
 		this.bank = bank;
+	}
+
+	public String getNomorKartu() {
+		return nomorKartu;
+	}
+
+	public void setNomorKartu(String nomorKartu) {
+		this.nomorKartu = nomorKartu;
+	}
+
+	public String getValidThru() {
+		return validThru;
+	}
+
+	public void setValidThru(String validThru) {
+		this.validThru = validThru;
 	}
 
 	public String getBagian() {
@@ -243,6 +262,14 @@ public class Nasabah extends Audit{
 
 	public void setUnit(Unit unit) {
 		this.unit = unit;
+	}
+
+	public Integer getLastKreditId() {
+		return lastKreditId;
+	}
+
+	public void setLastKreditId(Integer lastKreditId) {
+		this.lastKreditId = lastKreditId;
 	}
 
 	public String toString() {

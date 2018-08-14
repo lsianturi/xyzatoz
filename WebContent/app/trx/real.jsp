@@ -118,7 +118,7 @@
 				<td class="conText" >
 					<html:select property="status">
 						<html:option value=""><bean:message key="form.all"></bean:message></html:option>
-						<html:options collection="StatusList" property="id" labelProperty="status" />
+						<html:options collection="StatusList" property="value" labelProperty="label" />
 					</html:select>
 				</td>
 			</tr>
@@ -137,8 +137,9 @@
 				<td colspan="3">Search Result</td>
 			</tr>
 			<tr class="tblHeader"> 
-				<td><bean:message key="form.aju.tglAju"/></td>
 				<td><bean:message key="form.aju.noKredit"/></td>
+				<td><bean:message key="form.aju.tglAju"/></td>
+				<td><bean:message key="form.real.tglRealisasi"/></td>
 				<td><bean:message key="form.aju.tipeKredit"/></td>
 				<td><bean:message key="form.nasabah.nik"/></td>
 				<td><bean:message key="form.aju.nasabah"/></td>
@@ -153,7 +154,7 @@
 							key="form.noDataFound"></bean:message></td>
 					</tr>
 				</c:if>
-			<c:forEach var="comp" items="${DataList.list}" varStatus="status">
+			<c:forEach var="real" items="${DataList.list}" varStatus="status">
 				<c:choose>
 					<c:when test="${status.count % 2 != 0}">
 						<tr class="oddRow">
@@ -162,20 +163,21 @@
 						<tr class="evenRow">
 					</c:otherwise>
 				</c:choose>
-					<%-- <td class="celBorder"><c:out value="${comp.pillar.name}"/>&nbsp;</td> --%>
-					<td class="celBorder"><fmt:formatDate value="${comp.tglAju}" pattern="dd/MM/yyyy"/>&nbsp;</td>
-					<td class="celBorder"><c:out value="${comp.noKredit}"/>&nbsp;</td>
-					<td class="celBorder"><c:out value="${comp.tipeKreditName}"/>&nbsp;</td>
-					<td class="celBorder"><c:out value="${comp.nasabah.nik}"/>&nbsp;</td>
-					<td class="celBorder"><c:out value="${comp.nasabah.nama}"/>&nbsp;</td>
-					<td class="celBorder"><c:out value="${comp.nasabah.pt.nama}"/>&nbsp;</td>
-					<td class="celBorder"><c:out value="${comp.sponsor.nama}"/>&nbsp;</td>
-					<td class="celBorder"><c:out value="${comp.marketing.nama}"/>&nbsp;</td>
+					<%-- <td class="celBorder"><c:out value="${real.pillar.name}"/>&nbsp;</td> --%>
+					<td class="celBorder"><c:out value="${real.noKredit}"/>&nbsp;</td>
+					<td class="celBorder"><fmt:formatDate value="${real.tglAju}" pattern="dd/MM/yyyy"/>&nbsp;</td>
+					<td class="celBorder"><fmt:formatDate value="${real.tglReal}" pattern="dd/MM/yyyy"/>&nbsp;</td>
+					<td class="celBorder"><c:out value="${real.tipeKreditName}"/>&nbsp;</td>
+					<td class="celBorder"><c:out value="${real.nasabah.nik}"/>&nbsp;</td>
+					<td class="celBorder"><c:out value="${real.nasabah.nama}"/>&nbsp;</td>
+					<td class="celBorder"><c:out value="${real.nasabah.pt.nama}"/>&nbsp;</td>
+					<td class="celBorder"><c:out value="${real.sponsor.nama}"/>&nbsp;</td>
+					<td class="celBorder"><c:out value="${real.marketing.nama}"/>&nbsp;</td>
 					<td class="celBorder" align="center">
 						<a
-							href="javascript:del('<c:out value="${comp.id}"/>')"><bean:message
+							href="javascript:del('<c:out value="${real.id}"/>')"><bean:message
 								key="button.delete"></bean:message></a>&nbsp;|&nbsp;<a
-							href="javascript:edit('<c:out value="${comp.id}"/>')"><bean:message
+							href="javascript:edit('<c:out value="${real.id}"/>')"><bean:message
 								key="button.edit"></bean:message></a>
 				</td>
 				</tr>	

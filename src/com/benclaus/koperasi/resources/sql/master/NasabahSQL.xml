@@ -38,6 +38,8 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 		<result property="nik" column="nik" />
 		<result property="pt.id" column="perusahaan_id" />
 		<result property="bank.id" column="bank_id" />
+		<result property="nomorKartu" column="nomor_kartu"/>
+		<result property="validThru" column="valid_thru"/>
 		<result property="bagian" column="bagian" />
 		<result property="noRekening" column="no_rek" />
 		<result property="pinAtm" column="pin_atm" />
@@ -55,6 +57,7 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 		<result property="cabang.nama" column="cabang_nama" />
 		<result property="unit.id" column="unit_id" />
 		<result property="unit.nama" column="unit_nama" />
+		<result property="lastKreditId" column="last_kredit_id" />
 	</resultMap>
 	<resultMap id="nasabahHistoryResult" class="com.benclaus.koperasi.model.master.Nasabah">
 		<result property="id" column="id" />
@@ -67,6 +70,8 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 		<result property="nik" column="nik" />
 		<result property="pt.nama" column="perusahaan" />
 		<result property="bank.nama" column="bank" />
+		<result property="nomorKartu" column="nomor_kartu"/>
+		<result property="validThru" column="valid_thru"/>
 		<result property="bagian" column="bagian" />
 		<result property="noRekening" column="no_rek" />
 		<result property="pinAtm" column="pin_atm" />
@@ -183,25 +188,31 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 		<selectKey keyProperty="id" resultClass="int" type="post">
 			SELECT LAST_INSERT_ID() AS value
 		</selectKey>
-		INSERT INTO `ms_nasabah` (`cabang`, `unit`, `nama`,  `jns_kelamin_id`,  `sts_sipil_id`,  `domisili`,  `alamat`,  `telepon`,  `nik`,  `perusahaan_id`,  `bank_id`,
-  			`bagian`, `no_rek`, `pin_atm`, `tgl_masuk`, `tgl_payroll`, `sts_krywn_id`,  `jns_anggota_id`,  `sts_kerja_id`,  `no_rek_ref`,  `nama_ref`,  `keterangan`,  `aplikasi`, `is_agent`)
-		VALUES (#cabang.id#, #unit.id#, #nama#, #jenisKelamin.id#, #statusSipil.id#, #domisili#, #alamat#, #telepon#, #nik#, #pt.id#, #bank.id#,
-			#bagian#, #noRekening#, #pinAtm#, #tglMasuk#, #tglPayroll#, #statusKaryawan.id#, #jenisAnggota.id#, #statusKerja.id#, #noRekeningRef#, #namaRef#, #keterangan#, #aplikasi#, #anAgent#)
+		INSERT INTO `ms_nasabah` (`cabang`, `unit`, `nama`,  `jns_kelamin_id`,  `sts_sipil_id`,  `domisili`,  `alamat`,  `telepon`,  
+			`nik`,  `perusahaan_id`,  `bank_id`, `nomor_kartu`, `valid_thru`,	`bagian`, `no_rek`, `pin_atm`, `tgl_masuk`, `tgl_payroll`,
+			`sts_krywn_id`,  `jns_anggota_id`,  `sts_kerja_id`,  `no_rek_ref`,  `nama_ref`,  `keterangan`,  `aplikasi`, `is_agent`)
+		VALUES (#cabang.id#, #unit.id#, #nama#, #jenisKelamin.id#, #statusSipil.id#, #domisili#, #alamat#, #telepon#, 
+			#nik#, #pt.id#, #bank.id#, #nomorKartu#, #validThru#, #bagian#, #noRekening#, #pinAtm#, #tglMasuk#, #tglPayroll#, 
+			#statusKaryawan.id#, #jenisAnggota.id#, #statusKerja.id#, #noRekeningRef#, #namaRef#, #keterangan#, #aplikasi#, #anAgent#)
 	</insert>
 	
 	<update id="updateNasabah" parameterClass="com.benclaus.koperasi.model.master.Nasabah" >
 		UPDATE ms_nasabah SET  `cabang`=#cabang.id#, `unit`=#unit.id#, `nama`=#nama#, `jns_kelamin_id`=#jenisKelamin.id#,  
 			`sts_sipil_id`=#statusSipil.id#,  `domisili`=#domisili#,  `alamat`=#alamat#,  
-			`telepon`=#telepon#,  `nik`=#nik#,  `perusahaan_id`=#pt.id#,  `bank_id`=#bank.id#,
-  			`bagian`=#bagian#, `no_rek`=#noRekening#, `pin_atm` = #pinAtm# , `tgl_masuk`=#tglMasuk#,  `tgl_payroll`=#tglPayroll#, `sts_krywn_id`=#statusKaryawan.id#,  `jns_anggota_id`=#jenisAnggota.id#,
-  			  `sts_kerja_id`=#statusKerja.id#,  `no_rek_ref`=#noRekeningRef#,  `nama_ref`=#namaRef#,  `keterangan`=#keterangan#,  `aplikasi`=#aplikasi#,`is_agent`=#anAgent#
+			`telepon`=#telepon#,  `nik`=#nik#,  `perusahaan_id`=#pt.id#,  `bank_id`=#bank.id#, `nomor_kartu`=#nomorKartu#, 
+			`valid_thru` = #validThru#, `bagian`=#bagian#, `no_rek`=#noRekening#, `pin_atm` = #pinAtm# , `tgl_masuk`=#tglMasuk#,  
+			`tgl_payroll`=#tglPayroll#, `sts_krywn_id`=#statusKaryawan.id#,  `jns_anggota_id`=#jenisAnggota.id#,
+  			`sts_kerja_id`=#statusKerja.id#,  `no_rek_ref`=#noRekeningRef#,  `nama_ref`=#namaRef#,  `keterangan`=#keterangan#,  
+  			`aplikasi`=#aplikasi#,`is_agent`=#anAgent#
 		WHERE `id`=#id#
 	</update>
 	
 	<insert id="insertNasabahHistory" parameterClass="com.benclaus.koperasi.model.master.Nasabah" >
-		INSERT INTO `ms_nasabah_hist` (`id`, `cabang`, `unit`, `nama`,  `jns_kelamin_id`,  `sts_sipil_id`,  `domisili`,  `alamat`,  `telepon`,  `nik`,  `perusahaan_id`,  `bank_id`,
+		INSERT INTO `ms_nasabah_hist` (`id`, `cabang`, `unit`, `nama`,  `jns_kelamin_id`,  `sts_sipil_id`,  `domisili`,  `alamat`,  
+			`telepon`,  `nik`,  `perusahaan_id`,  `bank_id`, `nomor_kartu`, `valid_thru`,
   			`bagian`, `no_rek`,  `pin_atm`, `tgl_masuk`, `tgl_payroll`, `sts_krywn_id`,  `jns_anggota_id`,  `sts_kerja_id`,  `no_rek_ref`,  `nama_ref`,  `keterangan`, `aplikasi`, `is_agent`, `deleted`, `created_by`)
-		VALUES (#id#, #cabang.id#, #unit.id#, #nama#, #jenisKelamin.id#, #statusSipil.id#, #domisili#, #alamat#, #telepon#, #nik#, #pt.id#, #bank.id#,
+		VALUES (#id#, #cabang.id#, #unit.id#, #nama#, #jenisKelamin.id#, #statusSipil.id#, #domisili#, #alamat#, 
+			#telepon#, #nik#, #pt.id#, #bank.id#,#nomorKartu#, #validThru#,
 			#bagian#, #noRekening#, #pinAtm#, #tglMasuk#, #tglPayroll#, #statusKaryawan.id#, #jenisAnggota.id#, #statusKerja.id#, #noRekeningRef#, #namaRef#, #keterangan#, #aplikasi#, #anAgent#, #deleted#, #createdBy#)
 	</insert>
 	
@@ -211,9 +222,10 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 	</update>
 	
 	<select id="getNasabah" resultMap="nasabahResult">
-		SELECT n.`id`, n.`nama`,  n.`jns_kelamin_id`,  n.`sts_sipil_id`,  n.`domisili`,  n.`alamat`,  n.`telepon`,  n.`nik`,  n.`perusahaan_id`,  n.`bank_id`,
+		SELECT n.`id`, n.`nama`,  n.`jns_kelamin_id`,  n.`sts_sipil_id`,  n.`domisili`,  n.`alamat`,  n.`telepon`,  n.`nik`,  n.`perusahaan_id`,  
+			n.`bank_id`, n.`nomor_kartu`, n.`valid_thru`,
   			n.`bagian`, n.`no_rek`, n.pin_atm,  n.`tgl_masuk`, n.`tgl_payroll`, n.`sts_krywn_id`,  n.`jns_anggota_id`,  n.`sts_kerja_id`,  n.`no_rek_ref`,  n.`nama_ref`,  
-  			n.`keterangan`, n.`aplikasi`,  n.`is_agent`, c.id cabang_id, c.nama cabang_nama, u.id unit_id, u.nama unit_nama
+  			n.`keterangan`, n.`aplikasi`,  n.`is_agent`, c.id cabang_id, c.nama cabang_nama, u.id unit_id, u.nama unit_nama, last_kredit_id
 			FROM ms_nasabah n
 			INNER JOIN sy_cabang c on c.id = n.cabang
 			INNER JOIN sy_unit u on u.id = n.unit
@@ -221,7 +233,8 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 			AND n.id = #value#
 	</select>
 	<select id="getNasabahVersion" resultMap="nasabahHistoryResult">
-		SELECT n.`id`, n.`nama`,  k.`nama` jns_kelamin,  s.`status` sts_sipil,  n.`domisili`,  n.`alamat`,  n.`telepon`,  n.`nik`,  p.`nama` perusahaan,  b.nama `bank`,
+		SELECT n.`id`, n.`nama`,  k.`nama` jns_kelamin,  s.`status` sts_sipil,  n.`domisili`,  n.`alamat`,  n.`telepon`,  n.`nik`,  
+			p.`nama` perusahaan,  b.nama `bank`, n.`nomor_kartu`, n.`valid_thru`,
   			n.`bagian`, n.`no_rek`, n.pin_atm,  n.`tgl_masuk`, n.`tgl_payroll`, w.`status` `sts_krywn`,  g.jenis `jns_anggota`, t.`status` `sts_kerja`,  n.`no_rek_ref`,  n.`nama_ref`,  n.`keterangan`,  n.`aplikasi`,
 			n.`is_agent`, n.`deleted`, n.`created_by`, n.`created_time`, c.id cabang_id, c.nama cabang_nama, u.id unit_id, u.nama unit_nama
 			FROM ms_nasabah_hist n
@@ -237,7 +250,10 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 			WHERE n.deleted = 0
 			AND n.id = #value#
 	</select>
-	
+	<update id="incLastKreditNo" parameterClass="java.lang.Integer">
+		UPDATE ms_nasabah SET  `last_kredit_id` = `last_kredit_id` +1
+		WHERE `id` = #value#
+	</update>
 	
 </sqlMap>
 

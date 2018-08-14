@@ -24,6 +24,7 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 	<resultMap id="RealResult" class="com.benclaus.koperasi.model.trx.Realisasi">
 		<result property="id" column="id" />
 		<result property="noKredit" column="no_kredit" />
+		<result property="noUrutNsbh" column="no_urut_nsbh" />
 		<result property="tglAju" column="tgl_aju" />
 		<result property="nasabah.id" column="n_id" />
 		<result property="nasabah.nik" column="n_nik" />
@@ -56,7 +57,7 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 		<result property="biayaAdmin" column="biaya_adm" />
 		<result property="biayaProvisi" column="biaya_provisi" />
 		<result property="biayaLain" column="biaya_lain" />
-		<result property="angsuranReal" column="angsuran_real" />
+		<result property="sisaAngsuran" column="sisa_angsuran" />
 		<result property="diterima" column="diterima" />
 		<result property="keterangan" column="keterangan" />
 	</resultMap>
@@ -187,11 +188,11 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 	</select>
 	
 	<select id="getReal" resultMap="RealResult">
-		SELECT a.id, a.nasabah_id n_id, `no_kredit`,a.tgl_aju, n.nama n_nama, n.alamat n_alamat, n.jns_kelamin_id n_jenis_kelamin_id, 
+		SELECT a.id, a.no_urut_nsbh, a.nasabah_id n_id, `no_kredit`,a.tgl_aju, n.nama n_nama, n.alamat n_alamat, n.jns_kelamin_id n_jenis_kelamin_id, 
 			n.aplikasi n_aplikasi, k.nama n_jenis_kelamin_status, n.nik n_nik, n.bagian n_bagian, p.id pt_id, p.nama pt_nama, 
 			n.bank_id, b.nama bank_nama, n.tgl_payroll n_tgl_payroll, a.tipe_kredit, a.jenis_pinjam, a.jatuh_tempo,
 			na.nama sponsor_nama, pe.nama marketing_nama,	a.jumlah_aju, a.tenor, a.interest_rate, a.angsuran_aju, a.penjamin, a.agunan,
-			a.tgl_real, a.jumlah_real, a.biaya_adm, a.biaya_provisi, a.biaya_lain, a.angsuran_real, a.diterima, a.keterangan
+			a.tgl_real, a.jumlah_real, a.biaya_adm, a.biaya_provisi, a.biaya_lain, a.sisa_angsuran, a.diterima, a.keterangan
 		FROM `tx_kr_aju` a
 		INNER JOIN ms_nasabah n on n.id = a.nasabah_id
 		INNER JOIN ms_perusahaan p ON p.id = n.perusahaan_id
@@ -213,12 +214,24 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
   `terbilang_diterima`,
   `keterangan` -->
 	
-	<update id="updateReal" parameterClass="com.benclaus.koperasi.model.trx.Realisasi" >
-		UPDATE `tx_kr_aju` SET `no_kredit` = #noKredit#, `tgl_aju`= #tglAju#, `nasabah_id`=#nasabah.id#, `tipe_kredit`=#tipeKredit#, 
-			`jenis_pinjam`=#jenisPinjam#, `jumlah_aju`=#jumlahAju#, `tenor`=#tenor#, `interest_rate`=#interestRate#,
-			`angsuran_aju`=#angsuranAju#, `sponsor`=#sponsor.id#, `marketing`=#marketing.id#, `penjamin`=#penjamin#,
-			`agunan`=#agunan#, `jatuh_tempo`=#jatuhTempo#
+	<update id="saveReal" parameterClass="com.benclaus.koperasi.model.trx.Realisasi" >
+		UPDATE `tx_kr_aju` 
+		SET `realisasi` = 1, `tipe_kredit`= #tipeKredit#, `tgl_real`= #tglReal#, 
+			`jumlah_real`= #jmlReal#, `biaya_adm` = #biayaAdmin#, `biaya_lain` = #biayaLain#,
+  			`biaya_provisi` = #biayaProvisi#, `sisa_angsuran` = #sisaAngsuran#,
+			`diterima` = #diterima#, `keterangan` = #keterangan#
 		WHERE id = #id#
+	</update>
+	
+	<update id="setSimulasiLunas" parameterClass="java.util.Map" >
+		UPDATE tx_kr_aju_sim SET dibayar=#dibayar#, tgl_bayar = date(#tglBayar#) 
+		WHERE id = #id#
+	</update>
+	
+	<update id="setAjuLunas" parameterClass="java.lang.Integer" >
+		UPDATE tx_kr_aju
+			SET realisasi = 1, lunas = 1
+			WHERE id = #value#
 	</update>
 	
 </sqlMap>

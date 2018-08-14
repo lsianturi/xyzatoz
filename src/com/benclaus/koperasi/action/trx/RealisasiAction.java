@@ -5,6 +5,8 @@ import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -28,11 +30,11 @@ import com.benclaus.koperasi.dao.master.NasabahService;
 import com.benclaus.koperasi.dao.master.StatusPKService;
 import com.benclaus.koperasi.dao.trx.AjuService;
 import com.benclaus.koperasi.dao.trx.RealisasiService;
-import com.benclaus.koperasi.model.master.Nasabah;
-import com.benclaus.koperasi.model.master.Pegawai;
 import com.benclaus.koperasi.model.trx.Aju;
 import com.benclaus.koperasi.model.trx.JenisPinjam;
+import com.benclaus.koperasi.model.trx.Realisasi;
 import com.benclaus.koperasi.model.trx.Simulasi;
+import com.benclaus.koperasi.model.trx.StatusPinjaman;
 import com.benclaus.koperasi.model.trx.TipeKredit;
 import com.benclaus.koperasi.model.usm.Login;
 import com.benclaus.koperasi.utility.Constant;
@@ -57,6 +59,9 @@ public class RealisasiAction extends SecurityAction {
 	private Locale locale = new Locale("us", "US");
 	private NumberFormat nf = NumberFormat.getInstance(locale);
 	
+	private final String DUE_LIST = "DueList";
+	private final String SISA_ANGSURAN = "SisaAngsuran";
+	
 	private void prepareSearch(HttpServletRequest request) {
 		try {
 			request.setAttribute("PerusahaanList", stService.listPerusahaan());
@@ -64,7 +69,7 @@ public class RealisasiAction extends SecurityAction {
 			request.setAttribute("JenisPinjamList", JenisPinjam.getJenisPinjam());
 			request.setAttribute("AgentList", stService.listAgent());
 			request.setAttribute("MarketingList", stService.listPegawai());
-			request.setAttribute("StatusList", stService.listStatusKredit());
+			request.setAttribute("StatusList", StatusPinjaman.getStatusPinjaman());
 		} catch (Exception e) {
 		}
 	}
@@ -209,7 +214,7 @@ public class RealisasiAction extends SecurityAction {
         Integer tglToday = calAju.get(Calendar.DATE);
         Integer tglGajian= calPayroll.get(Calendar.DATE);
         
-        System.out.println(tglToday + " & " + tglGajian);
+//        System.out.println(tglToday + " & " + tglGajian);
         
         calAju.set(Calendar.DATE, tglGajian);
         if ( tglGajian > tglToday) {
@@ -357,6 +362,7 @@ public class RealisasiAction extends SecurityAction {
 			return forward;
 
 		try {
+			session.removeAttribute(DUE_LIST);
 			prepareData(request);
 			Integer ajuId = request.getParameter("id").equals("") ? 0
 					: Integer.parseInt(request.getParameter("id"));
@@ -369,6 +375,7 @@ public class RealisasiAction extends SecurityAction {
 			BeanUtils.copyProperties(planForm, aju);
 			planForm.set("tglAju", sdf.format(aju.getTglAju()));
 			planForm.set("nsbhId", aju.getNasabah().getId());
+			planForm.set("noUrut", aju.getNoUrutNsbh());
 			planForm.set("nsbhNama", aju.getNasabah().getNama());
 			planForm.set("bunga", nf.format(aju.getInterestRate()).replace(",", "."));
 			planForm.set("jumlahAju", nf.format(aju.getJumlahAju()));
@@ -392,7 +399,7 @@ public class RealisasiAction extends SecurityAction {
 			planForm.set("tglReal", sdf.format(new Date()));
 			
 			Double biaya = (2.5/100) * aju.getJumlahAju();
-			System.out.println("biaya: " + biaya);
+//			System.out.println("biaya: " + biaya);
 			planForm.set("jumlahReal", nf.format(aju.getJumlahAju()));
 			planForm.set("biayaAdmin", nf.format(biaya));
 			planForm.set("biayaProvisi", nf.format(biaya));
@@ -401,10 +408,16 @@ public class RealisasiAction extends SecurityAction {
 			
 			double totalUtang = 0d;
 			double totalBayar = 0d;
+			Aju a = null;
 			List<Aju> ajus = ajuService.getDueAju(aju.getNasabah().getId());
 			if (ajus != null) {
 				List<Simulasi> sims = null;
-				for (Aju a : ajus) {
+				for (Iterator<Aju> it = ajus.iterator(); it.hasNext();) {
+					a = it.next();
+					if (a.getId().intValue() == ajuId.intValue()) {
+						it.remove();
+						continue;
+					}
 					sims = ajuService.getDueSimulasi(a.getId());
 					if (sims != null) {
 						a.setSimulasi(sims);
@@ -415,10 +428,14 @@ public class RealisasiAction extends SecurityAction {
 						}
 					}
 				}
-				request.setAttribute("DueList", ajus);
+				if (ajus.size()>0) {
+					request.setAttribute(DUE_LIST, ajus);
+					session.setAttribute(DUE_LIST, ajus);
+				}
 			}
 			double kurang = (totalUtang - totalBayar);
 			planForm.set("sisaAngsuran", nf.format(kurang));
+			session.setAttribute(SISA_ANGSURAN, kurang);
 			
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
@@ -439,7 +456,69 @@ public class RealisasiAction extends SecurityAction {
 	}
 	
 
-	public ActionForward update(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+	public ActionForward view(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+
+		log.debug("View");
+
+		ActionMessages errors = new ActionMessages();
+		// Check Menu Access
+		HttpSession session = request.getSession();
+		ActionForward forward = new ActionForward();
+		DynaActionForm planForm = (DynaActionForm) form;
+		forward = hasMenuAccess(mapping, request, TRX_REAL_VIEW);
+		if (forward != null)
+			return forward;
+
+		try {
+			prepareData(request);
+			Integer ajuId = request.getParameter("id").equals("") ? 0
+					: Integer.parseInt(request.getParameter("id"));
+			if (errors.size() > 0) {
+				saveErrors(request, errors);
+				return mapping.findForward("continue");
+			}
+
+			Realisasi real = service.getReal(ajuId);
+			BeanUtils.copyProperties(planForm, real);
+			planForm.set("tglAju", sdf.format(real.getTglAju()));
+			planForm.set("nsbhId", real.getNasabah().getId());
+			planForm.set("nsbhNama", real.getNasabah().getNama());
+			planForm.set("bunga", nf.format(real.getInterestRate()).replace(",", "."));
+			planForm.set("jumlahAju", nf.format(real.getJumlahAju()));
+			planForm.set("angsuranAju", nf.format(real.getAngsuranAju()));
+			planForm.set("nsbhAlamat", real.getNasabah().getAlamat()); 
+			planForm.set("nsbhDomisili", real.getNasabah().getDomisili());
+			planForm.set("nsbhJnsKelamin", real.getNasabah().getJenisKelamin().getStatus());
+			planForm.set("nsbhNik", real.getNasabah().getNik());
+			planForm.set("nsbhBagian", real.getNasabah().getBagian());
+			planForm.set("nsbhPt", real.getNasabah().getPt().getNama());
+			planForm.set("nsbhBank", real.getNasabah().getBank().getNama());
+			planForm.set("nsbhTelepon", real.getNasabah().getTelepon());
+			planForm.set("nsbhNoRekening", real.getNasabah().getNoRekening());
+			planForm.set("nsbhTglPayrol", sdf.format(real.getNasabah().getTglPayroll()));
+			planForm.set("nsbhAplikasi", real.getNasabah().getAplikasi());
+			planForm.set("jatuhTempo", sdf.format(real.getJatuhTempo()));
+			if (real.getSponsor() != null) planForm.set("sponsor", real.getSponsor().getId());
+			if (real.getMarketing() != null) planForm.set("marketing", real.getMarketing().getId());
+			
+			request.setAttribute("aju", real);
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			errors.add(Constant.GLOBALERROR, new ActionMessage("error.exception", e.getMessage()));
+		}
+
+		if (errors.size() > 0) {
+			saveErrors(request, errors);
+			return mapping.findForward("fail");
+		}
+
+		saveToken(request);
+
+		return mapping.findForward("continue");
+
+	}
+	/*public ActionForward update(ActionMapping mapping, ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 
 		log.debug("Update");
@@ -501,7 +580,7 @@ public class RealisasiAction extends SecurityAction {
 		planForm.set("dispatch", Constant.UPDATESAVE);
 		return mapping.findForward("continue");
 
-	}
+	}*/
 
 	public ActionForward updateSave(ActionMapping mapping, ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
@@ -521,35 +600,63 @@ public class RealisasiAction extends SecurityAction {
 		if (userLogin == null) {
 			errors.add(Constant.GLOBALERROR, new ActionMessage("error.invalidLogin"));
 		}
-
+		List<Aju> dueList= null;
 		try {
-			
 			if (isTokenValid(request)) {
 				saveToken(request);
-				Aju aju = new Aju();
-				aju.setId((Integer)myForm.get("id"));
-				aju.setTipeKredit(1); // tipe kredit harus melihat history pinjaman sebelumnya.
-				aju.setNoKredit(myForm.getString("noKredit"));
-				aju.setTglAju(sdf.parse(myForm.getString("tglAju")));
-				aju.setNasabah(new Nasabah((Integer)myForm.get("nsbhId")));
-				aju.setPenjamin(myForm.getString("penjamin"));
-				aju.setAgunan(myForm.getString("agunan"));
-				aju.setJenisPinjam((Integer)myForm.get("jenisPinjam"));
-				aju.setJumlahAju(nf.parse(myForm.getString("jumlahAju")).doubleValue());
-				aju.setTenor((Integer)myForm.get("tenor"));
-				aju.setInterestRate(nf.parse(myForm.getString("interestRate")).doubleValue());
-				aju.setAngsuranAju(nf.parse(myForm.getString("angsuranAju")).doubleValue());
-				aju.setJatuhTempo(sdf.parse(myForm.getString("jatuhTempo")));
-				try {
-					aju.setSponsor(new Nasabah((Integer)myForm.get("sponsor")));
-				}catch (Exception e){}
-				try {
-					aju.setMarketing(new Pegawai((Integer)myForm.get("marketing")));
-				}catch (Exception e) {}
+				dueList = (List<Aju>)session.getAttribute(DUE_LIST);
+				Integer noUrut = (Integer)myForm.get("noUrut");
 				
-				service.updateAju(aju);
-				aju.setCreatedBy(userLogin.getUser().getUserCode());
-
+				Realisasi real = new Realisasi();
+				real.setId((Integer)myForm.get("id"));
+				if (dueList == null) {
+					if (noUrut == 1) {
+						real.setTipeKredit(TipeKredit.BARU); // tipe kredit harus melihat history pinjaman sebelumnya.
+					} else {
+						real.setTipeKredit(TipeKredit.REPEAT_ORDER);
+					}
+				} else {
+					real.setTipeKredit(TipeKredit.TOP_UP);
+				}
+				
+				real.setTglReal(sdf.parse(myForm.getString("tglReal")));
+				real.setJmlReal(nf.parse(myForm.getString("jumlahReal")).doubleValue());
+				real.setBiayaAdmin(nf.parse(myForm.getString("biayaAdmin")).doubleValue());
+				real.setBiayaLain(nf.parse(myForm.getString("biayaLain")).doubleValue());
+				real.setBiayaProvisi(nf.parse(myForm.getString("biayaProvisi")).doubleValue());
+				real.setSisaAngsuran(nf.parse(myForm.getString("sisaAngsuran")).doubleValue());
+				real.setDiterima(nf.parse(myForm.getString("diterima")).doubleValue());
+				real.setKeterangan(myForm.getString("keterangan"));
+				
+				//update pinjaman lama
+				double totalUtang = 0d;
+				double totalBayar = 0d;
+				int id = 0;
+				Map<String, Object> param = null;
+				if (dueList != null) {
+					for (Aju due:dueList) {
+						param = new HashMap<>();
+						id = 0;
+						//update status pinjaman lama
+						for (Simulasi s: due.getSimulasi()) {
+							totalUtang += s.getPokok();
+							totalUtang += s.getBunga();
+							totalBayar += s.getDibayar() == null ? 0d : s.getDibayar();
+							if (id == 0) {
+								if (s.getDibayar() == null && s.getTglBayar() == null) {
+									id = s.getId();
+								}
+							}
+						}
+						param.put("id", id);
+						param.put("dibayar", totalUtang - totalBayar);
+						param.put("tglBayar", sdfMysql.format(new Date()));
+						
+						service.saveReal(real, param, due.getId());
+					}
+				} else {
+					service.saveReal(real);
+				}
 			} else {
 				errors.add(Constant.GLOBALERROR, new ActionMessage("error.invalidToken"));
 				saveErrors(request, errors);

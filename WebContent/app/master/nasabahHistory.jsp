@@ -53,6 +53,8 @@
 				<td><bean:message key="form.nasabah.statusKaryawan"/></td>
 				
 				<td><bean:message key="form.nasabah.bank"/></td>
+				<td><bean:message key="form.nasabah.nomorKartu"/></td>
+				<td><bean:message key="form.nasabah.validThru"/></td>
 				<td><bean:message key="form.nasabah.rekening"/></td>
 				<td><bean:message key="form.nasabah.pinAtm"/></td>
 				
@@ -98,6 +100,8 @@
 					<td class="celBorder"><fmt:formatDate value="${nsbh.tglPayroll}" pattern="dd/MM/yyyy"/></td>
 					<td class="celBorder"><c:out value="${nsbh.statusKaryawan.status}"/></td>
 					<td class="celBorder"><c:out value="${nsbh.bank.nama}"/></td>
+					<td class="celBorder"><c:out value="${nsbh.nomorKartu}"/></td>
+					<td class="celBorder"><c:out value="${nsbh.validThru}"/></td>
 					<td class="celBorder"><c:out value="${nsbh.noRekening}"/></td>
 					<td class="celBorder"><c:out value="${nsbh.pinAtm}"/></td>
 					<td class="celBorder"><c:out value="${nsbh.noRekeningRef}"/></td>
