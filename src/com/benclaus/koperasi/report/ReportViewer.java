@@ -16,15 +16,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
-import com.benclaus.koperasi.action.trx.AjuAction;
-
+import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
-import net.sf.jasperreports.engine.JasperRunManager;
 import net.sf.jasperreports.engine.util.JRLoader;
 
 /**
@@ -57,7 +54,7 @@ public class ReportViewer extends HttpServlet {
 	 */
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Integer kreditId = Integer.parseInt(request.getParameter("id"));
-		byte[] doc = null;//getAjuDocument(kreditId); // Method that generate and return PDF as byte[]
+		byte[] doc = getAjuDocument(kreditId); // Method that generate and return PDF as byte[]
 
 		response.setContentType("application/pdf");
 		response.setHeader("Content-Disposition", "inline;filename=document.pdf"); // Change from "attachment" to
@@ -78,7 +75,7 @@ public class ReportViewer extends HttpServlet {
 		}
 	}
 
-	private void getAjuDocument(Integer kreditId){
+	private byte[] getAjuDocument(Integer kreditId){
 		Map<String, Object> param = new HashMap<>();
 		param.put("pt", "PT.GS");
 		param.put("aplikasi", "1. Ijazah SMP\n2. Jamsostek + BPJS\n3. ATM + Buku tabungan\n4. Parklaring PT. GS");
@@ -92,7 +89,7 @@ public class ReportViewer extends HttpServlet {
 		param.put("ref_trf", "0");
 		param.put("hp", "0812-2345-8979 / 0813-8765-9876");
 		param.put("note", "0");
-		param.put("status_kerja", 0);
+		param.put("status_kerja", "0");
 		param.put("pokok", new Double(4000000));
 		param.put("cicilan", new Double(450000));
 		param.put("tenor", 10);
@@ -104,21 +101,21 @@ public class ReportViewer extends HttpServlet {
 		byte[] bytes = null;
 
 		try {
-//			JasperReport jasperReport =  (JasperReport)JRLoader.loadObject(
-//					AjuAction.class.getResourceAsStream("/com/benclaus/koperasi/resources/jrxml/Aju.jasper"));
+			JasperReport jasperReport =  (JasperReport)JRLoader.loadObject(
+					ReportViewer.class.getResourceAsStream("/com/benclaus/koperasi/resources/jrxml/Aju.jasper"));
 			
-			JasperReport jasperReport = JasperCompileManager.compileReport(
-					AjuAction.class.getResourceAsStream("/com/benclaus/koperasi/resources/jrxml/Aju.jrxml"));
-			JasperPrint printer = JasperFillManager.fillReport(jasperReport, param);
-//			bytes = JasperExportManager.exportReportToPdf(printer);
-			JasperExportManager.exportReportToPdfFile(printer, "d://test.pdf");
+//			JasperReport jasperReport = JasperCompileManager.compileReport(
+//					ReportViewer.class.getResourceAsStream("/com/benclaus/koperasi/resources/jrxml/Aju.jrxml"));
+			JasperPrint printer = JasperFillManager.fillReport(jasperReport, param, new JREmptyDataSource());
+			bytes = JasperExportManager.exportReportToPdf(printer);
+//			JasperExportManager.exportReportToPdfFile(printer, "d://test.pdf");
 			
 //			bytes = JasperRunManager.runReportToPdf(jasperReport, param);
 			
 		} catch (JRException e) {
 			e.printStackTrace();
 		}
-//		return bytes;
+		return bytes;
 	}
 	public static void main(String[] args) {
 		new ReportViewer().getAjuDocument(1);

@@ -97,6 +97,7 @@
   <button class="w3-bar-item w3-button conTitle" onclick="openTab('Jaminan')">Jaminan</button>
   <button class="w3-bar-item w3-button conTitle" onclick="openTab('Aju')">Pengajuan</button>
   <button class="w3-bar-item w3-button conTitle" onclick="openTab('Simulasi')">Simulasi</button>
+  <button class="w3-bar-item w3-button conTitle" onclick="openTab('TheForm')">Form</button>
 </div>
 <table border="0">
 		<tbody>
@@ -362,7 +363,14 @@
 	</table>
 	</div>
 	
-	
+	<div id="TheForm" class="w3-container aju" style="display:none">
+		<div>
+			
+			<iframe src="ajuUpdate.do?dispatch=generate&id=<bean:write name="aju" property="id"/>" width="600" height="400">
+			Browser ini tidak mendukung IFRAME, gunakan browser lain seperti Google Chrome atau Mozilla Firefox terbaru.
+			</iframe>
+		</div>
+		</div>
 	<table width="100%" border="0">
 		<tbody>
 			<tr>

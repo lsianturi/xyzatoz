@@ -1,6 +1,6 @@
 package com.benclaus.koperasi.action.trx;
 
-import java.io.OutputStream;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -11,15 +11,13 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.lang.WordUtils;
 import org.apache.log4j.Logger;
-import org.apache.struts.action.ActionError;
-import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -40,23 +38,18 @@ import com.benclaus.koperasi.model.trx.Simulasi;
 import com.benclaus.koperasi.model.trx.StatusPinjaman;
 import com.benclaus.koperasi.model.trx.TipeKredit;
 import com.benclaus.koperasi.model.usm.Login;
+import com.benclaus.koperasi.report.ReportViewer;
 import com.benclaus.koperasi.utility.Constant;
 import com.benclaus.koperasi.utility.DAFContainer;
 import com.ibatis.common.util.PaginatedList;
-import com.lowagie.text.BadElementException;
-import com.lowagie.text.Document;
-import com.lowagie.text.DocumentException;
-import com.lowagie.text.Element;
-import com.lowagie.text.Paragraph;
-import com.lowagie.text.Phrase;
-import com.lowagie.text.Rectangle;
-import com.lowagie.text.pdf.PdfPCell;
-import com.lowagie.text.pdf.PdfPTable;
-import com.lowagie.text.pdf.PdfWriter;
 
-import id.co.ggpc.absensi.model.EmployeeAbsensi;
-import id.co.ggpc.absensi.model.MonthlySummary;
-import id.co.ggpc.absensi.utility.YearHelper;
+import net.sf.jasperreports.engine.JREmptyDataSource;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.util.JRLoader;
 
 public class AjuAction extends SecurityAction {
 	private static Logger log = Logger.getLogger(AjuAction.class);
@@ -783,182 +776,77 @@ private static void createTable(Paragraph content, List<MonthlySummary> summary,
 		
 		ActionMessages errors = new ActionMessages();
 		// Check Menu Access
-		HttpSession session = request.getSession();
-		ActionForward forward = new ActionForward();
-		DynaActionForm planForm = (DynaActionForm) form;
-		forward = hasMenuAccess(mapping, request, TRX_PJM_VIEW);
-		if (forward != null)
-			return forward;
 
+		Integer kreditId = Integer.parseInt(request.getParameter("id"));
+		byte[] doc = getAjuDocument(kreditId); // Method that generate and return PDF as byte[]
+
+		response.setContentType("application/pdf");
+		response.setHeader("Content-Disposition", "inline;filename=document.pdf"); // Change from "attachment" to
+																						// "inline" for opening in
+																						// browser (attachment should
+																						// download directly)
+		response.setContentLength(doc.length);
+
+		ServletOutputStream out = null;
 		try {
-			prepareData(request);
-			Integer ajuId = request.getParameter("id").equals("") ? 0
-					: Integer.parseInt(request.getParameter("id"));
-			if (errors.size() > 0) {
-				saveErrors(request, errors);
-				return mapping.findForward("continue");
-			}
-
-			Aju aju = service.getAju(ajuId);
-				
-			try {
-				response.setContentType("application/octet-stream");
-				response.setHeader("Content-Disposition", "attachment; filename=" + year + "-"+param.get("month") + "-MonthlySummary.pdf");
-				OutputStream fileOut = response.getOutputStream();
-				
-				Document document = new Document(new Rectangle(792, 612));
-				PdfWriter.getInstance(document, fileOut);
-				document.open();
-				addMetaData(document);
-				addContent(document, month, year, summaryList, workdays);
-				document.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-				
-			
-		}catch(Exception e) { 						
+			out = response.getOutputStream();
+			out.write(doc);
+			out.flush();
+		} catch (IOException e) {
 			log.error(e.getMessage(), e);			
-			errors.add(Constant.GLOBALERROR, new ActionError("error.exception", e.getMessage()));
+			errors.add(Constant.GLOBALERROR, new ActionMessage("error.exception", e.getMessage()));
 			saveErrors(request, errors);
+		} finally {
+			if (out != null)
+				out.close();
+			
 		}
-		return mapping.findForward("main");
+		
+		return null;
+//		return mapping.findForward("main");
 	} 
 	
-	private static void addMetaData(Document document) {
-		document.addTitle("Attendance summary");
-		document.addSubject("Attendance summary");
-		document.addKeywords("attendance,summary");
-		document.addAuthor("Lambok Sianturi");
-		document.addCreator("Lambok Sianturi");
-	}
-	
-	private static void addContent(Document document, Integer month, Integer year, List<MonthlySummary> summary, Integer workdays) throws DocumentException {
-		Paragraph report = new Paragraph();
-		Paragraph title = new Paragraph();
-		title.add(new Paragraph("Attendance Monthly Summary Report", titleFont));
-		title.add(new Paragraph("In Time: 08:00 WIB               Out time: 17:15 / 17:30 WIB (Friday)", subTitleFont));
-		title.add(new Paragraph("Daily work hours: 8hr (excl. break)", subTitleFont));
-		title.add(new Paragraph("Month: " + YearHelper.getInstance().getMonthName(month)+", Year " + year, subTitleFont));
-		title.add(new Paragraph("Workday(s): "+ workdays + " days = " + workdays * 8 + " hours", subTitleFont));
-		
-		title.add(new Paragraph("AL: Annual Leave, BT: Business Travel, ANL: Annual Leave Half day, SiL: Sick Leave, SpL: Special Leave, UL: Unpaid Leave", tableRow));
+	private byte[] getAjuDocument(Integer kreditId){
+		Map<String, Object> param = new HashMap<>();
+		param.put("pt", "PT.GS");
+		param.put("aplikasi", "1. Ijazah SMP\n2. Jamsostek + BPJS\n3. ATM + Buku tabungan\n4. Parklaring PT. GS");
+		param.put("nik", "GS.1235");
+		param.put("nama", "SHOFYAH RAHMAN");
+		param.put("bagian", "AQ");
+		param.put("bank", "HANA BANK");
+		param.put("supervisor", "SAMY");
+		param.put("status", "RO");
+		param.put("surveyor", "ACEP");
+		param.put("ref_trf", "0");
+		param.put("hp", "0812-2345-8979 / 0813-8765-9876");
+		param.put("note", "0");
+		param.put("status_kerja", "0");
+		param.put("pokok", new Double(4000000));
+		param.put("cicilan", new Double(450000));
+		param.put("tenor", 10);
+		param.put("tgl_lunas", new Date());
+		param.put("no_kredit", "110.32459");
+		param.put("deadline", "9");
+		param.put("tgl_aju", new Date());
 
-		report.add(title);
+		byte[] bytes = null;
 
-		// add a table
-		createTable(report, summary, workdays * 8);
-		
-		// now add all this to the document
-		document.add(report);
-
-	}
-
-private static void createTable(Paragraph content, List<MonthlySummary> summary, Integer workhour) throws BadElementException, DocumentException  {
-		PdfPTable table = new PdfPTable(15);
-		table.setHorizontalAlignment(Element.ALIGN_JUSTIFIED_ALL);
-		table.setWidths(new float[] { 25, 55, 100, 95, 50, 35, 45,40, 40, 40, 40, 40, 40, 40, 120 });
-		table.setWidthPercentage(100);
-		table.setSpacingBefore(0f);
-        table.setSpacingAfter(0f);
-        
-		
-		PdfPCell c1 = new PdfPCell(new Phrase("No", tableHeader));
-		c1.setHorizontalAlignment(Element.ALIGN_LEFT);
-		table.addCell(c1);
-
-		c1 = new PdfPCell(new Phrase("Employee No", tableHeader));
-		c1.setHorizontalAlignment(Element.ALIGN_LEFT);
-		table.addCell(c1);
-
-		c1 = new PdfPCell(new Phrase("Name", tableHeader));
-		c1.setHorizontalAlignment(Element.ALIGN_LEFT);
-		table.addCell(c1);
-		
-		c1 = new PdfPCell(new Phrase("Job Title", tableHeader));
-		c1.setHorizontalAlignment(Element.ALIGN_LEFT);
-		table.addCell(c1);
-		
-		c1 = new PdfPCell(new Phrase("Job Level", tableHeader));
-		c1.setHorizontalAlignment(Element.ALIGN_LEFT);
-		table.addCell(c1);
-		
-		c1 = new PdfPCell(new Phrase("Work days", tableHeader));
-		c1.setHorizontalAlignment(Element.ALIGN_CENTER);
-		table.addCell(c1);
-		
-		c1 = new PdfPCell(new Phrase("Work hours", tableHeader));
-		c1.setHorizontalAlignment(Element.ALIGN_CENTER);
-		table.addCell(c1);
-
-		c1 = new PdfPCell(new Phrase("Early In", tableHeader));
-		c1.setHorizontalAlignment(Element.ALIGN_LEFT);
-		table.addCell(c1);
-
-		c1 = new PdfPCell(new Phrase("Late In", tableHeader));
-		c1.setHorizontalAlignment(Element.ALIGN_LEFT);
-		table.addCell(c1);
-
-		c1 = new PdfPCell(new Phrase("Early Out", tableHeader));
-		c1.setHorizontalAlignment(Element.ALIGN_LEFT);
-		table.addCell(c1);
-		
-		c1 = new PdfPCell(new Phrase("Late Out", tableHeader));
-		c1.setHorizontalAlignment(Element.ALIGN_LEFT);
-		table.addCell(c1);
-
-		c1 = new PdfPCell(new Phrase("Under time", tableHeader));
-		c1.setHorizontalAlignment(Element.ALIGN_LEFT);
-		table.addCell(c1);
-		
-		c1 = new PdfPCell(new Phrase("Over time", tableHeader));
-		c1.setHorizontalAlignment(Element.ALIGN_LEFT);
-		table.addCell(c1);
-		
-		c1 = new PdfPCell(new Phrase("Over - Under", tableHeader));
-		c1.setHorizontalAlignment(Element.ALIGN_LEFT);
-		table.addCell(c1);
-
-		c1 = new PdfPCell(new Phrase("Leave", tableHeader));
-		c1.setHorizontalAlignment(Element.ALIGN_LEFT);
-		table.addCell(c1);
-
-		table.setHeaderRows(1);
-		int i = 1;
-		Integer hour =0;
-		for (MonthlySummary sum : summary) {
-			if (sum.getWorkdays() != null && sum.getWorkdays() != 0) {
-				hour = Integer.parseInt(sum.getTotalWork().substring(0, sum.getTotalWork().indexOf("h") ));
-				table.addCell(new Phrase(""+ i++, tableRow));
-				table.addCell(new Phrase(sum.getEmployeeNo().toString(), tableRow));
-				table.addCell(new Phrase(WordUtils.capitalizeFully(sum.getFirstName() + ( sum.getLastName() != null ? " " +sum.getLastName() : "")), tableRow));
-				table.addCell(new Phrase(WordUtils.capitalizeFully(sum.getJobTitle()), tableRow));
-				table.addCell(new Phrase(WordUtils.capitalizeFully(sum.getJobLevel()), tableRow));
-				table.addCell(new Phrase(""+sum.getWorkdays(), tableRow));
-				if (hour == workhour ) {
-					table.addCell(new Phrase(sum.getTotalWork(), tableRow));
-				} else if (hour > workhour) { 
-					table.addCell(new Phrase(sum.getTotalWork(), tableRowGreen));
-				} else {
-					table.addCell(new Phrase(sum.getTotalWork(), tableRowRed));
-				}
-				table.addCell(new Phrase(sum.getEarlyIn(), tableRow));
-				table.addCell(new Phrase(sum.getLateIn(), tableRow));
-				table.addCell(new Phrase(sum.getEarlyOut(), tableRow));
-				table.addCell(new Phrase(sum.getLateOut(), tableRow));
-				table.addCell(new Phrase(sum.getUnderTime(), tableRow));
-				table.addCell(new Phrase(sum.getOverTime(), tableRow));
-				if (sum.getOverMinUnder().startsWith("-")) {
-					table.addCell(new Phrase(sum.getOverMinUnder(), tableRowRed));
-				} else {
-					table.addCell(new Phrase(sum.getOverMinUnder(), tableRow));
-				}
-				table.addCell(new Phrase(sum.getNote(), tableRow));
-			}
+		try {
+			JasperReport jasperReport =  (JasperReport)JRLoader.loadObject(
+					ReportViewer.class.getResourceAsStream("/com/benclaus/koperasi/resources/jrxml/Aju.jasper"));
+			
+//			JasperReport jasperReport = JasperCompileManager.compileReport(
+//					ReportViewer.class.getResourceAsStream("/com/benclaus/koperasi/resources/jrxml/Aju.jrxml"));
+			JasperPrint printer = JasperFillManager.fillReport(jasperReport, param, new JREmptyDataSource());
+			bytes = JasperExportManager.exportReportToPdf(printer);
+//			JasperExportManager.exportReportToPdfFile(printer, "d://test.pdf");
+			
+//			bytes = JasperRunManager.runReportToPdf(jasperReport, param);
+			
+		} catch (JRException e) {
+			e.printStackTrace();
 		}
-
-		content.add(table);
-
+		return bytes;
 	}
 
 }
