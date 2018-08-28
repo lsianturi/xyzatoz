@@ -115,6 +115,15 @@
 					</html:select>
 				</td>
 			</tr>
+			<tr><td></td><td></td>
+				<td width="100" class="conLabel"><bean:message key="form.aju.surveyor"></bean:message></td>
+				<td class="conText">
+					<html:select property="surveyor">
+						<html:option value=""><bean:message key="form.all"></bean:message></html:option>
+						<html:options collection="SurveyorList" property="id" labelProperty="status" />
+					</html:select>
+				</td>
+			</tr>
 			<tr>
 				<td width="100" class="conLabel"><bean:message key="form.aju.perusahaan"></bean:message></td>
 				<td class="conText" >

@@ -427,7 +427,7 @@ public class PegawaiAction extends SecurityAction {
 		}
 
 		// Return to Search
-		return mapping.findForward("continue");
+		return mapping.findForward("success");
 	}
 	public ActionForward history(ActionMapping mapping, ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {

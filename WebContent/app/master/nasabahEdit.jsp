@@ -87,7 +87,7 @@
 			<tr>
 				<td class="conLabel"><bean:message key="form.nasabah.telepon"></bean:message></td>
 				<td class="conText">
-					<html:text property="telepon" maxlength="14" size="60"></html:text>
+					<html:text property="telepon" maxlength="60" size="60"></html:text>
 				</td>
 			</tr>
 			<tr>

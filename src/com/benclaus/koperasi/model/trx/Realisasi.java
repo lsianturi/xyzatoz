@@ -73,14 +73,6 @@ public class Realisasi extends Aju {
 		this.diterima = diterima;
 	}
 
-	public String getKeterangan() {
-		return keterangan;
-	}
-
-	public void setKeterangan(String keterangan) {
-		this.keterangan = keterangan;
-	}
-
 	public Integer getLunas() {
 		return lunas;
 	}
@@ -96,6 +88,12 @@ public class Realisasi extends Aju {
 	public void setTerbilang(String terbilang) {
 		this.terbilang = terbilang;
 	}
-	
+	public String getKeterangan() {
+		return keterangan;
+	}
+
+	public void setKeterangan(String keterangan) {
+		this.keterangan = keterangan;
+	}
 }
 

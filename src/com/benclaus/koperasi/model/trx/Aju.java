@@ -24,11 +24,13 @@ public class Aju extends Audit{
 	private Double angsuranAju;
 	private Nasabah sponsor;
 	private Pegawai marketing;
+	private Pegawai surveyor;
 	private String penjamin;
 	private String agunan;
 	private Date jatuhTempo;
 	private Integer realisasi;
 	private List<Simulasi> simulasi;
+	private String note;
 
 	public Aju() {
 	}
@@ -178,6 +180,22 @@ public class Aju extends Audit{
 
 	public void setSimulasi(List<Simulasi> simulasi) {
 		this.simulasi = simulasi;
+	}
+	
+	public String getNote() {
+		return note;
+	}
+
+	public void setNote(String note) {
+		this.note = note;
+	}
+
+	public Pegawai getSurveyor() {
+		return surveyor;
+	}
+
+	public void setSurveyor(Pegawai surveyor) {
+		this.surveyor = surveyor;
 	}
 
 	public String toString() {

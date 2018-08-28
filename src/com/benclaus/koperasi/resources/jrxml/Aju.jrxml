@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Aju" pageWidth="646" pageHeight="306" orientation="Landscape" columnWidth="562" leftMargin="42" rightMargin="42" topMargin="42" bottomMargin="42" uuid="2160faad-18d6-4850-ac46-f87d56f61421">
 	<property name="ireport.zoom" value="1.5"/>
-	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="67"/>
+	<property name="ireport.x" value="174"/>
+	<property name="ireport.y" value="0"/>
 	<parameter name="pt" class="java.lang.String"/>
 	<parameter name="aplikasi" class="java.lang.String"/>
 	<parameter name="nik" class="java.lang.String"/>
 	<parameter name="nama" class="java.lang.String"/>
 	<parameter name="bagian" class="java.lang.String"/>
 	<parameter name="bank" class="java.lang.String"/>
-	<parameter name="supervisor" class="java.lang.String"/>
+	<parameter name="sponsor" class="java.lang.String"/>
 	<parameter name="status" class="java.lang.String"/>
 	<parameter name="surveyor" class="java.lang.String"/>
 	<parameter name="ref_trf" class="java.lang.String"/>
@@ -21,7 +21,7 @@
 	<parameter name="tenor" class="java.lang.Integer"/>
 	<parameter name="tgl_lunas" class="java.util.Date"/>
 	<parameter name="no_kredit" class="java.lang.String"/>
-	<parameter name="deadline" class="java.lang.String"/>
+	<parameter name="payroll" class="java.util.Date"/>
 	<parameter name="tgl_aju" class="java.util.Date"/>
 	<summary>
 		<band height="222">
@@ -34,7 +34,7 @@
 				<textFieldExpression><![CDATA[$P{pt}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="27" y="35" width="187" height="90" uuid="606d3c4a-0785-47e6-976b-dacd9345bcef"/>
+				<reportElement x="27" y="50" width="187" height="75" uuid="606d3c4a-0785-47e6-976b-dacd9345bcef"/>
 				<textFieldExpression><![CDATA[$P{aplikasi}]]></textFieldExpression>
 			</textField>
 			<staticText>
@@ -43,7 +43,7 @@
 			</staticText>
 			<staticText>
 				<reportElement x="341" y="1" width="57" height="15" uuid="13558d90-5e50-4e95-8605-a27b0fa4f4f3"/>
-				<text><![CDATA[DEADLINE]]></text>
+				<text><![CDATA[Tgl Payroll]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="341" y="21" width="57" height="15" uuid="e0c119a1-a167-4e24-9040-a92866e65853"/>
@@ -91,14 +91,14 @@
 			</textField>
 			<textField>
 				<reportElement x="398" y="80" width="117" height="15" uuid="a5be5cef-9539-44cf-849e-a673a1de2b82"/>
-				<textFieldExpression><![CDATA[": "+ $P{surveyor}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[": "+ $P{sponsor}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="398" y="96" width="117" height="15" uuid="a76bccdf-adfa-4f10-8465-cf6180f1f27b"/>
-				<textFieldExpression><![CDATA[": "+ $P{supervisor}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[": "+ $P{surveyor}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="398" y="110" width="117" height="15" uuid="c8ee95e7-f6f3-46f3-ab3b-f4d0cac1828c"/>
+				<reportElement x="398" y="111" width="117" height="15" uuid="c8ee95e7-f6f3-46f3-ab3b-f4d0cac1828c"/>
 				<textFieldExpression><![CDATA[": "+ $P{status}]]></textFieldExpression>
 			</textField>
 			<staticText>
@@ -150,28 +150,28 @@
 				<textFieldExpression><![CDATA[": "+ $P{status_kerja}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0;-#,##0">
-				<reportElement x="399" y="145" width="100" height="15" uuid="57318dba-1e9e-4e69-bac0-1f5e37eb81dd"/>
+				<reportElement x="405" y="145" width="100" height="15" uuid="57318dba-1e9e-4e69-bac0-1f5e37eb81dd"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{pokok}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0;-#,##0">
-				<reportElement x="399" y="160" width="100" height="15" uuid="eb54c3e2-707f-4b7f-b99c-32c02b22d927"/>
+				<reportElement x="405" y="160" width="100" height="15" uuid="eb54c3e2-707f-4b7f-b99c-32c02b22d927"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{cicilan}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="399" y="175" width="100" height="15" uuid="ad36d598-5ad1-4e7d-b2db-c1e3d8515973"/>
+				<reportElement x="405" y="175" width="100" height="15" uuid="ad36d598-5ad1-4e7d-b2db-c1e3d8515973"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{tenor}]]></textFieldExpression>
 			</textField>
 			<textField pattern="dd.MM.yyyy">
-				<reportElement x="399" y="190" width="100" height="15" uuid="5b1e0dc8-f941-4ea1-8814-8863187e4c17"/>
+				<reportElement x="405" y="190" width="88" height="15" uuid="5b1e0dc8-f941-4ea1-8814-8863187e4c17"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
@@ -181,10 +181,6 @@
 				<reportElement x="463" y="21" width="65" height="15" uuid="1ec3f674-cf35-4463-8b71-60c00f1e26d0"/>
 				<textFieldExpression><![CDATA[$P{no_kredit}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="398" y="2" width="100" height="15" uuid="ace0f6a6-0f2d-4413-b814-afd2751ba340"/>
-				<textFieldExpression><![CDATA[": " + $P{deadline}]]></textFieldExpression>
-			</textField>
 			<staticText>
 				<reportElement x="128" y="-1" width="100" height="17" uuid="4275c62f-3c61-4a6b-a3f8-245c07d7e8c7"/>
 				<text><![CDATA[DP]]></text>
@@ -193,6 +189,45 @@
 				<reportElement x="228" y="0" width="100" height="17" uuid="a739aaca-992b-4259-aee0-b48d7dd985f1"/>
 				<textFieldExpression><![CDATA[$P{tgl_aju}]]></textFieldExpression>
 			</textField>
+			<staticText>
+				<reportElement x="399" y="190" width="6" height="15" uuid="745b5697-308f-48b0-9087-15edda9cb6b2"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<textField pattern="dd">
+				<reportElement x="405" y="1" width="100" height="14" uuid="42fefe87-8dca-4ad4-8270-3616dabde5d7"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{payroll}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="399" y="1" width="6" height="14" uuid="0fc8e969-6994-4a62-b09e-90d849bf9669"/>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="399" y="145" width="6" height="15" uuid="f85058e9-8507-41fe-b373-a476c3440e47"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="399" y="160" width="6" height="15" uuid="19ebfb91-c939-4920-bec4-39eb22eb85c7"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="399" y="175" width="6" height="15" uuid="4a494431-9608-4c70-b2c0-0168792cd359"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
 		</band>
 	</summary>
 </jasperReport>

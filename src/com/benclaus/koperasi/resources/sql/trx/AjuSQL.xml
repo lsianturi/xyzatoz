@@ -33,6 +33,9 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 		<result property="nasabah.nik" column="n_nik" />
 		<result property="nasabah.nama" column="n_nama" />
 		<result property="nasabah.alamat" column="n_alamat" />
+		<result property="nasabah.telepon" column="n_telepon" />
+		<result property="nasabah.statusKerja.id" column="n_sts_kerja_id" />
+		<result property="nasabah.statusKerja.status" column="n_sts_kerja_status" />
 		<result property="nasabah.jenisKelamin.id" column="n_jenis_kelamin_id" />
 		<result property="nasabah.jenisKelamin.status" column="n_jenis_kelamin_status" />
 		<result property="nasabah.nik" column="n_nik" />
@@ -43,10 +46,12 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 		<result property="nasabah.bank.nama" column="bank_nama" />
 		<result property="nasabah.tglPayroll" column="n_tgl_payroll" />
 		<result property="nasabah.aplikasi" column="n_aplikasi" />
+		<result property="nasabah.noRekeningRef" column="n_norek_ref" />
 		<result property="tipeKredit" column="tipe_kredit" />
 		<result property="jenisPinjam" column="jenis_pinjam" />
 		<result property="sponsor.nama" column="sponsor_nama" />
 		<result property="marketing.nama" column="marketing_nama" />
+		<result property="surveyor.nama" column="surveyor_nama" />
 		<result property="jumlahAju" column="jumlah_aju" />
 		<result property="tenor" column="tenor" />
 		<result property="interestRate" column="interest_rate" />
@@ -54,6 +59,7 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 		<result property="penjamin" column="penjamin" />
 		<result property="agunan" column="agunan" />
 		<result property="jatuhTempo" column="jatuh_tempo" />
+		<result property="note" column="note" />
 	</resultMap>
 	
 	<resultMap id="SimulasiResult" class="com.benclaus.koperasi.model.trx.Simulasi">
@@ -198,16 +204,18 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 	<select id="getAju" resultMap="AjuResult">
 		SELECT a.id, a.nasabah_id n_id, `no_kredit`,a.tgl_aju, n.nama n_nama, n.alamat n_alamat, n.jns_kelamin_id n_jenis_kelamin_id, n.aplikasi n_aplikasi,
 		k.nama n_jenis_kelamin_status, n.nik n_nik, n.bagian n_bagian, p.id pt_id, p.nama pt_nama, n.bank_id, b.nama bank_nama,
-		n.tgl_payroll n_tgl_payroll, a.tipe_kredit, a.jenis_pinjam, a.jatuh_tempo, a.no_urut_nsbh,
-			na.nama sponsor_nama, pe.nama marketing_nama,
-			a.jumlah_aju, a.tenor, a.interest_rate, a.angsuran_aju, a.penjamin, a.agunan
+		n.tgl_payroll n_tgl_payroll, a.tipe_kredit, a.jenis_pinjam, a.jatuh_tempo, a.no_urut_nsbh, n.no_rek_ref n_norek_ref,
+			na.nama sponsor_nama, pe.nama marketing_nama, sv.nama surveyor_nama, n.telepon n_telepon, n.sts_kerja_id n_sts_kerja_id, sk.status n_sts_kerja_status,
+			a.jumlah_aju, a.tenor, a.interest_rate, a.angsuran_aju, a.penjamin, a.agunan, a.`note`
 			FROM `tx_kr_aju` a
 			INNER JOIN ms_nasabah n on n.id = a.nasabah_id
 			INNER JOIN ms_perusahaan p ON p.id = n.perusahaan_id
 			LEFT JOIN ms_nasabah na on na.id = a.sponsor
 			LEFT JOIN ms_pegawai pe on pe.id = a.marketing
+			LEFT JOIN ms_pegawai sv on sv.id = a.surveyor
 			INNER JOIN ms_jns_kelamin k ON k.id = n.jns_kelamin_id
 			INNER JOIN ms_bank b ON b.id = n.bank_id
+			inner Join ms_sts_kerja sk on sk.id = n.sts_kerja_id
 		WHERE a.id=#value#
 	</select>
 	
@@ -227,16 +235,16 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 			SELECT LAST_INSERT_ID() AS value
 		</selectKey>
 		INSERT INTO `tx_kr_aju` (`no_kredit`, `tgl_aju`, `nasabah_id`, `no_urut_nsbh`, `tipe_kredit`, `jenis_pinjam`, `jumlah_aju`, `tenor`, `interest_rate`,
-					`angsuran_aju`, `sponsor`, `marketing`, `penjamin`, `agunan`, `jatuh_tempo`, `created_by`)
+					`angsuran_aju`, `sponsor`, `marketing`, `penjamin`, `agunan`, `jatuh_tempo`, `note`, `created_by`)
 		VALUES (#noKredit#, #tglAju#, #nasabah.id#, #noUrutNsbh#, #tipeKredit#, #jenisPinjam#, #jumlahAju#, #tenor#, #interestRate#, 
-				#angsuranAju#, #sponsor.id#, #marketing.id#, #penjamin#, #agunan#, #jatuhTempo#, #createdBy#)
+				#angsuranAju#, #sponsor.id#, #marketing.id#, #penjamin#, #agunan#, #jatuhTempo#, #note#, #createdBy#)
 	</insert>
 	
 	<update id="updateAju" parameterClass="com.benclaus.koperasi.model.trx.Aju" >
 		UPDATE `tx_kr_aju` SET `no_kredit` = #noKredit#, `tgl_aju`= #tglAju#, `nasabah_id`=#nasabah.id#, `tipe_kredit`=#tipeKredit#, 
 			`jenis_pinjam`=#jenisPinjam#, `jumlah_aju`=#jumlahAju#, `tenor`=#tenor#, `interest_rate`=#interestRate#,
 			`angsuran_aju`=#angsuranAju#, `sponsor`=#sponsor.id#, `marketing`=#marketing.id#, `penjamin`=#penjamin#,
-			`agunan`=#agunan#, `jatuh_tempo`=#jatuhTempo#, `no_urut_nsbh` = #noUrutNsbh#
+			`agunan`=#agunan#, `jatuh_tempo`=#jatuhTempo#, `no_urut_nsbh` = #noUrutNsbh#, `note`=#note#
 		WHERE id = #id#
 	</update>
 	
@@ -252,16 +260,18 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 	<select id="getDueAju" resultMap="AjuResult">
 		SELECT a.id, a.nasabah_id n_id, `no_kredit`,a.tgl_aju, n.nama n_nama, n.alamat n_alamat, n.jns_kelamin_id n_jenis_kelamin_id, n.aplikasi n_aplikasi,
 		k.nama n_jenis_kelamin_status, n.nik n_nik, n.bagian n_bagian, p.id pt_id, p.nama pt_nama, n.bank_id, b.nama bank_nama,
-		n.tgl_payroll n_tgl_payroll, a.tipe_kredit, a.jenis_pinjam, a.jatuh_tempo, a.no_urut_nsbh,
-			na.nama sponsor_nama, pe.nama marketing_nama,
-			a.jumlah_aju, a.tenor, a.interest_rate, a.angsuran_aju, a.penjamin, a.agunan
+		n.tgl_payroll n_tgl_payroll, a.tipe_kredit, a.jenis_pinjam, a.jatuh_tempo, a.no_urut_nsbh, n.no_rek_ref n_norek_ref,
+			na.nama sponsor_nama, pe.nama marketing_nama, sv.nama surveyor_nama, n.telepon n_telepon, n.sts_kerja_id n_sts_kerja_id, sk.status n_sts_kerja_status,
+			a.jumlah_aju, a.tenor, a.interest_rate, a.angsuran_aju, a.penjamin, a.agunan, a.`note`
 			FROM `tx_kr_aju` a
 			INNER JOIN ms_nasabah n on n.id = a.nasabah_id
 			INNER JOIN ms_perusahaan p ON p.id = n.perusahaan_id
 			LEFT JOIN ms_nasabah na on na.id = a.sponsor
 			LEFT JOIN ms_pegawai pe on pe.id = a.marketing
+			LEFT JOIN ms_pegawai sv on sv.id = a.surveyor
 			INNER JOIN ms_jns_kelamin k ON k.id = n.jns_kelamin_id
 			INNER JOIN ms_bank b ON b.id = n.bank_id
+			inner Join ms_sts_kerja sk on sk.id = n.sts_kerja_id
 		WHERE a.nasabah_id=#value#
 		AND a.lunas = 0
 	</select>

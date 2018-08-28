@@ -76,6 +76,7 @@ public class AjuAction extends SecurityAction {
 			request.setAttribute("AgentList", stService.listAgent());
 			request.setAttribute("MarketingList", stService.listPegawai());
 			request.setAttribute("StatusList", StatusPinjaman.getStatusPinjaman());
+			request.setAttribute("SurveyorList", stService.listPegawai());
 		} catch (Exception e) {
 		}
 	}
@@ -87,6 +88,7 @@ public class AjuAction extends SecurityAction {
 			request.setAttribute("SukuBunga", StatusPKService.getInstance().listSukuBunga());
 			request.setAttribute("AgentList", stService.listAgent());
 			request.setAttribute("MarketingList", stService.listPegawai());
+			request.setAttribute("SurveyorList", stService.listPegawai());
 		} catch (Exception e) {
 		}
 	}
@@ -453,6 +455,7 @@ public class AjuAction extends SecurityAction {
 				aju.setAngsuranAju(Double.valueOf(nf.parse(myForm.getString("angsuranAju")).doubleValue()));
 				aju.setJatuhTempo(sdf.parse(myForm.getString("jatuhTempo")));
 				aju.setNoUrutNsbh(nsbh.getLastKreditId() + 1);
+				aju.setNote(myForm.getString("note"));
 				try {
 					aju.setSponsor(new Nasabah((Integer)myForm.get("sponsor")));
 				}catch (Exception e){}
@@ -587,6 +590,7 @@ public class AjuAction extends SecurityAction {
 				aju.setInterestRate(nf.parse(myForm.getString("interestRate")).doubleValue());
 				aju.setAngsuranAju(nf.parse(myForm.getString("angsuranAju")).doubleValue());
 				aju.setJatuhTempo(sdf.parse(myForm.getString("jatuhTempo")));
+				aju.setNote(myForm.getString("note"));
 				try {
 					aju.setSponsor(new Nasabah((Integer)myForm.get("sponsor")));
 				}catch (Exception e){}
@@ -782,9 +786,9 @@ private static void createTable(Paragraph content, List<MonthlySummary> summary,
 
 		response.setContentType("application/pdf");
 		response.setHeader("Content-Disposition", "inline;filename=document.pdf"); // Change from "attachment" to
-																						// "inline" for opening in
-																						// browser (attachment should
-																						// download directly)
+																					// "inline" for opening in
+																					// browser (attachment should
+																					// download directly)
 		response.setContentLength(doc.length);
 
 		ServletOutputStream out = null;
@@ -807,27 +811,28 @@ private static void createTable(Paragraph content, List<MonthlySummary> summary,
 	} 
 	
 	private byte[] getAjuDocument(Integer kreditId){
+		Aju aju = service.getAju(kreditId);
 		Map<String, Object> param = new HashMap<>();
-		param.put("pt", "PT.GS");
-		param.put("aplikasi", "1. Ijazah SMP\n2. Jamsostek + BPJS\n3. ATM + Buku tabungan\n4. Parklaring PT. GS");
-		param.put("nik", "GS.1235");
-		param.put("nama", "SHOFYAH RAHMAN");
-		param.put("bagian", "AQ");
-		param.put("bank", "HANA BANK");
-		param.put("supervisor", "SAMY");
-		param.put("status", "RO");
-		param.put("surveyor", "ACEP");
-		param.put("ref_trf", "0");
-		param.put("hp", "0812-2345-8979 / 0813-8765-9876");
-		param.put("note", "0");
-		param.put("status_kerja", "0");
-		param.put("pokok", new Double(4000000));
-		param.put("cicilan", new Double(450000));
-		param.put("tenor", 10);
-		param.put("tgl_lunas", new Date());
-		param.put("no_kredit", "110.32459");
-		param.put("deadline", "9");
-		param.put("tgl_aju", new Date());
+		param.put("pt", aju.getNasabah().getPt().getNama());
+		param.put("aplikasi", aju.getNasabah().getAplikasi());
+		param.put("nik", aju.getNasabah().getNik());
+		param.put("nama", aju.getNasabah().getNama());
+		param.put("bagian", aju.getNasabah().getBagian());
+		param.put("bank", aju.getNasabah().getBank().getNama());
+		param.put("status", TipeKredit.getTipeKredit(aju.getTipeKredit()));
+		param.put("sponsor", aju.getSponsor() == null ? "" : aju.getSponsor().getNama());
+		param.put("surveyor", aju.getSurveyor() == null ? "" : aju.getSurveyor().getNama());
+		param.put("ref_trf", aju.getNasabah().getNoRekeningRef());
+		param.put("hp", aju.getNasabah().getTelepon());
+		param.put("note", aju.getNote());
+		param.put("status_kerja", aju.getNasabah().getStatusKerja().getStatus());
+		param.put("pokok", aju.getJumlahAju());
+		param.put("cicilan", aju.getAngsuranAju());
+		param.put("tenor", aju.getTenor());
+		param.put("tgl_lunas", aju.getJatuhTempo());
+		param.put("no_kredit", aju.getNoKredit());
+		param.put("payroll", aju.getNasabah().getTglPayroll());
+		param.put("tgl_aju", aju.getTglAju());
 
 		byte[] bytes = null;
 

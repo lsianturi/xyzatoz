@@ -16,6 +16,7 @@
 			<form-property name="jenisPinjam" type="java.lang.Integer" />
 			<form-property name="sponsor" type="java.lang.Integer" />
 			<form-property name="marketing" type="java.lang.Integer"/>
+			<form-property name="surveyor" type="java.lang.Integer"/>
 			<form-property name="status" type="java.lang.Integer"/>
 			<form-property name="pageIndex" type="java.lang.String" initial="1" />
 			<form-property name="totalPage" type="java.lang.String" />
@@ -44,6 +45,7 @@
 			<form-property name="penjamin" type="java.lang.String" />
 			<form-property name="agunan" type="java.lang.String" />
 			<form-property name="sponsor" type="java.lang.Integer" />
+			<form-property name="surveyor" type="java.lang.Integer"/>
 			<form-property name="marketing" type="java.lang.Integer"/>
 			<form-property name="tipeKredit" type="java.lang.Integer" initial="1"/>
 			<form-property name="jenisPinjam" type="java.lang.Integer" />
@@ -53,6 +55,7 @@
 			<form-property name="bunga" type="java.lang.String"/>
 			<form-property name="angsuranAju" type="java.lang.String" />
 			<form-property name="jatuhTempo" type="java.lang.String" />
+			<form-property name="note" type="java.lang.String" />
 		</form-bean>
 		
 		<form-bean name="realSearch" type="org.apache.struts.validator.DynaValidatorForm">
@@ -97,6 +100,7 @@
 			<form-property name="agunan" type="java.lang.String" />
 			<form-property name="sponsor" type="java.lang.Integer" />
 			<form-property name="marketing" type="java.lang.Integer"/>
+			<form-property name="surveyor" type="java.lang.Integer"/>
 			<form-property name="tipeKredit" type="java.lang.Integer" />
 			<form-property name="jenisPinjam" type="java.lang.Integer" />
 			<form-property name="jumlahAju" type="java.lang.String" />

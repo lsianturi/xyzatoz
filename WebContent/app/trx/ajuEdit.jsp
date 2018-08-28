@@ -222,6 +222,12 @@
 					<html:textarea property="agunan" rows="4" cols="60" ></html:textarea>
 				</td>
 			</tr>
+			<tr>
+				<td width="100" class="conLabel"><bean:message key="form.aju.note"></bean:message></td>
+				<td class="conText" colspan="3">
+					<html:textarea property="note" rows="4" cols="60" ></html:textarea>
+				</td>
+			</tr>
 		</tbody>
 	</table>
 	</div>
@@ -283,6 +289,15 @@
 					<html:select property="marketing">
 						<html:option value=""><bean:message key="form.all"></bean:message></html:option>
 						<html:options collection="MarketingList" property="id" labelProperty="status" />
+					</html:select>
+				</td>
+			</tr>
+			<tr>
+				<td width="100" class="conLabel"><bean:message key="form.aju.surveyor"></bean:message></td>
+				<td class="conText">
+					<html:select property="surveyor">
+						<html:option value=""><bean:message key="form.all"></bean:message></html:option>
+						<html:options collection="SurveyorList" property="id" labelProperty="status" />
 					</html:select>
 				</td>
 			</tr>
@@ -363,14 +378,16 @@
 	</table>
 	</div>
 	
+	<c:if test="${aju != null}">
 	<div id="TheForm" class="w3-container aju" style="display:none">
 		<div>
 			
-			<iframe src="ajuUpdate.do?dispatch=generate&id=<bean:write name="aju" property="id"/>" width="600" height="400">
+			<iframe src="ajuUpdate.do?dispatch=generate&id=<bean:write name="aju" property="id"/>" width="800" height="450" >
 			Browser ini tidak mendukung IFRAME, gunakan browser lain seperti Google Chrome atau Mozilla Firefox terbaru.
 			</iframe>
 		</div>
-		</div>
+	</div>
+	</c:if>
 	<table width="100%" border="0">
 		<tbody>
 			<tr>
