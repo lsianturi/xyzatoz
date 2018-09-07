@@ -34,6 +34,7 @@ import com.benclaus.koperasi.model.master.Nasabah;
 import com.benclaus.koperasi.model.master.Pegawai;
 import com.benclaus.koperasi.model.trx.Aju;
 import com.benclaus.koperasi.model.trx.JenisPinjam;
+import com.benclaus.koperasi.model.trx.Realisasi;
 import com.benclaus.koperasi.model.trx.Simulasi;
 import com.benclaus.koperasi.model.trx.StatusPinjaman;
 import com.benclaus.koperasi.model.trx.TipeKredit;
@@ -75,7 +76,7 @@ public class AjuAction extends SecurityAction {
 			request.setAttribute("JenisPinjamList", JenisPinjam.getJenisPinjam());
 			request.setAttribute("AgentList", stService.listAgent());
 			request.setAttribute("MarketingList", stService.listPegawai());
-			request.setAttribute("StatusList", StatusPinjaman.getStatusPinjaman());
+			request.setAttribute("StatusList", StatusPinjaman.getStatusAju());
 			request.setAttribute("SurveyorList", stService.listPegawai());
 		} catch (Exception e) {
 		}
@@ -620,6 +621,69 @@ public class AjuAction extends SecurityAction {
 		}
 
 		return mapping.findForward("success");
+	}
+	
+	public ActionForward view(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+
+		log.debug("View");
+
+		ActionMessages errors = new ActionMessages();
+		// Check Menu Access
+		HttpSession session = request.getSession();
+		ActionForward forward = new ActionForward();
+		DynaActionForm planForm = (DynaActionForm) form;
+		forward = hasMenuAccess(mapping, request, TRX_PJM_VIEW);
+		if (forward != null)
+			return forward;
+
+		try {
+			prepareData(request);
+			Integer ajuId = request.getParameter("id").equals("") ? 0
+					: Integer.parseInt(request.getParameter("id"));
+			if (errors.size() > 0) {
+				saveErrors(request, errors);
+				return mapping.findForward("continue");
+			}
+
+			Aju aju = service.getAju(ajuId);
+			BeanUtils.copyProperties(planForm, aju);
+			planForm.set("tglAju", sdf.format(aju.getTglAju()));
+			planForm.set("nsbhId", aju.getNasabah().getId());
+			planForm.set("nsbhNama", aju.getNasabah().getNama());
+			planForm.set("bunga", nf.format(aju.getInterestRate()).replace(",", "."));
+			planForm.set("jumlahAju", nf.format(aju.getJumlahAju()));
+			planForm.set("angsuranAju", nf.format(aju.getAngsuranAju()));
+			planForm.set("nsbhAlamat", aju.getNasabah().getAlamat()); 
+			planForm.set("nsbhDomisili", aju.getNasabah().getDomisili());
+			planForm.set("nsbhJnsKelamin", aju.getNasabah().getJenisKelamin().getStatus());
+			planForm.set("nsbhNik", aju.getNasabah().getNik());
+			planForm.set("nsbhBagian", aju.getNasabah().getBagian());
+			planForm.set("nsbhPt", aju.getNasabah().getPt().getNama());
+			planForm.set("nsbhBank", aju.getNasabah().getBank().getNama());
+			planForm.set("nsbhTelepon", aju.getNasabah().getTelepon());
+			planForm.set("nsbhNoRekening", aju.getNasabah().getNoRekening());
+			planForm.set("nsbhTglPayrol", sdf.format(aju.getNasabah().getTglPayroll()));
+			planForm.set("nsbhAplikasi", aju.getNasabah().getAplikasi());
+			planForm.set("jatuhTempo", sdf.format(aju.getJatuhTempo()));
+			if (aju.getSponsor() != null) planForm.set("sponsor", aju.getSponsor().getId());
+			if (aju.getMarketing() != null) planForm.set("marketing", aju.getMarketing().getId());
+			
+			request.setAttribute("aju", aju);
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			errors.add(Constant.GLOBALERROR, new ActionMessage("error.exception", e.getMessage()));
+		}
+
+		if (errors.size() > 0) {
+			saveErrors(request, errors);
+			return mapping.findForward("fail");
+		}
+
+		saveToken(request);
+
+		return mapping.findForward("continue");
+
 	}
 	
 	/*private void generateSimulasi(HttpServletResponse response) {

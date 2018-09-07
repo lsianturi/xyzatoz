@@ -69,7 +69,7 @@ public class RealisasiAction extends SecurityAction {
 			request.setAttribute("JenisPinjamList", JenisPinjam.getJenisPinjam());
 			request.setAttribute("AgentList", stService.listAgent());
 			request.setAttribute("MarketingList", stService.listPegawai());
-			request.setAttribute("StatusList", StatusPinjaman.getStatusPinjaman());
+			request.setAttribute("StatusList", StatusPinjaman.getStatusAju());
 		} catch (Exception e) {
 		}
 	}

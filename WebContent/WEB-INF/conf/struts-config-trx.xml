@@ -120,10 +120,7 @@
 			<form-property name="terbilang" type="java.lang.String" />
 			<form-property name="keterangan" type="java.lang.String" />
 			<form-property name="lunas" type="java.lang.String" />
-			
 		</form-bean>
-		
-		
 	</form-beans>
 	
 	<action-mappings>
@@ -146,6 +143,5 @@
 			<forward name="success" path="/trx/real.do?dispatch=returned" />
 			<forward name="fail" path="/app/trx/realEdit.jsp" />
 		</action>
-		
 	</action-mappings>
 </struts-config>

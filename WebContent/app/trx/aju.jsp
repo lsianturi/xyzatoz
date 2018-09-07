@@ -29,7 +29,7 @@
 	</c:if>	
 	
 	function view(id) {
-		doGoToUrl('<c:url value="/trx/realUpdate.do?dispatch=view"/>'+'&id='+id);
+		doGoToUrl('<c:url value="/trx/ajuUpdate.do?dispatch=view"/>'+'&id='+id);
 	}
 	function edit(id) {
 		doGoToUrl('<c:url value="/trx/ajuUpdate.do?dispatch=update"/>'+'&id='+id);
@@ -78,20 +78,6 @@
 					<html:text property="nik" maxlength="30" size="40"></html:text>
 				</td>
 				
-				<td width="100" class="conLabel"><bean:message key="form.aju.jenisPinjam"></bean:message></td>
-				<td class="conText" >
-					<html:select property="jenisPinjam">
-						<html:option value=""><bean:message key="form.all"></bean:message></html:option>
-						<html:options collection="JenisPinjamList" property="value" labelProperty="label" />
-					</html:select>
-				</td>
-			</tr>
-			<tr>
-				<td class="conLabel"><bean:message key="form.aju.nasabah"></bean:message></td>
-				<td class="conText" >
-					<html:text property="nasabah" maxlength="30" size="40"></html:text>
-				</td>
-				
 				<td width="100" class="conLabel"><bean:message key="form.aju.sponsor"></bean:message></td>
 				<td class="conText" >
 					<html:select property="sponsor">
@@ -101,10 +87,9 @@
 				</td>
 			</tr>
 			<tr>
-				<td class="conLabel"><bean:message key="form.aju.tglAju"></bean:message></td>
+				<td class="conLabel"><bean:message key="form.aju.nasabah"></bean:message></td>
 				<td class="conText" >
-					<html:text property="tglAjuFrom" maxlength="12" size="15"></html:text>&nbsp;<a href="javascript:cal1.popup();"><img src="../icons/cal.gif"  border="0" height="16" width="16"></a>&nbsp;To&nbsp;
-					<html:text property="tglAjuTo" maxlength="12" size="15"></html:text>&nbsp;<a href="javascript:cal2.popup();"><img src="../icons/cal.gif"  border="0" height="16" width="16"></a>
+					<html:text property="nasabah" maxlength="30" size="40"></html:text>
 				</td>
 				
 				<td width="100" class="conLabel"><bean:message key="form.aju.marketing"></bean:message></td>
@@ -115,7 +100,13 @@
 					</html:select>
 				</td>
 			</tr>
-			<tr><td></td><td></td>
+			<tr>
+				<td class="conLabel"><bean:message key="form.aju.tglAju"></bean:message></td>
+				<td class="conText" >
+					<html:text property="tglAjuFrom" maxlength="12" size="15"></html:text>&nbsp;<a href="javascript:cal1.popup();"><img src="../icons/cal.gif"  border="0" height="16" width="16"></a>&nbsp;To&nbsp;
+					<html:text property="tglAjuTo" maxlength="12" size="15"></html:text>&nbsp;<a href="javascript:cal2.popup();"><img src="../icons/cal.gif"  border="0" height="16" width="16"></a>
+				</td>
+				
 				<td width="100" class="conLabel"><bean:message key="form.aju.surveyor"></bean:message></td>
 				<td class="conText">
 					<html:select property="surveyor">
@@ -213,11 +204,8 @@
 						<c:when test="${aju.realisasi == 0 }">
 							Belum realisasi
 						</c:when>
-						<c:when test="${aju.realisasi == 1 && aju.lunas == 0 }">
+						<c:when test="${aju.realisasi == 1 }">
 							Sudah realisasi
-						</c:when>
-						<c:when test="${aju.lunas == 1 }">
-							Lunas
 						</c:when>
 					</c:choose></td>
 					<td class="celBorder" align="center">

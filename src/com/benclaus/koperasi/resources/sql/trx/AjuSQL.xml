@@ -5,7 +5,7 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 
 <sqlMap namespace="AjuSQL">
 	
-	<resultMap id="AjuSearchResult" class="com.benclaus.koperasi.model.trx.Realisasi">
+	<resultMap id="AjuSearchResult" class="com.benclaus.koperasi.model.trx.Aju">
 		<result property="id" column="id" />
 		<result property="noKredit" column="no_kredit" />
 		<result property="tglAju" column="tgl_aju" />
@@ -20,7 +20,6 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 		<result property="nasabah.bank.nama" column="bank_nama" />
 		<result property="realisasi" column="realisasi" />
 		<result property="jumlahAju" column="jumlah_aju" />
-		<result property="lunas" column="lunas" />
 		
 	</resultMap>
 	
@@ -79,7 +78,7 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 	<select id="searchAju" resultMap="AjuSearchResult">
 		SELECT a.id, no_kredit, n.nik nasabah_nik, a.tgl_aju, n.nama nasabah_nama, p.nama pt_nama,
 			a.tipe_kredit, a.jenis_pinjam, na.nama sponsor_nama, pe.nama marketing_nama, a.no_urut_nsbh,
-			b.nama bank_nama, a.realisasi, a.jumlah_aju, a.lunas
+			b.nama bank_nama, a.realisasi, a.jumlah_aju
 			FROM `tx_kr_aju` a
 			INNER JOIN ms_nasabah n on n.id = a.nasabah_id
 			INNER JOIN ms_perusahaan p ON p.id = n.perusahaan_id
@@ -132,9 +131,6 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 			</isEqual>
 			<isEqual property="status" prepend="AND" compareValue="2">
 				a.realisasi = 1
-			</isEqual>
-			<isEqual property="status" prepend="AND" compareValue="3">
-				a.lunas = 1
 			</isEqual>
 		</dynamic>
 		ORDER BY a.tgl_aju DESC, a.no_kredit DESC, n.nama DESC
